@@ -56,6 +56,7 @@ namespace KevinIglesias {
         //This will make the prop move when launched
         void Update() 
         {
+            if (targetPos == null) return;
             //Arc throw facing the target
             if(launched && spear)
             {

@@ -305,41 +305,37 @@ public class EntityMember : DisplayEntity
 	public void UpdateBattle()
     {
 		AniCtrl.SetFloat(MoveHashCode, 0f);
-		var animatorInfo = AniCtrl.GetCurrentAnimatorStateInfo(0);
-		if (animatorInfo.normalizedTime > 1.0f)
-		{
-			AniCtrl.SetTrigger(AckHashCode);
-		}
-
-		//AttackTime++;
-		//if (AttackTime < ship.GetAtt(ShipAttr.AttackSpeed))
-		//{
-		//	return;
-		//}
-
 		Quaternion _lookAt = Quaternion.identity;
 		if (target != null )
         {
+			var animatorInfo = AniCtrl.GetCurrentAnimatorStateInfo(0);
+			if (animatorInfo.normalizedTime > 1.0f)
+			{
+				AniCtrl.SetTrigger(AckHashCode);
+			}
+
 			_lookAt		= Quaternion.LookRotation(target.GetPosition() - GetPosition());
 			if (Throw != null)
 				Throw.targetPos = target.entity.go.transform;
-		}
-		else
-        {
-			if( targetNode != null )
-            {
-				_lookAt = Quaternion.LookRotation(targetNode.GetPosition() - GetPosition());
-				if (Throw != null)
-					Throw.targetPos = targetNode.entity.go.transform;
-			}
 
-			else
-            {
-				return;
-            }
-        }
-		go.transform.rotation = _lookAt;
-		ship.SetAtt(ShipAttr.AttackSpeed, BattleSystem.Instance.battleData.rand.Range(30, 60));
+			go.transform.rotation = _lookAt;
+			ship.SetAtt(ShipAttr.AttackSpeed, BattleSystem.Instance.battleData.rand.Range(30, 60));
+		}
+		//else
+  //      {
+		//	if( targetNode != null )
+  //          {
+		//		_lookAt = Quaternion.LookRotation(targetNode.GetPosition() - GetPosition());
+		//		if (Throw != null)
+		//			Throw.targetPos = targetNode.entity.go.transform;
+		//	}
+
+		//	else
+  //          {
+		//		return;
+  //          }
+  //      }
+		
 	}
 
 	/// ---------------------------------------------------------------------------------------------------------
@@ -404,6 +400,5 @@ public class EntityMember : DisplayEntity
 	public void StartAttackAction()
     {
 		AniCtrl.SetFloat(MoveHashCode, 0f);
-		
 	}
 }

@@ -14,6 +14,7 @@ public class BattleMemberAIPublicy
     /// </summary>
     public enum Battlestate
     {
+        Move,
         Escape,
         Repel,
         Battle,
@@ -70,6 +71,25 @@ public class BattleMemberAIPublicy
     /// --------------------------------------------------------------------------------------------------------
     public void AotuBattle( int frame, float dt )
     {
+        if( mBattleStates == Battlestate.Move )
+        {
+            bool IsNeedMove = mOwer.entity.UpdateMove( frame, dt );
+            if( !IsNeedMove )
+            {
+                mBattleStates = Battlestate.Battle;
+                return;
+            }
+
+            float fAlertRange   = mOwer.GetAtt(ShipAttr.WarningRange);
+            float fAtkRange     = mOwer.GetAtt(ShipAttr.AttackRange );
+            float distance      = (mOwer.GetPosition() - mOwer.entity.target.GetPosition()).magnitude;
+            if( distance > fAlertRange && distance < fAtkRange )
+            {
+                mBattleStates   = Battlestate.Battle;
+                return;
+            }
+        }
+
         if (mBattleStates == Battlestate.Battle)
         {
             /// 战内攻击策略
@@ -78,26 +98,26 @@ public class BattleMemberAIPublicy
             }
 
             /// 战内游走策略
-            {
-                wanderPublicy(frame, dt);
-            }
+            //{
+            //    wanderPublicy(frame, dt);
+            //}
 
-            /// -------------------------游走逻辑--------------------------------
-            if (Iswandering)
-            {
-                wanderTimer += dt;
-                if (wanderTimer >= wanderMaxTimer)
-                {
-                    wanderTimer = 0f;
-                    Iswandering = false;
-                }
-            }
+            ///// -------------------------游走逻辑--------------------------------
+            //if (Iswandering)
+            //{
+            //    wanderTimer += dt;
+            //    if (wanderTimer >= wanderMaxTimer)
+            //    {
+            //        wanderTimer = 0f;
+            //        Iswandering = false;
+            //    }
+            //}
 
-            /// 使用技能
-            foreach (var it in skillpool)
-            {
-                it.Tick(frame, dt);
-            }
+            ///// 使用技能
+            //foreach (var it in skillpool)
+            //{
+            //    it.Tick(frame, dt);
+            //}
         }
 
         if( mBattleStates == Battlestate.Escape )
@@ -120,11 +140,11 @@ public class BattleMemberAIPublicy
     /// --------------------------------------------------------------------------------------------------------
     private bool IsAlertRange()
     {
-        if (mOwer.target != null && mOwer.target.isALive)
+        if (mOwer.entity.target != null && mOwer.entity.target.isALive)
         {
             float fRange    = mOwer.GetAtt(ShipAttr.WarningRange);
             fRange          *= fRange;
-            float distance  = (mOwer.GetPosition() - mOwer.target.GetPosition()).sqrMagnitude;
+            float distance  = (mOwer.GetPosition() - mOwer.entity.target.GetPosition()).sqrMagnitude;
             if (distance <= fRange)
             {
                 return true;
@@ -141,11 +161,11 @@ public class BattleMemberAIPublicy
     /// --------------------------------------------------------------------------------------------------------
     private bool IsAtkRange()
     {
-        if( mOwer.target != null && mOwer.target.isALive )
+        if( mOwer.entity.target != null && mOwer.entity.target.isALive )
         {
             float fRange        = mOwer.GetAtt( ShipAttr.AttackRange );
             fRange              *= fRange;
-            float distance      = (mOwer.GetPosition() - mOwer.target.GetPosition()).sqrMagnitude;
+            float distance      = (mOwer.GetPosition() - mOwer.entity.target.GetPosition()).sqrMagnitude;
             if (distance <= fRange )
             {
                 return true;
@@ -162,15 +182,33 @@ public class BattleMemberAIPublicy
     ///  --------------------------------------------------------------------------------------------------------
     private void attackPublicy( int frame, float dt )
     {
-        mOwer.target            = FindNearestEnemy();
-        if( mOwer.target == null ) return;
+        mOwer.entity.target            = FindNearestEnemy();
+        if( mOwer.entity.target == null ) return;
         if( IsAtkRange() )
         {
-            mOwer.entity.UpdateBattle();
+            if( IsAlertRange() )
+            {
+                float fAlertRange   = mOwer.GetAtt(ShipAttr.WarningRange);
+                Vector3 moveDir     = mOwer.GetPosition() - mOwer.entity.target.GetPosition();
+                float distance      = fAlertRange - moveDir.magnitude - UnityEngine.Random.Range( 0f, 2f);
+                moveDir.Normalize();
+                moveDir             = mOwer.GetPosition() + moveDir * distance;
+                mOwer.SetTargetPosition(moveDir);
+                mBattleStates       = Battlestate.Move;
+            }
+            else
+            {
+                mOwer.entity.UpdateBattle();
+            }
         }
         else
         {
-            mOwer.entity.UpdateMove( frame, dt );
+            float fAtkRange         = mOwer.GetAtt(ShipAttr.AttackRange);
+            Vector3 moveDir         = mOwer.GetPosition() - mOwer.entity.target.GetPosition();
+            moveDir.Normalize();
+            moveDir                 = mOwer.GetPosition() - moveDir * fAtkRange;
+            mOwer.SetTargetPosition(moveDir);
+            mBattleStates           = Battlestate.Move;
         }
     }
 

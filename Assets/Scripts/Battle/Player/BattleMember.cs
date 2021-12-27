@@ -54,10 +54,6 @@ public partial class BattleMember : Lifecycle2
     /// </summary>
     public BattleUnitType       unitType = BattleUnitType.Member;
 
-    /// <summary>
-	/// 目标
-	/// </summary>
-	public BattleMember         target;
 
     /// <summary>
     /// 当前队伍信息
@@ -462,90 +458,6 @@ public partial class BattleMember : Lifecycle2
                 return bufs[i];
         }
         return null;
-    }
-
-
-    /// --------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// 优先攻击最近的小兵
-    /// </summary>
-    /// --------------------------------------------------------------------------------------------------------
-    public void PriorityAttackNearestEnemy()
-    {
-        if (currentNode == null)
-            return;
-
-        float fMax                = float.MaxValue;
-        BattleMember nearestEnemy = null;
-        List<BattleTeam> arrays   = currentNode.battArray;
-        foreach (BattleTeam bt in arrays)
-        {
-            if (bt.team.team == this.team)
-                continue;
-
-            List<BattleMember> members = bt.members;
-            foreach( var member in members )
-            {
-                float distance    = (this.GetPosition() - member.GetPosition()).sqrMagnitude;
-                if (distance <= fMax && member.isALive && member.unitType == BattleUnitType.Member)
-                {
-                    nearestEnemy  = member;
-                    fMax          = distance;
-                }
-            }
-        }
-    
-        target                  = nearestEnemy;
-        entity.target           = target;
-        if(target != null )
-        {
-             float AtkRange     = GetAtt(ShipAttr.AttackRange);
-            Vector3 dir         = GetPosition() - target.GetPosition();
-            dir                 = Vector3.Normalize(dir);
-            Vector3 targetPos   = target.GetPosition() + dir * AtkRange;
-            SetTargetPosition(targetPos);
-        }
-    }
-
-    /// --------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// 优先攻击最近的英雄
-    /// </summary>
-    /// --------------------------------------------------------------------------------------------------------
-    public void PriorityAttackNearestHero( )
-    {
-        if (currentNode == null)
-            return;
-
-        float fMax                   = float.MaxValue;
-        BattleMember nearestEnemy    = null;
-        List<BattleTeam> arrays      = currentNode.battArray;
-        foreach (BattleTeam bt in arrays)
-        {
-            if (bt.team.team == this.team)
-                continue;
-
-            List<BattleMember> members = bt.members;
-            foreach( var member in members )
-            {
-                float distance      = (this.GetPosition() - member.GetPosition()).sqrMagnitude;
-                if (distance <= fMax && member.isALive && member.unitType == BattleUnitType.Member)
-                {
-                    nearestEnemy    = member;
-                    fMax            = distance;
-                }
-            }
-        }
-
-        target                  = nearestEnemy;
-        entity.target           = target;
-        if( target != null ) {
-            float AtkRange      = GetAtt(ShipAttr.AttackRange);
-            Vector3 dir         = GetPosition() - target.GetPosition();
-            dir                 = Vector3.Normalize(dir);
-            Vector3 targetPos   = target.GetPosition() + dir * AtkRange;
-            SetTargetPosition(targetPos);
-        }
     }
 
     // --------------------------------------------------------------------------------------------------------

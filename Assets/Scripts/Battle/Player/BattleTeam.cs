@@ -292,6 +292,12 @@ public class BattleTeam
         {
             btState         = BattleTeamState.Battle;
             btFormation     = Formation.FormationNull;
+
+            Leader.entity.StartAttackAction();
+            for (int i = 0; i < members.Count; i++)
+            {
+                members[i].entity.StartAttackAction();
+            }
         }
     }
 
@@ -329,6 +335,12 @@ public class BattleTeam
         {
             btState         = BattleTeamState.Battle;
             btFormation     = Formation.FormationNull;
+
+            Leader.entity.StartAttackAction();
+            for (int i = 0; i < members.Count; i++)
+            {
+                members[i].entity.StartAttackAction();
+            }
         }
     }
 
@@ -447,7 +459,7 @@ public class BattleTeam
                 {
                     enemyPostion            = bt.Leader.GetPosition();
                     bt.btState              = BattleTeamState.Encirclecity;
-                    bt.btFormation          = Formation.FormationAttack;
+                    bt.btFormation          = Formation.FormationSurround;
                 }
             }
 
@@ -542,7 +554,7 @@ public class BattleTeam
         Vector3 cityPosition    = city.GetPosition();
         Vector3 moveDir         = targetPostion - cityPosition;
         moveDir.Normalize();
-        cityPosition            = cityPosition + (moveDir * 10f);
+        cityPosition            = cityPosition + (moveDir * 7.5f);
         Leader.SetTargetPosition(cityPosition);
     }
 
