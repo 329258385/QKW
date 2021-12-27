@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<buildconfigs>
+	<buildconfig id="1" buildType="1" condition="1" needTime="1" level="1" needMoney="100" needDiamond="30" needItem="1" needCount="1.6" name="0" icon="0" desc="0" />
+	<buildconfig id="2" buildType="2" condition="1" needTime="2" level="1" needMoney="100" needDiamond="40" needItem="1" needCount="1.4" name="0" icon="0" desc="0" />
+	<buildconfig id="3" buildType="3" condition="1" needTime="3" level="1" needMoney="100" needDiamond="50" needItem="1" needCount="1.2" name="0" icon="0" desc="0" />
+	<buildconfig id="4" buildType="4" condition="1" needTime="4" level="1" needMoney="100" needDiamond="60" needItem="1" needCount="1.0" name="0" icon="0" desc="0" />
+	<buildconfig id="5" buildType="5" condition="1" needTime="5" level="1" needMoney="100" needDiamond="70" needItem="1" needCount="0.8" name="0" icon="0" desc="0" />
+</buildconfigs>

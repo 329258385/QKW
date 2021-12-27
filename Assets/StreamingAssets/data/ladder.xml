@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ladders>
+	<ladder ladderlevel="1" itemgather="10101,10201,10301,10401,10501,10601,10701" points="0" laddername="训练场" icon="Texture_2/jjc_0" showlevel="408" winmincoin="5" winmaxcoin="5" />
+	<ladder ladderlevel="2" itemgather="10101,10201,10301,10401,10501,10601,10701" points="400" laddername="仙女座星系" icon="Texture_2/jjc_0" showlevel="417" winmincoin="7" winmaxcoin="7" />
+	<ladder ladderlevel="3" itemgather="10101,10201,10301,10401,10501,10601,10701" points="800" laddername="大麦哲伦云系" icon="Texture_2/jjc_0" showlevel="412" winmincoin="9" winmaxcoin="9" />
+	<ladder ladderlevel="4" itemgather="10101,10201,10301,10401,10501,10601,10701" points="1100" laddername="小麦哲伦星云" icon="Texture_2/jjc_0" showlevel="415" winmincoin="11" winmaxcoin="11" />
+	<ladder ladderlevel="5" itemgather="10101,10201,10301,10401,10501,10601,10701" points="1400" laddername="猎犬座大星云" icon="Texture_2/jjc_0" showlevel="416" winmincoin="12" winmaxcoin="12" />
+	<ladder ladderlevel="6" itemgather="10101,10201,10301,10401,10501,10601,10701" points="1700" laddername="赛弗特星系" icon="Texture_2/jjc_0" showlevel="421" winmincoin="14" winmaxcoin="14" />
+	<ladder ladderlevel="7" itemgather="10101,10201,10301,10401,10501,10601,10701" points="2300" laddername="室女座星系" icon="Texture_2/jjc_0" showlevel="x17" winmincoin="15" winmaxcoin="15" />
+	<ladder ladderlevel="8" itemgather="10101,10201,10301,10401,10501,10601,10701" points="2300" laddername="大熊座星系" icon="Texture_2/jjc_0" showlevel="x18" winmincoin="16" winmaxcoin="16" />
+	<ladder ladderlevel="9" itemgather="10101,10201,10301,10401,10501,10601,10701" points="2600" laddername="后发座星系" icon="Texture_2/jjc_0" showlevel="x19" winmincoin="18" winmaxcoin="18" />
+	<ladder ladderlevel="10" itemgather="10101,10201,10301,10401,10501,10601,10701" points="3000" laddername="半人马座星系" icon="Texture_2/jjc_0" showlevel="x13" winmincoin="20" winmaxcoin="20" />
+</ladders>

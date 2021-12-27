@@ -1,0 +1,7 @@
+solarmax_key.keystore
+
+keystore名称：solarmax
+keystore密码：solarmax
+
+当前alias名称：solarmax
+当前alias密码：solarmax

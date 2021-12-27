@@ -1,0 +1,15 @@
+#ID	Name	Value
+1	FPS	60
+2	Version	0.1.13
+3	ConsoleLogMode	1
+4	ConsoleLogLevel	2
+5	FileLogMode	0
+6	FileLogLevel	2
+7	FileLogFrontName	Solarmax
+8	FileLogExtName	milog
+9	UpdateServer	http://120.92.142.56/
+10	L_SERVER	120.92.142.56:8192
+11	R_SERVER	120.92.141.208:8192
+12	DEV_SERVER	10.235.148.124:8192
+13	Referee_SERVER	127.0.0.1:9999
+14	Channel	xiaomi_gamecenter

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Heros>
+	<Hero id="3001" Arms="0" ArmsType="1" speed="1" attackspeed="45" MaxHP="1000" damage="100" Armor="100" name="曹操" icon="" desc="xxxxxxxxxx" perfab="caocao" />
+	<Hero id="3002" Arms="0" ArmsType="1" speed="1" attackspeed="45" MaxHP="1000" damage="100" Armor="100" name="关羽" icon="" desc="xxxxxxxxxx" perfab="guanyu" />
+	<Hero id="4001" Arms="0" ArmsType="1" speed="1" attackspeed="45" MaxHP="1000" damage="100" Armor="100" name="步兵" icon="" desc="xxxxxxxxxx" perfab="qiangbing" />
+	<Hero id="4002" Arms="0" ArmsType="1" speed="1" attackspeed="45" MaxHP="1000" damage="100" Armor="100" name="工兵" icon="" desc="xxxxxxxxxx" perfab="gongbing" />
+</Heros>

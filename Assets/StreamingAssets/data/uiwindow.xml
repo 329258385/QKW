@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<windows>
+	<item id="1" Name="LobbyWindow" Prefab="UI/LobbyWindow" HideWithDestroy="1" />
+	<item id="2" Name="LogoWindow" Prefab="UI/LogoWindow" HideWithDestroy="1" />
+	<item id="3" Name="BattlePublicyWindow" Prefab="UI/BattlePublicyWindow" HideWithDestroy="1" />
+</windows>

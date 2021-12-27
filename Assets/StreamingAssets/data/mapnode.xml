@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mapnodes>
+	<mapnode id="1" type="star" typeEnum="1" sizeType="1" size="0.4" hp="100" food="30" createshipnum="1" createship="1.6" attackrange="0" attackspeed="0" attackpower="0" nodesize="25" perfab="Entity_Planet" skills="NULL" />
+	<mapnode id="3" type="teleport" typeEnum="3" sizeType="1" size="0.7" hp="100" food="0" createshipnum="0" createship="0" attackrange="0" attackspeed="0" attackpower="0" nodesize="0.65" perfab="Entity_Door" skills="NULL" />
+	<mapnode id="4" type="tower" typeEnum="4" sizeType="1" size="1" hp="100" food="0" createshipnum="0" createship="0" attackrange="50" attackspeed="0.25" attackpower="100" nodesize="1.1" perfab="Entity_Tower" skills="NULL" />
+	<mapnode id="2" type="castle" typeEnum="2" sizeType="1" size="1" hp="100" food="100" createshipnum="1" createship="0.5" attackrange="6" attackspeed="0.15" attackpower="0" nodesize="1.08" perfab="Entity_Castle" skills="NULL" />
+	<mapnode id="5" type="barrier" typeEnum="5" sizeType="1" size="0.25" hp="100" food="0" createshipnum="0" createship="0" attackrange="10" attackspeed="0.2" attackpower="0" nodesize="0.25" perfab="Entity_Barrier" skills="NULL" />
+	<mapnode id="7" type="masterA" typeEnum="7" sizeType="1" size="0.7" hp="100" food="0" createshipnum="0" createship="0" attackrange="10" attackspeed="0.2" attackpower="0" nodesize="25" perfab="Entity_Master" skills="NULL" />
+	<mapnode id="8" type="masterB" typeEnum="8" sizeType="1" size="0.5" hp="100" food="0" createshipnum="0" createship="0" attackrange="10" attackspeed="0.2" attackpower="10" nodesize="0.5" perfab="Entity_Defense" skills="NULL" />
+	<mapnode id="9" type="power" typeEnum="9" sizeType="1" size="0.7" hp="100" food="0" createshipnum="0" createship="0" attackrange="0" attackspeed="0" attackpower="0" nodesize="0.7" perfab="Entity_Power" skills="NULL" />
+	<mapnode id="6" type="barrierline" typeEnum="10" sizeType="1" size="0.7" hp="100" food="0" createshipnum="0" createship="0" attackrange="5" attackspeed="2" attackpower="10" nodesize="0.5" perfab="Entity_BlackHole" skills="NULL" />
+</mapnodes>

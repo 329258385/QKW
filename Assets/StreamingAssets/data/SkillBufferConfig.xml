@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<items>
+	<item id="100101" name="复苏" icon="" order="0" logicId="0" targetType="0" lastTime="1.0" coodown="10" actInterval="0" overcastType="0" breakUpSkill="0" effectId="" arg0="0.0" arg1="10.0" desc="建设星球完成后，在该星球瞬间生产最多10艘飞船" />	
+	<item id="100201" name="突进" icon="" order="0" logicId="0" targetType="2" lastTime="20.0" coodown="10" actInterval="0" overcastType="0" breakUpSkill="0" effectId="" arg0="0.5" arg1="0.0" desc="飞船飞行速度+50%，持续20秒" />	
+	<item id="100301" name="禁锢" icon="" order="0" logicId="0" targetType="0" lastTime="20.0" coodown="10" actInterval="0" overcastType="0" breakUpSkill="0" effectId="" arg0="0.0" arg1="0.0" desc="禁锢敌方飞船最多的星球，持续20秒" />		
+	<item id="100401" name="潜行" icon="" order="0" logicId="0" targetType="2" lastTime="30.0" coodown="10" actInterval="0" overcastType="0" breakUpSkill="0" effectId="" arg0="0.0" arg1="0.0" desc="飞船进入隐身状态，不会被防御塔攻击，持续30秒" />	
+	<item id="100501" name="硬壳" icon="" order="0" logicId="0" targetType="2" lastTime="1.0" coodown="10" actInterval="0" overcastType="0" breakUpSkill="0" effectId="" arg0="-0.5" arg1="0.0" desc="星球被掠夺速度-50%" />
+	<item id="100601" name="繁衍" icon="" order="0" logicId="0" targetType="2" lastTime="1.0" coodown="10" actInterval="0" overcastType="0" breakUpSkill="0" effectId="" arg0="0.05" arg1="0.0" desc="飞船上限+5%	" />
+	<item id="100701" name="虫网" icon="" order="0" logicId="0" targetType="2" lastTime="6.0" coodown="10" actInterval="0" overcastType="0" breakUpSkill="0" effectId="" arg0="0.0" arg1="0.0" desc="已方星球不可被掠夺，同时暂停正在掠夺己方星球进度，持续6秒" />
+	<item id="100801" name="奇袭" icon="" order="0" logicId="0" targetType="0" lastTime="0.0" coodown="10" actInterval="0" overcastType="0" breakUpSkill="0" effectId="" arg0="0.0" arg1="0.1" desc="在所有非己方星球上，瞬间生产飞船上限10%的飞船	" />
+	<item id="100901" name="专注" icon="" order="0" logicId="0" targetType="2" lastTime="1.0" coodown="10" actInterval="0" overcastType="0" breakUpSkill="0" effectId="" arg0="0.2" arg1="0.0" desc="生产飞船速度+20%" />	
+	<item id="101001" name="先知" icon="" order="0" logicId="0" targetType="2" lastTime="5.0" coodown="10" actInterval="0" overcastType="0" breakUpSkill="0" effectId="" arg0="0.2" arg1="0.0" desc="建设星球完成后，生产飞船速度＋20%，持续5秒" />	
+	<item id="101201" name="觉醒" icon="" order="0" logicId="0" targetType="2" lastTime="10.0" coodown="10" actInterval="0" overcastType="0" breakUpSkill="0" effectId="" arg0="0.2" arg1="0.0" desc="总飞船上限+20%，持续10秒" />	
+	<item id="101301" name="干扰" icon="" order="0" logicId="0" targetType="2" lastTime="20.0" coodown="10" actInterval="0" overcastType="0" breakUpSkill="0" effectId="3016" arg0="0.5" arg1="0.0" desc="生产飞船速度50%，持续20秒" />		
+	<item id="101401" name="磁盾" icon="" order="0" logicId="0" targetType="0" lastTime="20.0" coodown="10" actInterval="20" overcastType="0" breakUpSkill="0" effectId="vfx_diancihudun" arg0="-0.9" arg1="0.0" desc="所有敌方生产飞船速度-70%，持续20秒" />
+	<item id="101501" name="瘟疫" icon="" order="0" logicId="0" targetType="0" lastTime="8.0" coodown="10" actInterval="0" overcastType="0" breakUpSkill="0" effectId="" arg0="-0.08" arg1="0.0" desc="摧毁所有星球上的敌方飞船每秒-8%，持续8秒" />
+	<item id="101601" name="打击" icon="" order="0" logicId="1" targetType="1" lastTime="8.0" coodown="10" actInterval="40" overcastType="0" breakUpSkill="0" effectId="" arg0="0" arg1="0" desc="每隔0.5秒释放一次导弹打击敌人，持续4秒" />
+	<item id="101701" name="突防" icon="" order="0" logicId="2" targetType="1" lastTime="8.0" coodown="10" actInterval="40" overcastType="0" breakUpSkill="0" effectId="" arg0="0" arg1="0" desc="突防" />
+	<item id="101801" name="盾寻" icon="" order="0" logicId="3" targetType="1" lastTime="8.0" coodown="10" actInterval="40" overcastType="0" breakUpSkill="0" effectId="" arg0="0" arg1="0" desc="突防" />
+</items>

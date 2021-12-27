@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<gameconfigs>
+	<gameconfig id="1" value="x13,x13,x14,x16,x17,x18,x21,x22,x25,x28" desc="单机关卡" />
+	<gameconfig id="2" value="30" desc="PVP放弃等待时间" />
+	<gameconfig id="3" value="0,1;300,1.25;480,1.5" desc="游戏速率（起始时间s，速率；）" />
+	<gameconfig id="4" value="10" desc="PVP持续时长（分钟）" />
+	<gameconfig id="6" value="30" desc="完全失去星球后生存时间（s）" />
+</gameconfigs>

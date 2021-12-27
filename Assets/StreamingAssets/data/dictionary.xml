@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dictionarys>
+	<item id="1" value="小米" />
+	<item id="2" value="游戏中心" />
+	<item id="3" value="牛逼！！" />
+	<item id="100" value="胜利" />
+	<item id="101" value="失败" />
+	<item id="102" value="{0}天{1:D2}小时前" />
+	<item id="103" value="{0}小时{1:D2}分钟前" />
+	<item id="104" value="{0}分种前" />
+	<item id="105" value="MVP" />
+	<item id="106" value="结束" />
+	<item id="107" value="一,二,三,四" />
+	<item id="108" value="第{0}名" />
+	<item id="109" value="第{0}次MVP" />
+	<item id="110" value="平局" />
+	<item id="200" value="{0} / {1}" />
+	<item id="300" value="第{0:D}关" />
+	<item id="301" value="开始" />
+	<item id="302" value="无尽战争" />
+	<item id="303" value="激活 {0}" />
+	<item id="304" value="星际大战" />
+	<item id="400" value="设置界面" />
+	<item id="401" value="开" />
+	<item id="402" value="关" />
+	<item id="500" value="断线重连相关" />
+	<item id="501" value="连......" />
+	<item id="502" value="正在重连......{0}" />
+	<item id="503" value="断开" />
+	<item id="504" value="{0} ms" />
+	<item id="505" value="当前账号在{0}设备登录，您已被踢下线。是否重新登录？" />
+	<item id="600" value="主界面相关" />
+	<item id="601" value="第{0}阶" />
+	<item id="602" value="功能暂未开放" />
+	<item id="603" value="{0}天{1:D2}小时" />
+	<item id="604" value="{0}小时{1:D2}分钟" />
+	<item id="605" value="{0}分钟{1:D2}秒" />
+	<item id="606" value="{0}秒" />
+	<item id="607" value="打开" />
+	<item id="608" value="{0}小时" />
+	<item id="609" value="{0}阶竞技场" />
+	<item id="610" value="竞技场" />
+	<item id="611" value="{0}-{1}" />
+	<item id="612" value="X{0}" />
+	<item id="613" value="x{0}" />
+	<item id="630" value="宝箱未解锁" />
+	<item id="631" value="错误的宝箱" />
+	<item id="632" value="钻石不足" />
+	<item id="633" value="CD中......" />
+	<item id="634" value="胜利场次不足" />
+	<item id="700" value="联赛活动相关" />
+	<item id="701" value="{0}天{1:D2}小时" />
+	<item id="702" value="{0:D2}:{1:D2}:{2:D2}" />
+	<item id="703" value="{0}.{1}.{2} {3:D2}:{4:D2} - {5:D2}:{6:D2}" />
+	<item id="704" value="{0}.{1}.{2} {3:D2}:{4:D2} - {5}.{6}.{7} {8:D2}:{9:D2}" />
+	<item id="705" value="活动未开始" />
+	<item id="706" value="活动已结束" />
+	<item id="707" value="报名未开始" />
+	<item id="708" value="报名已结束" />
+	<item id="709" value="战斗未开始" />
+	<item id="710" value="战斗已结束" />
+	<item id="711" value="NULL" />
+	<item id="712" value="比赛已开始[ff4d4d]{0}秒[-]，请及时参加!" />
+	<item id="713" value="比赛已开始[ff4d4d]{0}分钟{1}秒[-]，请及时参加!" />
+	<item id="714" value="比赛已开始[ff4d4d]{0}小时{1}分钟{2}秒[-]，请及时参加!" />
+	<item id="715" value="{0}小时" />
+	<item id="716" value="第{0}名" />
+	<item id="717" value="您确定参加终极之战吗？比赛时间是:\n[5aa6f1]{0}.{1}.{2} {3:D2}:{4:D2} - {5:D2}:{6:D2}[-]" />
+	<item id="718" value="您确定参加终极之战吗？比赛时间是:\n[5aa6f1]{0}.{1}.{2} {3:D2}:{4:D2} - {5}.{6}.{7} {8:D2}:{9:D2}[-]" />
+	<item id="719" value="{0}分钟" />
+	<item id="720" value="{0}小时{1}分钟" />
+	<item id="750" value="联赛是一种集合大量玩家在一起的活动。\n您可以在此页报名联赛活动。" />
+	<item id="751" value="联赛是一种集合大量玩家在一起的活动。\n您可以在此页等待联赛开始。" />
+	<item id="800" value="结束界面相关" />
+	<item id="801" value="确认逃离战斗吗？" />
+	<item id="802" value="战败" />	
+	<item id="803" value="已投降" />
+	<item id="804" value="在线" />
+	<item id="805" value="离线" />
+	<item id="806" value="关注" />
+	<item id="807" value="相互关注" />
+	<item id="808" value="已关注" />
+	<item id="809" value="关注好友" />
+	<item id="810" value="取消关注" />
+	<item id="811" value="已取消" />
+	<item id="812" value="你确定取消关注:{0}" />
+	<item id="900" value="房间相关功能" />
+	<item id="901" value="错误:{0}" />
+	<item id="902" value="房间人数已满" />
+	<item id="903" value="当前已经在房间内" />
+	<item id="904" value="不在匹配中" />
+	<item id="905" value="不是房主" />
+	<item id="906" value="房间不存在" />
+	<item id="907" value="退出当前房间吗？" />
+	<item id="908" value="{0} (房主)" />
+	<item id="909" value="你已被踢出房间" />
+	<item id="910" value="({0}/{1})" />
+	<item id="911" value="切换位置失败" />
+	<item id="912" value="玩家人数不够" />
+	<item id="913" value="是否退出当前观战" />
+	<item id="1000" value="章节相关功能" />
+	<item id="1001" value="获得{0}颗星\n可解锁" />
+</dictionarys>

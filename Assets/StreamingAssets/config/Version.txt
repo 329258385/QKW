@@ -1,0 +1,32 @@
+{
+    "1": {
+        "version": "0.0.2",
+        "assetTableUrl": "http://120.131.1.171/0.0.10/filelist.txt",
+        "assetBundlesFileUrl": "http://120.131.1.171/0.0.10/AssetBundles",
+        "assetDataSize": 12340,
+        "assetUrlHead": "http://120.131.1.171/0.0.10/"
+    },
+    "2": {
+        "version": "0.0.3",
+        "assetTableUrl": "http://120.131.1.171/0.0.10/filelist.txt",
+        "assetBundlesFileUrl": "http://120.131.1.171/0.0.10/AssetBundles",
+        "assetDataSize": 2000,
+        "assetUrlHead": "http://120.131.1.171/0.0.10/"
+    },
+    "3": {
+        "version": "0.0.8",
+        "assetTableUrl": "http://120.131.1.171/0.0.10/filelist.txt",
+        "assetBundlesFileUrl": "http://120.131.1.171/0.0.10/AssetBundles",
+        "assetDataSize": 8000,
+        "assetUrlHead": "http://120.131.1.171/0.0.10/"
+    },
+    "4": {
+        "version": "0.0.10",
+        "isPackage": true,
+        "assetTableUrl": "http://app.mi.com/details?id=com.miGalaxy.mi",
+        "assetBundlesFileUrl": "",
+        "assetDataSize": 51200,
+        "assetUrlHead": "",
+        "Desc": "更新单机关卡游戏方式，优化战斗流畅性，优化网络性能。\n新增1v1战场。\n新增新地图。\n优化公告逻辑。\n优化更新逻辑。"
+    }
+}

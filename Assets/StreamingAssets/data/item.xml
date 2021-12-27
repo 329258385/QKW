@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<items>
+	<item id="1" name="钻石" icon="icon_jewel" desc="5" />
+	<item id="2" name="金币" icon="icon_gold" desc="5" />
+</items>

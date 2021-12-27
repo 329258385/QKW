@@ -1,0 +1,14 @@
+#id	startCondition	windowname	srcX	srcY	dstX	dstY	angle	duration	coordsinates	moveType	nextID	endCondition
+#System.Int32	System.Int32	System.String	System.Single	System.Single	System.Single	System.Single	System.Single	System.Single	System.Int32	System.Int32	System.Int32	System.Int32
+0	0	x1	-3.5	-2	1.5	1	-90	4	1	2	0	0
+1	0	x2	562	-407	100	-407	90	4	0	2	0	1
+2	1	SingleClearWindow	392	-60	415	-60	0	0.5	0	1	0	2
+3	1	StartWindow_h4,Anchor/left/freebox	-537	232	-487	232	0	0.5	0	1	0	3
+4	1	ChestWindow	-175	-251	-209	-251	180	0.5	0	1	5	4
+5	1	StartWindow_h4,Anchor/startbtn	-14	-48	-14	-24	90	0.5	0	1	0	5
+6	1	StartWindow_h4,Anchor/right/reword1	462	296	425	296	180	0.5	0	1	7	6
+7	1	StartWindow_h4	-209	-251	-262	-251	180	0.5	0	1	0	7
+8	1	StartWindow_h4,Anchor/right/reword1	462	296	425	296	180	0.5	0	1	0	8
+9	1	StartWindow_h4	-209	-251	-262	-251	180	0.5	0	1	0	9
+10	1	NewRaceWindow	-181	-248	-249	-248	180	0.5	0	1	0	10
+11	1	BattleWindow_h	900	274	900	324	90	0.5	0	1	0	11
