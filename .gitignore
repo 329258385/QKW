@@ -1,0 +1,23 @@
+#ignore temporary file
+#ignore file generate by visual studio and mono
+
+*.suo
+*.user
+
+*.csproj
+*.sln
+*.vs
+*.userprefs
+
+[Dd]ebug/
+[Rr]elease/
+[Rr]eleases/
+
+[Bb]in/
+[Oo]bj/
+
+[Ll]ibrary/
+
+[Tt]emp/
+
+

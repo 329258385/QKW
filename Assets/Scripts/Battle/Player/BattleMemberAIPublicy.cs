@@ -9,14 +9,27 @@ using UnityEngine;
 
 public class BattleMemberAIPublicy
 {
+    /// <summary>
+    /// 战斗状态
+    /// </summary>
+    public enum Battlestate
+    {
+        Escape,
+        Repel,
+        Battle,
+        Death,
+    }
+
+
     public enum Publicy
     {
-        active,         // 主动攻击
-        defense,        // 主动防御，然后攻击
+        active,                     // 主动攻击
+        defense,                    // 主动防御，然后攻击
     }
 
     private BattleMember            mOwer = null;
     private Publicy                 mPublicy = Publicy.active;
+    private Battlestate             mBattleStates = Battlestate.Battle;
 
     /// <summary>
     /// 技能池子
@@ -32,6 +45,13 @@ public class BattleMemberAIPublicy
     private float                   wanderMaxTimer = 5f;
 
 
+    /// <summary>
+    /// 逃跑逻辑
+    /// </summary>
+    private bool                    IsEscaping = false;
+    private float                   escapeTimer = 1.5f; // 逃跑持续时间
+
+   
     /// <summary>
     /// 
     /// </summary>
@@ -50,32 +70,44 @@ public class BattleMemberAIPublicy
     /// --------------------------------------------------------------------------------------------------------
     public void AotuBattle( int frame, float dt )
     {
-        
-        /// 战内攻击策略
+        if (mBattleStates == Battlestate.Battle)
         {
-            attackPublicy( frame, dt );
-        }
-        
-        /// 战内游走策略
-        {
-            wanderPublicy( frame, dt );
-        }
-
-        /// -------------------------游走逻辑--------------------------------
-        if( Iswandering )
-        {
-            wanderTimer     += dt;
-            if( wanderTimer >= wanderMaxTimer )
+            /// 战内攻击策略
             {
-                wanderTimer = 0f;
-                Iswandering = false;
+                attackPublicy(frame, dt);
+            }
+
+            /// 战内游走策略
+            {
+                wanderPublicy(frame, dt);
+            }
+
+            /// -------------------------游走逻辑--------------------------------
+            if (Iswandering)
+            {
+                wanderTimer += dt;
+                if (wanderTimer >= wanderMaxTimer)
+                {
+                    wanderTimer = 0f;
+                    Iswandering = false;
+                }
+            }
+
+            /// 使用技能
+            foreach (var it in skillpool)
+            {
+                it.Tick(frame, dt);
             }
         }
 
-        /// 使用技能
-        foreach( var it in skillpool )
+        if( mBattleStates == Battlestate.Escape )
         {
-            it.Tick(frame, dt);
+            OnEscape();
+        }
+
+        if( mBattleStates == Battlestate.Repel )
+        {
+            OnRepel();
         }
     }
 
@@ -205,6 +237,23 @@ public class BattleMemberAIPublicy
         return result;
     }
 
+
+    /// <summary>
+    /// 逃跑
+    /// </summary>
+    private void OnEscape()
+    {
+
+    }
+
+
+    /// <summary>
+    /// 击退
+    /// </summary>
+    private void OnRepel()
+    {
+
+    }
 
     /// --------------------------------------------------------------------------------------------------------
     /// <summary>

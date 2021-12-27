@@ -110,11 +110,6 @@ public class BattleTeam
     }
 
 
-    public bool IsMoving()
-    {
-        return btFormation == Formation.FormationAttack || btFormation == Formation.FormationDefensive || btFormation == Formation.FormationMove || btFormation == Formation.FormationSurround;
-    }
-
     /// <summary>
     /// 当前飞船数量
     /// </summary>
@@ -292,6 +287,12 @@ public class BattleTeam
                 index++;
             }
         }
+
+        if (!IsReadyTarget())
+        {
+            btState         = BattleTeamState.Battle;
+            btFormation     = Formation.FormationNull;
+        }
     }
 
     // --------------------------------------------------------------------------------------
@@ -322,6 +323,12 @@ public class BattleTeam
                 }
                 index++;
             }
+        }
+
+        if( !IsReadyTarget() )
+        {
+            btState         = BattleTeamState.Battle;
+            btFormation     = Formation.FormationNull;
         }
     }
 
