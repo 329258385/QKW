@@ -83,7 +83,49 @@ namespace Solarmax
                 item.reward = 10;
 				dataDict.Add (item.id, item);
 			}
+
+			Verify();
 		}
+
+		public bool Verify()
+		{
+			foreach (var map in dataDict.Values)
+			{
+
+				// 建筑物
+				string[] buildingIdArray = map.buildingIds.Split(',');
+				for (int i = 0; i < buildingIdArray.Length; ++i)
+				{
+					map.builds.Add(MapBuildingConfigProvider.Instance.GetData(string.Format("{0}_{1}", map.id, buildingIdArray[i])));
+				}
+
+				// 玩家
+				string[] playerIdArray = map.playerIds.Split(',');
+				for (int i = 0; i < playerIdArray.Length; ++i)
+				{
+					map.players.Add(MapPlayerConfigProvider.Instance.GetData(string.Format("{0}_{1}", map.id, playerIdArray[i])));
+				}
+
+				// 障碍物线
+				if (!string.IsNullOrEmpty(map.linetags))
+				{
+					string[] a = map.linetags.Split(';');
+					for (int i = 0; i < a.Length; ++i)
+					{
+						List<string> tags = new List<string>();
+						string[] b = a[i].Split(',');
+						for (int j = 0; j < b.Length; ++j)
+						{
+							tags.Add(b[j]);
+						}
+						map.lines.Add(tags);
+					}
+				}
+			}
+
+			return true;
+		}
+
 
 		public Dictionary<string, MapConfig> GetAllData()
 		{

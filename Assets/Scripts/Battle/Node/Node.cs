@@ -605,6 +605,7 @@ public abstract partial class Node : Lifecycle3
 			mCityHUD			= go.GetComponent<HUDCityOperater>();
 			mCityHUD.transform.parent = UISystem.Get().mUIParent;
 			mCityHUD.transform.localScale = Vector3.one;
+			go.SetActive(false);
 		}
 	}
 

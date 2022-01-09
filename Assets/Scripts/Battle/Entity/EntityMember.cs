@@ -135,12 +135,14 @@ public class EntityMember : DisplayEntity
 	/// 初始化对象
 	/// </summary>
 	private ThrowProp		Throw;
+	private BowLoadScript   bowLoadScript;
 	protected override void InitGameObject ()
 	{
 		go			= CreateGameObject ();
 		go.transform.SetParent(Game.game.sceneRoot.transform);
 		AniCtrl		= go.GetComponentInChildren<Animator>();
 		Throw		= go.GetComponentInChildren<ThrowProp>();
+		bowLoadScript = go.GetComponentInChildren<BowLoadScript>();
 		go.transform.localEulerAngles	= Vector3.zero;
 		go.transform.localScale			= Vector3.one;
 		go.gameObject.SetActive(false);
@@ -302,11 +304,11 @@ public class EntityMember : DisplayEntity
 	/// <summary>
 	/// 暂时先定义小兵的战斗逻辑
 	/// </summary>
-	public void UpdateBattle()
+	public void UpdateBattle( bool atkCity = false )
     {
 		AniCtrl.SetFloat(MoveHashCode, 0f);
 		Quaternion _lookAt = Quaternion.identity;
-		if (target != null )
+		if (target != null && !atkCity )
         {
 			var animatorInfo = AniCtrl.GetCurrentAnimatorStateInfo(0);
 			if (animatorInfo.normalizedTime > 1.0f)
@@ -316,25 +318,47 @@ public class EntityMember : DisplayEntity
 
 			_lookAt		= Quaternion.LookRotation(target.GetPosition() - GetPosition());
 			if (Throw != null)
-				Throw.targetPos = target.entity.go.transform;
+			{
+				Throw.targetPos			= target.GetPosition();
+				Throw.targetPos.y		+= 1.0f;
+			}
+
+			if (bowLoadScript != null)
+			{
+				bowLoadScript.targetPos = target.GetPosition();
+				bowLoadScript.targetPos.y += 1.0f;
+			}
 
 			go.transform.rotation = _lookAt;
 			ship.SetAtt(ShipAttr.AttackSpeed, BattleSystem.Instance.battleData.rand.Range(30, 60));
 		}
-		//else
-  //      {
-		//	if( targetNode != null )
-  //          {
-		//		_lookAt = Quaternion.LookRotation(targetNode.GetPosition() - GetPosition());
-		//		if (Throw != null)
-		//			Throw.targetPos = targetNode.entity.go.transform;
-		//	}
+		else
+        {
+			if( targetNode != null )
+            {
+				var animatorInfo = AniCtrl.GetCurrentAnimatorStateInfo(0);
+				if (animatorInfo.normalizedTime > 1.0f)
+				{
+					AniCtrl.SetTrigger(AckHashCode);
+				}
 
-		//	else
-  //          {
-		//		return;
-  //          }
-  //      }
+				_lookAt = Quaternion.LookRotation(targetNode.GetPosition() - GetPosition());
+				if (Throw != null)
+				{
+					Throw.targetPos		= targetNode.GetPosition();
+					Throw.targetPos.y += 1.0f;
+				}
+
+				if (bowLoadScript != null)
+				{
+					bowLoadScript.targetPos = targetNode.GetPosition();
+					bowLoadScript.targetPos.y += 1.0f;
+				}
+
+				go.transform.rotation = _lookAt;
+				ship.SetAtt(ShipAttr.AttackSpeed, BattleSystem.Instance.battleData.rand.Range(30, 60));
+			}
+        }
 		
 	}
 

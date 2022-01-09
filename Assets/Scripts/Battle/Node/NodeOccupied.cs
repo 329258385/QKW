@@ -31,7 +31,7 @@ public partial class Node
 		Team team           = nodeManager.sceneManager.teamManager.GetTeam (occupiedTeam);
         occupiedRate        *= CaleOccupiedSpeed(team);
 		
-		hp                  += (occupiedRate * dt * 0.25f );
+		hp                  += (occupiedRate * dt );
 		if (hp > hpMax) {
 			hp              = hpMax;
             Team t          = nodeManager.sceneManager.teamManager.GetTeam(occupiedTeam);
@@ -85,7 +85,7 @@ public partial class Node
 
 		// 新算法
 		//float rate  = (-5000 / (count + 100) + 50) / (3*GetScale());
-        float rate = (-5000 / (count + 100) + 50) / (3 * GetScale());
+        float rate = (-5000 / (count + 100) + 50) / (10 * GetScale());
         return rate > 100f ? 100f : rate;
 	}
 
@@ -128,17 +128,16 @@ public partial class Node
             mCityHUD.SetNode(this);
         }
 
+        if (!mCityHUD.gameObject.activeSelf)
+            mCityHUD.gameObject.SetActive(true);
+
         Team team   = nodeManager.sceneManager.teamManager.GetTeam(occupiedTeam);
         m_HPArray.Add(hp);
         m_teamArray.Add(team);
-        if ( mCityHUD.gameObject.activeSelf )
+        
         {
+            mCityHUD.ShowCity(HUDCityOperater.UIPanel.Battle);
             mCityHUD.ShowPopulationProcess(m_teamArray, m_HPArray);
-        }
-        else
-        {
-            mCityHUD.gameObject.SetActive(true);
-            mCityHUD.ShowCity(HUDCityOperater.UIPanel.Battle, HUDCityOperater.UIBattle.Flag);
         }
         #endif
     }

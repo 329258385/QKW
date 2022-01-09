@@ -14,10 +14,13 @@ public class BattleMemberAIPublicy
     /// </summary>
     public enum Battlestate
     {
-        Move,
-        Escape,
-        Repel,
-        Battle,
+        Move,                       // 移动
+        Escape,                     // 逃跑
+        Repel,                      // 击退
+        Battle,                     // 战斗
+        Wander,                     // 选择游走点
+        SerachEntiy,                // 索敌
+        AtkCity,
         Death,
     }
 
@@ -45,14 +48,7 @@ public class BattleMemberAIPublicy
     private float                   wanderTimer = 0f;
     private float                   wanderMaxTimer = 5f;
 
-
-    /// <summary>
-    /// 逃跑逻辑
-    /// </summary>
-    private bool                    IsEscaping = false;
-    private float                   escapeTimer = 1.5f; // 逃跑持续时间
-
-   
+    private float                    repelTimer = 0f;
     /// <summary>
     /// 
     /// </summary>
@@ -71,63 +67,64 @@ public class BattleMemberAIPublicy
     /// --------------------------------------------------------------------------------------------------------
     public void AotuBattle( int frame, float dt )
     {
-        if( mBattleStates == Battlestate.Move )
+        /// 索敌策略
+        searchEntiyPublicy(frame, dt);
+        if ( mBattleStates == Battlestate.Move )
         {
-            bool IsNeedMove = mOwer.entity.UpdateMove( frame, dt );
-            if( !IsNeedMove )
-            {
-                mBattleStates = Battlestate.Battle;
-                return;
-            }
-
-            float fAlertRange   = mOwer.GetAtt(ShipAttr.WarningRange);
-            float fAtkRange     = mOwer.GetAtt(ShipAttr.AttackRange );
-            float distance      = (mOwer.GetPosition() - mOwer.entity.target.GetPosition()).magnitude;
-            if( distance > fAlertRange && distance < fAtkRange )
+            bool IsNeedMove     = mOwer.entity.UpdateMove( frame, dt );
+            if (!IsNeedMove)
             {
                 mBattleStates   = Battlestate.Battle;
                 return;
             }
         }
 
-        if (mBattleStates == Battlestate.Battle)
+        else if ( mBattleStates == Battlestate.SerachEntiy )
         {
-            /// 战内攻击策略
-            {
-                attackPublicy(frame, dt);
-            }
-
-            /// 战内游走策略
-            //{
-            //    wanderPublicy(frame, dt);
-            //}
-
-            ///// -------------------------游走逻辑--------------------------------
-            //if (Iswandering)
-            //{
-            //    wanderTimer += dt;
-            //    if (wanderTimer >= wanderMaxTimer)
-            //    {
-            //        wanderTimer = 0f;
-            //        Iswandering = false;
-            //    }
-            //}
-
-            ///// 使用技能
-            //foreach (var it in skillpool)
-            //{
-            //    it.Tick(frame, dt);
-            //}
+            searchEntiyPublicy( frame, dt );
         }
 
-        if( mBattleStates == Battlestate.Escape )
+        else if (mBattleStates == Battlestate.Battle)
         {
+            /// 战内攻击策略
+            attackPublicy(frame, dt);
+        }
+
+        else if( mBattleStates == Battlestate.Wander )
+        {
+            if( !Iswandering )
+            {
+                wanderPublicy(frame, dt);
+            }
+
+            /// 游走逻辑
+            if (Iswandering)
+            {
+                wanderTimer     += dt;
+                if (wanderTimer >= wanderMaxTimer)
+                {
+                    wanderTimer = 0f;
+                    Iswandering = false;
+                }
+            }
+        }
+
+        else if ( mBattleStates == Battlestate.AtkCity )
+        {
+            // 攻城
+            atkCityPublicy();
+        }
+
+        else if ( mBattleStates == Battlestate.Escape )
+        {
+            /// 逃跑逻辑
             OnEscape();
         }
 
-        if( mBattleStates == Battlestate.Repel )
+        else if( mBattleStates == Battlestate.Repel )
         {
-            OnRepel();
+            /// 击退逻辑
+            OnRepel( frame, dt );
         }
     }
 
@@ -159,7 +156,7 @@ public class BattleMemberAIPublicy
     /// 是否在攻击范围
     /// </summary>
     /// --------------------------------------------------------------------------------------------------------
-    private bool IsAtkRange()
+    private bool IsAtkRange( )
     {
         if( mOwer.entity.target != null && mOwer.entity.target.isALive )
         {
@@ -177,24 +174,38 @@ public class BattleMemberAIPublicy
 
     /// --------------------------------------------------------------------------------------------------------
     /// <summary>
+    /// 是否能攻击城
+    /// </summary>
+    /// --------------------------------------------------------------------------------------------------------
+    private bool IsAtkCity( )
+    {
+        if( mOwer.entity.targetNode != null )
+        {
+            float fRange        = mOwer.GetAtt( ShipAttr.AttackRange );
+            fRange              *= fRange;
+            float distance      = (mOwer.GetPosition() - mOwer.entity.targetNode.GetPosition()).sqrMagnitude;
+            if (distance <= fRange )
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    /// --------------------------------------------------------------------------------------------------------
+    /// <summary>
     /// 攻击策略
     /// </summary>
     ///  --------------------------------------------------------------------------------------------------------
     private void attackPublicy( int frame, float dt )
     {
-        mOwer.entity.target            = FindNearestEnemy();
         if( mOwer.entity.target == null ) return;
         if( IsAtkRange() )
         {
-            if( IsAlertRange() )
+            if( IsAlertRange() && mPublicy == Publicy.defense )
             {
-                float fAlertRange   = mOwer.GetAtt(ShipAttr.WarningRange);
-                Vector3 moveDir     = mOwer.GetPosition() - mOwer.entity.target.GetPosition();
-                float distance      = fAlertRange - moveDir.magnitude - UnityEngine.Random.Range( 0f, 2f);
-                moveDir.Normalize();
-                moveDir             = mOwer.GetPosition() + moveDir * distance;
-                mOwer.SetTargetPosition(moveDir);
-                mBattleStates       = Battlestate.Move;
+                mBattleStates       = Battlestate.Wander;
             }
             else
             {
@@ -203,15 +214,59 @@ public class BattleMemberAIPublicy
         }
         else
         {
-            float fAtkRange         = mOwer.GetAtt(ShipAttr.AttackRange);
-            Vector3 moveDir         = mOwer.GetPosition() - mOwer.entity.target.GetPosition();
-            moveDir.Normalize();
-            moveDir                 = mOwer.GetPosition() - moveDir * fAtkRange;
-            mOwer.SetTargetPosition(moveDir);
-            mBattleStates           = Battlestate.Move;
+            mBattleStates           = Battlestate.SerachEntiy;
         }
     }
 
+
+    /// --------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 索敌策略
+    /// </summary>
+    /// --------------------------------------------------------------------------------------------------------
+    private void searchEntiyPublicy( int frame, float dt )
+    {
+        mOwer.entity.target = FindNearestEnemy();
+        if( mOwer.entity.target != null )
+        {
+            float fAlertRange   = mOwer.GetAtt(ShipAttr.WarningRange);
+            float fAtkRange     = mOwer.GetAtt(ShipAttr.AttackRange);
+            Vector3 moveDir     = mOwer.GetPosition() - mOwer.entity.target.GetPosition();
+            float distance      = moveDir.magnitude;
+
+            if( /*distance >= fAlertRange &&*/ distance < fAtkRange )
+            {
+                mBattleStates   = Battlestate.Battle;
+            }
+            //else if ( distance < fAlertRange )
+            //{
+            //    moveDir         = moveDir.normalized;
+            //    Vector3 tarPos  = mOwer.GetPosition() - moveDir * fAlertRange;
+            //    mBattleStates   = Battlestate.Move;
+            //    mOwer.SetTargetPosition(tarPos);
+            //}
+            else if( distance > fAtkRange )
+            {
+                Vector3 tarPos      = mOwer.entity.target.GetPosition();
+                mBattleStates       = Battlestate.Move;
+                mOwer.SetTargetPosition(tarPos);
+            }
+        }
+        else
+        {
+            if( IsNeedAtkCity() )
+            {
+                if ( IsAtkCity())
+                    mBattleStates   = Battlestate.AtkCity;
+                else
+                {
+                    Vector3 tarPos  = mOwer.entity.targetNode.GetPosition();
+                    mBattleStates   = Battlestate.Move;
+                    mOwer.SetTargetPosition(tarPos);
+                }
+            }
+        }
+    }
 
     /// --------------------------------------------------------------------------------------------------------
     /// <summary>
@@ -256,23 +311,30 @@ public class BattleMemberAIPublicy
 
     /// --------------------------------------------------------------------------------------------------------
     /// <summary>
-    /// 评估风险策略
+    /// 攻城
     /// </summary>
     /// --------------------------------------------------------------------------------------------------------
-    private Vector3 appraisePublicy( )
+    private void atkCityPublicy( )
     {
-        Vector3 result      = Vector3.zero;
-        if(mPublicy == Publicy.active )
+        if ( mOwer.entity.targetNode != null )
         {
-            ///  主动
+            mOwer.entity.UpdateBattle(true);
+        }
+    }
+
+
+    private bool IsNeedAtkCity()
+    {
+        int nTeam = 0;
+        for (int i = 0; i < (int)TEAM.TeamMax; i++)
+        {
+            if (mOwer.currentNode.GetShipCount(i) == 0)
+                continue;
+
+            nTeam++;
         }
 
-        
-        if ( mPublicy == Publicy.defense )
-        {
-            ///  被动
-        }
-        return result;
+        return nTeam == 1 ? true : false;
     }
 
 
@@ -288,9 +350,20 @@ public class BattleMemberAIPublicy
     /// <summary>
     /// 击退
     /// </summary>
-    private void OnRepel()
+    private void OnRepel( int frame, float dt )
     {
+        bool IsNeedMove   = mOwer.entity.UpdateMove(frame, dt);
+        if (!IsNeedMove)
+        {
+            mBattleStates = Battlestate.Battle;
+            return;
+        }
 
+        repelTimer += dt;
+        if( repelTimer > 1.5f )
+        {
+
+        }
     }
 
     /// --------------------------------------------------------------------------------------------------------
@@ -323,37 +396,5 @@ public class BattleMemberAIPublicy
 
         return nearestEnemy;
     }
-
-    /// --------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// 优先攻击最近的英雄
-    /// </summary>
-    /// --------------------------------------------------------------------------------------------------------
-    public void PriorityAttackNearestHero()
-    {
-        if (mOwer.currentNode == null)
-            return;
-
-        float fMax                  = float.MaxValue;
-        BattleMember nearestEnemy   = null;
-        List<BattleTeam> arrays     = mOwer.currentNode.battArray;
-        foreach (BattleTeam bt in arrays)
-        {
-            if (bt.team.team == mOwer.team)
-                continue;
-
-            List<BattleMember> members = bt.members;
-            foreach (var member in members)
-            {
-                float distance = (mOwer.GetPosition() - member.GetPosition()).sqrMagnitude;
-                if (distance <= fMax && member.isALive && member.unitType == BattleMember.BattleUnitType.Member)
-                {
-                    nearestEnemy = member;
-                    fMax = distance;
-                }
-            }
-        }
-    }
-
 }
 

@@ -20,16 +20,22 @@ namespace KevinIglesias {
 	public class BowLoadScript : MonoBehaviour
 	{
 	   
-		public Transform bow;
-		public Transform arrowLoad;
+		public Transform		bow;
+		public Transform		arrowLoad;
 		
 		//Bow Blendshape
-		SkinnedMeshRenderer bowSkinnedMeshRenderer;
+		SkinnedMeshRenderer		bowSkinnedMeshRenderer;
 		
 		//Arrow draw & rotation
-		public bool arrowOnHand;
-		public Transform arrowToDraw;
-		public Transform arrowToShoot; 
+		public bool				arrowOnHand;
+		private bool			bThrow = false;
+		private Vector3			startPos = Vector3.zero;
+		public Vector3			targetPos = Vector3.zero;
+		public float			speed = 10;
+		public float			arcHeight = 1;
+		public Transform		arrowToDraw;
+		public Transform		arrowToShoot; 
+		
 	   
 		void Awake()
 		{
@@ -52,42 +58,70 @@ namespace KevinIglesias {
 		void Update()
 		{
 			//Bow blendshape animation
-				if(bowSkinnedMeshRenderer != null && bow != null && arrowLoad != null)
-				{
-					float bowWeight = Mathf.InverseLerp(0, -0.7f, arrowLoad.localPosition.z);
-					bowSkinnedMeshRenderer.SetBlendShapeWeight(0, bowWeight*100);
-				}
+			if(bowSkinnedMeshRenderer != null && bow != null && arrowLoad != null)
+			{
+				float bowWeight = Mathf.InverseLerp(0, -0.7f, arrowLoad.localPosition.z);
+				bowSkinnedMeshRenderer.SetBlendShapeWeight(0, bowWeight*100);
+			}
 			
 			//Draw arrow from quiver and rotate it
-				if(arrowToDraw != null && arrowToShoot != null && arrowLoad != null)
+			if(arrowToDraw != null && arrowToShoot != null && arrowLoad != null)
+			{
+				if(arrowLoad.localPosition.y == 0.5f)
 				{
-					if(arrowLoad.localPosition.y == 0.5f)
+					if(arrowToDraw != null)
 					{
-						if(arrowToDraw != null)
-						{
-							arrowOnHand = true;
-							arrowToDraw.gameObject.SetActive(true);
-						}
-					}
-					
-					if(arrowLoad.localPosition.y > 0.5f)
-					{
-						if(arrowToDraw != null && arrowToShoot != null)
-						{
-							arrowToDraw.gameObject.SetActive(false);
-							arrowToShoot.gameObject.SetActive(true);
-						}
-					}
-					
-					if(arrowLoad.localScale.z < 1f)
-					{
-						if(arrowToShoot != null)
-						{
-							arrowToShoot.gameObject.SetActive(false);
-							arrowOnHand = false;
-						}
+						arrowOnHand = true;
+						bThrow = false;
+						arrowToDraw.gameObject.SetActive(true);
 					}
 				}
+					
+				if(arrowLoad.localPosition.y > 0.5f)
+				{
+					if(arrowToDraw != null && arrowToShoot != null)
+					{
+						bThrow		= true;
+						startPos	= arrowToShoot.position;
+						arrowToDraw.gameObject.SetActive(false);
+						arrowToShoot.gameObject.SetActive(true);
+					}
+				}
+					
+				if(arrowLoad.localScale.z < 1f)
+				{
+					if(arrowToShoot != null)
+					{
+						arrowToShoot.gameObject.SetActive(false);
+						arrowOnHand = false;
+					}
+				}
+
+				if( bThrow )
+                {
+					float x0		= startPos.x;
+					float x1		= targetPos.x;
+					float dist		= x1 - x0;
+					float nextX		= Mathf.MoveTowards(arrowToShoot.position.x, x1, speed * Time.deltaTime);
+					float baseY		= Mathf.Lerp(startPos.y, targetPos.y, (nextX - x0) / dist);
+					float arc		= arcHeight * (nextX - x0) * (nextX - x1) / (-0.25f * dist * dist);
+					Vector3 nextPos = new Vector3(nextX, baseY + arc, arrowToShoot.position.z);
+
+					arrowToShoot.rotation = LookAt2D(nextPos - arrowToShoot.position);
+					arrowToShoot.position = nextPos;
+
+					float currentDistance = Mathf.Abs(targetPos.x - arrowToShoot.position.x);
+					if (currentDistance < 0.5f)
+					{
+						bThrow = false;
+					}
+				}
+			}
+		}
+
+		static Quaternion LookAt2D(Vector3 forward)
+		{
+			return Quaternion.Euler(0, 0, (Mathf.Atan2(forward.y, forward.x) * Mathf.Rad2Deg) - 90f);
 		}
 	}
 }

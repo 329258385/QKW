@@ -21,7 +21,7 @@ namespace KevinIglesias {
         public Transform hand;
 
         //Target to throw the prop
-        public Transform targetPos;
+        public Vector3 targetPos;
 
         //Speed of the prop
         public float speed = 10;
@@ -61,17 +61,17 @@ namespace KevinIglesias {
             if(launched && spear)
             {
                 float x0 = startPos.x;
-                float x1 = targetPos.position.x;
+                float x1 = targetPos.x;
                 float dist = x1 - x0;
                 float nextX = Mathf.MoveTowards(propToThrow.position.x, x1, speed * Time.deltaTime);
-                float baseY = Mathf.Lerp(startPos.y, targetPos.position.y, (nextX - x0) / dist);
+                float baseY = Mathf.Lerp(startPos.y, targetPos.y, (nextX - x0) / dist);
                 float arc = arcHeight * (nextX - x0) * (nextX - x1) / (-0.25f * dist * dist);
                 Vector3 nextPos = new Vector3(nextX, baseY + arc, propToThrow.position.z);
             
                 propToThrow.rotation = LookAt2D(nextPos - propToThrow.position);
                 propToThrow.position = nextPos;
      
-                float currentDistance = Mathf.Abs(targetPos.position.x - propToThrow.position.x);
+                float currentDistance = Mathf.Abs(targetPos.x - propToThrow.position.x);
                 if(currentDistance < 0.5f)
                 {
                     launched = false;
@@ -82,17 +82,17 @@ namespace KevinIglesias {
             if(launched && tomahawk)
             {
                 float x0 = startPos.x;
-                float x1 = targetPos.position.x;
+                float x1 = targetPos.x;
                 float dist = x1 - x0;
                 float nextX = Mathf.MoveTowards(propToThrow.position.x, x1, speed * Time.deltaTime);
-                float baseY = Mathf.Lerp(startPos.y, targetPos.position.y, (nextX - x0) / dist);
+                float baseY = Mathf.Lerp(startPos.y, targetPos.y, (nextX - x0) / dist);
                 float arc = arcHeight * (nextX - x0) * (nextX - x1) / (-0.25f * dist * dist);
                 Vector3 nextPos = new Vector3(nextX, baseY + arc, propToThrow.position.z);
             
                 propToThrow.transform.Rotate(19f, 0.0f, 0.0f, Space.Self);
                 propToThrow.position = nextPos;
      
-                float currentDistance = Mathf.Abs(targetPos.position.x - propToThrow.position.x);
+                float currentDistance = Mathf.Abs(targetPos.x - propToThrow.position.x);
                 if(currentDistance < 0.5f)
                 {
                     launched = false;

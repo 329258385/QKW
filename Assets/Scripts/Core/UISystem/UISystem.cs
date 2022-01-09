@@ -21,8 +21,8 @@ public partial class UISystem : Solarmax.Singleton<UISystem>, Lifecycle
 	/// </summary>
 	#if !SERVER
 	public UIRoot			mUIRoot;
-	private UICamera			mUICamera;
-	public RectTransform		mUIParent;
+	private UICamera		mUICamera;
+	public Transform		mUIParent;
 	#endif
 
 	/// <summary>
@@ -118,14 +118,8 @@ public partial class UISystem : Solarmax.Singleton<UISystem>, Lifecycle
 		}
 		mUIRoot = uiRoot.GetComponent<UIRoot>();
 
-		GameObject uiCanvas = GameObject.Find("UICanvas");
-		if( uiCanvas == null )
-        {
-			return false;
-        }
-
-		mUIParent			= uiCanvas.transform.Find("Parent") as RectTransform;
-		if( mUIParent == null )
+		mUIParent		= GameObject.Find("UICanvas").transform;
+		if(mUIParent == null )
         {
 			return false;
         }

@@ -49,7 +49,6 @@ public abstract class BaseAILogic : Lifecycle2
 
 	public void Tick (Team t, int frame, float interval)
 	{
-		return;
         FriendSmartAIData ad       = t.aiData;
         ad.actionTime   += interval;
         if (ad.actionTime < actionTick)

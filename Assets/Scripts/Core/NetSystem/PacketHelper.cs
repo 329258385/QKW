@@ -985,36 +985,40 @@ public class PacketHelper
 
 		// 玩家数据
 		MapConfig mapConfig  = MapConfigProvider.Instance.GetData (matchId);
-		List<int> userIdList = new List<int> ();
-		for (int i = 0; i < mapConfig.player_count; ++i) {
-			Team t = BattleSystem.Instance.sceneManager.teamManager.GetTeam ((TEAM)(i + 1));
-			if (t.team == TEAM.Team_1) {
-				t.playerData.Init (LocalPlayer.Get ().playerData);
-				BattleSystem.Instance.battleData.currentTeam = t.team;
-			} else {
-				t.playerData.userId     = -10000 - i;
-				t.playerData.name       = AIManager.GetAIName (t.playerData.userId);
-				t.playerData.icon       = AIManager.GetAIIcon (t.playerData.userId);
-				// 加入ai数据
-				BattleSystem.Instance.sceneManager.aiManager.AddAI (t, AIType.FriendSmart, t.playerData.level, BattleSystem.Instance.battleData.aiLevel );
-				t.aiEnable = true;
-			}
+		Team t				 = BattleSystem.Instance.sceneManager.teamManager.GetTeam(TEAM.Team_1 );
+		t.playerData.Init (LocalPlayer.Get ().playerData);
+		BattleSystem.Instance.battleData.currentTeam = t.team;
 
-			userIdList.Add (t.playerData.userId);
-		}
+		//List<int> userIdList = new List<int> ();
+		//for (int i = 0; i < mapConfig.player_count; ++i) {
+		//	Team t = BattleSystem.Instance.sceneManager.teamManager.GetTeam ((TEAM)(i + 1));
+		//	if (t.team == TEAM.Team_1) {
+		//		t.playerData.Init (LocalPlayer.Get ().playerData);
+		//		BattleSystem.Instance.battleData.currentTeam = t.team;
+		//	} else {
+		//		t.playerData.userId     = -10000 - i;
+		//		t.playerData.name       = AIManager.GetAIName (t.playerData.userId);
+		//		t.playerData.icon       = AIManager.GetAIIcon (t.playerData.userId);
+		//		// 加入ai数据
+		//		BattleSystem.Instance.sceneManager.aiManager.AddAI (t, AIType.FriendSmart, t.playerData.level, BattleSystem.Instance.battleData.aiLevel );
+		//		t.aiEnable = true;
+		//	}
+
+		//	userIdList.Add (t.playerData.userId);
+		//}
 
 
-        // 状态、预加载资源、预加载特效
+		// 状态、预加载资源、预加载特效
 		BattleSystem.Instance.battleData.gameState = GameState.Game;
 		AssetManager.Get().LoadBattleResources ();
 		EffectManager.Get().PreloadEffect ();
 		
         // 创建地图
 		BattleSystem.Instance.sceneManager.Reset ();
-		if(mapList == null )
-			BattleSystem.Instance.sceneManager.CreateScene (userIdList);
-		else
-			BattleSystem.Instance.sceneManager.CreateBattleScene(mapList);
+		//if(mapList == null )
+		//	BattleSystem.Instance.sceneManager.CreateScene (userIdList);
+		//else
+		BattleSystem.Instance.sceneManager.CreateBattleScene(mapConfig, mapList);
 
 		if (BattleSystem.Instance.battleData.useAI) {
 			// 启动ai

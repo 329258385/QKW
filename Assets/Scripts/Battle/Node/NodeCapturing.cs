@@ -111,14 +111,10 @@ public partial class Node
         Team team = nodeManager.sceneManager.teamManager.GetTeam(capturingTeam);
         m_teamArray.Add(team);
         m_HPArray.Add(hp);
-        if (mCityHUD.gameObject.activeSelf )
+        
         {
+            mCityHUD.ShowCity(HUDCityOperater.UIPanel.Battle);
             mCityHUD.ShowPopulationProcess(m_teamArray, m_HPArray);
-        }
-        else
-        {
-            mCityHUD.gameObject.SetActive(true);
-            mCityHUD.ShowCity(HUDCityOperater.UIPanel.Battle, HUDCityOperater.UIBattle.Flag);
         }
         #endif
     }

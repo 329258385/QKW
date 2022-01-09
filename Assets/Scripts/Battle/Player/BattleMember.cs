@@ -233,16 +233,16 @@ public partial class BattleMember : Lifecycle2
 
         entity.Tick(frame, interval);
 
-        HexmapNode hexnode = HexMap.Instance.Vector3ToNode( GetPosition() );
-        if( hexnode != null )
-        {
-            if( currentHexNode != null && hexnode != currentHexNode )
-            {
-                HexMap.Instance.ModifyNodeCost(currentHexNode, -1f);
-                currentHexNode = hexnode;
-                HexMap.Instance.ModifyNodeCost(currentHexNode,  1f);
-            }
-        }
+        //HexmapNode hexnode = HexMap.Instance.Vector3ToNode( GetPosition() );
+        //if( hexnode != null )
+        //{
+        //    if( currentHexNode != null && hexnode != currentHexNode )
+        //    {
+        //        HexMap.Instance.ModifyNodeCost(currentHexNode, -1f);
+        //        currentHexNode = hexnode;
+        //        HexMap.Instance.ModifyNodeCost(currentHexNode,  1f);
+        //    }
+        //}
 
         if (battleTeam.btState == BattleTeamState.Battle )
         {

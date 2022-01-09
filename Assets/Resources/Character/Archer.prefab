@@ -1883,6 +1883,9 @@ MonoBehaviour:
   bow: {fileID: 7987644944791774217}
   arrowLoad: {fileID: 4887422718165341033}
   arrowOnHand: 0
+  targetPos: {x: 0, y: 0, z: 0}
+  speed: 20
+  arcHeight: 1
   arrowToDraw: {fileID: 4887422717378048779}
   arrowToShoot: {fileID: 4887422717553968144}
 --- !u!1 &5954211857668591385

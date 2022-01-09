@@ -14,13 +14,6 @@ public class HUDCityOperater : MonoBehaviour
         Battle,
     }
 
-    public enum UIBattle
-    {
-        Flag,
-        Detail,
-        Go,
-    }
-
     /// <summary>
     /// 
     /// </summary>
@@ -49,7 +42,6 @@ public class HUDCityOperater : MonoBehaviour
     private Color           TempTeamColor = new Color32(0x99, 0x99, 0x99, 0x00);
 
     private UIPanel         mUIPanel = UIPanel.Flag;
-    private UIBattle        mUIBattle = UIBattle.Flag;
 
     public HUDCityOperater()
     {
@@ -69,12 +61,9 @@ public class HUDCityOperater : MonoBehaviour
         mHudRoot.transform.localScale = Vector3.one;
     }
 
-    public void ShowCity( UIPanel eTye, UIBattle eBattle )
+    public void ShowCity( UIPanel eTye  )
     {
         mUIPanel        = eTye;
-        mUIBattle       = eBattle;
-        FlagPanel.SetActive(true);
-        BattlePanel.SetActive(false);
     }
 
 
@@ -90,43 +79,63 @@ public class HUDCityOperater : MonoBehaviour
     public Vector2 Offset = Vector2.zero;
     public void Update( )
     {
-        if( Camera.main != null && Camera.main.gameObject != null )
+        //CalcPos();
+        if (Camera.main != null && Camera.main.gameObject != null)
         {
-            if( transform.rotation != Camera.main.transform.rotation )
+            if (transform.rotation != Camera.main.transform.rotation)
             {
                 transform.rotation = Camera.main.transform.rotation;
             }
 
-            Vector3 pos             = hostNode.entity.go.transform.position + new Vector3( 0, 2, 0 );
-            Vector3 screenPoint     = Camera.main.WorldToViewportPoint(pos); 
-            screenPoint.x           -= 0.5f;
-            screenPoint.y           -= 0.5f;
-            Vector3 in_screen       = new Vector3(Camera.main.pixelWidth * screenPoint.x, Camera.main.pixelHeight * screenPoint.y, 0);
-            in_screen.x             += Offset.x;
-            in_screen.y             += Offset.y;
+            Vector3 pos = hostNode.entity.go.transform.position + new Vector3(0, 2, 0);
+            Vector3 screenPoint = Camera.main.WorldToViewportPoint(pos);
+            screenPoint.x -= 0.5f;
+            screenPoint.y -= 0.5f;
+            Vector3 in_screen = new Vector3(Camera.main.pixelWidth * screenPoint.x, Camera.main.pixelHeight * screenPoint.y, 0);
+            in_screen.x += Offset.x;
+            in_screen.y += Offset.y;
             transform.localPosition = in_screen;
         }
     }
 
+    public virtual void CalcPos()
+    {
+        if (UICamera.mainCamera != null && Camera.main != null )
+        {
+            Vector3 pos             = hostNode.entity.go.transform.position + new Vector3(0, 2, 0);
+            var v1                  = Camera.main.WorldToViewportPoint(pos);
+            var v2                  = UICamera.mainCamera.ViewportToWorldPoint(v1) - new Vector3( 0.5f, 0.5f, 0 );
+            transform.position      = v2;
+            var v3                  = transform.localPosition;
+            transform.localPosition = new Vector3(v3.x, v3.y, 0);
+        }
+    }
+
+
+
     public void ShowPopulationProcess(List<Team> teamArray, List<float> HPArray, float hpMax = 100f)
     {
-        if (teamArray.Count != HPArray.Count)
-        {
-            return;
-        }
-
-        if(mUIBattle == UIBattle.Detail )
+        if(this.mUIPanel ==  UIPanel.Battle  )
         {
             if (FlagPanel.activeSelf) FlagPanel.SetActive(false);
             if (!BattlePanel.activeSelf) BattlePanel.SetActive(true);
         }
 
-        if( mUIBattle == UIBattle.Flag )
+        if(this.mUIPanel == UIPanel.Flag )
         {
             if (!FlagPanel.activeSelf) FlagPanel.SetActive(true);
             if (BattlePanel.activeSelf) BattlePanel.SetActive(false);
         }
-        
+
+        if (teamArray == null  || HPArray == null )
+        {
+            return;
+        } 
+        if (teamArray.Count != HPArray.Count)
+        {
+            return;
+        }
+
         if (1 == teamArray.Count)
         {
             // 未开发星球

@@ -140,13 +140,10 @@ public partial class Node
 			m_HPArray.Add (shipNum);
 		}
 
-        if (mCityHUD.gameObject.activeSelf)
+        
         {
+            mCityHUD.ShowCity(HUDCityOperater.UIPanel.Battle);
             mCityHUD.ShowPopulationProcess(m_teamArray, m_HPArray);
-        }
-        else
-        {
-            mCityHUD.ShowCity(HUDCityOperater.UIPanel.Battle, HUDCityOperater.UIBattle.Flag);
         }
         #endif
     }

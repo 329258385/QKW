@@ -110,14 +110,7 @@ public partial class NodeManager : Lifecycle2
         dir.z = fAngle;
         Node node = CreateNode((NodeType)kind, tag, perfab);
         node.nodeManager = this;
-        if (team == 0)
-        {
-            node.hp = 100;
-        }
-        else
-        {
-            node.hp = 100;
-        }
+        node.hp = 0;
         node.SetAttribute(NodeAttr.HpMax, 100);
         node.SetAttribute(NodeAttr.Poplation, 0);
         node.produceNum = 0;
@@ -160,11 +153,7 @@ public partial class NodeManager : Lifecycle2
         dir.z = item.fAngle;
         Node node = CreateNode((NodeType)nodecfg.typeEnum, item.tag, nodecfg.perfab);
         node.nodeManager = this;
-        if (item.camption == 0) {
-            node.hp = nodecfg.hp;
-        } else {
-            node.hp = nodecfg.hp;
-        }
+        node.hp = 0;
         node.SetAttribute(NodeAttr.HpMax, nodecfg.hp);
         node.SetAttribute(NodeAttr.Poplation, nodecfg.food);
         node.produceNum = nodecfg.createshipnum;
@@ -208,7 +197,7 @@ public partial class NodeManager : Lifecycle2
 
         Node node           = CreateNode(type, tag, "", go );
         node.nodeManager    = this;
-        node.hp             = nodecfg.hp;
+        node.hp             = 0;
         node.SetAttribute(NodeAttr.HpMax,       nodecfg.hp);
         node.SetAttribute(NodeAttr.Poplation,   nodecfg.food);
         node.produceNum     = 1;

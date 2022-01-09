@@ -167,11 +167,13 @@ public partial class Node
 			mCityHUD.SetNode(this);
         }
 		
-		if(!mCityHUD.gameObject.activeSelf  )
         {
-			mCityHUD.gameObject.SetActive(true);
-			mCityHUD.ShowCity(HUDCityOperater.UIPanel.Flag, HUDCityOperater.UIBattle.Flag);
+			if (!mCityHUD.gameObject.activeSelf)
+				mCityHUD.gameObject.SetActive(true);
+			mCityHUD.ShowCity(HUDCityOperater.UIPanel.Flag);
+			mCityHUD.ShowPopulationProcess(null, null);
 		}
+		
 		#endif
 	}
 

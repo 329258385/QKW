@@ -90,7 +90,7 @@ public class SelectTeamWindow : BaseWindow
 
         TEAM t2                     = BattleSystem.Instance.battleData.currentTeam == TEAM.Team_1 ? TEAM.Team_2 : TEAM.Team_1;
         Team Enemy                  = BattleSystem.Instance.sceneManager.teamManager.GetTeam(t2);
-        for (int i = 0; i < team.battleArray.Count; i++)
+        for (int i = 0; i < Enemy.battleArray.Count; i++)
         {
             current                 += Enemy.battleArray[i].current;
             currentMax              += Enemy.battleArray[i].currentMax;

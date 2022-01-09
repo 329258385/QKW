@@ -62,12 +62,6 @@ public class SceneManager : Lifecycle2
 
 
 	/// <summary>
-	/// 战斗内的英雄 
-	/// </summary>
-	private List<Simpleheroconfig>	battleHeros = new List<Simpleheroconfig>();
-
-
-	/// <summary>
 	/// 初始化
 	/// </summary>
 	public SceneManager(BattleData bd)
@@ -210,7 +204,7 @@ public class SceneManager : Lifecycle2
 		CreatePVEBattleTeams(table.players);
 	}
 
-	public void CreateBattleScene(List<BuildTypeBehaviour> mapList )
+	public void CreateBattleScene(MapConfig table, List<BuildTypeBehaviour> mapList )
     {
 		foreach (BuildTypeBehaviour item in mapList)
 		{
@@ -222,14 +216,17 @@ public class SceneManager : Lifecycle2
 			}
 
 			Node node = nodeManager.CreateAndModifyNode(eType, item.tag, item.camption, item.gameObject );
-			if (node != null)
+			if (node != null )
 			{
 				node.sceneManager = this;
-				CreatePVEBattleTeams(node);
 			}
 		}
 
+		// 创建战队
 		CreatreLocalBattleTeam();
+
+		// 根据地图配置
+		CreatePVEBattleTeams(table.players);
 	}
 
 	
@@ -279,94 +276,31 @@ public class SceneManager : Lifecycle2
 	/// <param name="players"></param>
     private void CreatePVEBattleTeams(List<MapPlayerConfig> players)
     {
-		battleHeros.Clear();
-		if(players == null )
-        {
-			Team tm = teamManager.GetTeam(TEAM.Team_2);
-			if (tm == null)
-				return;
+		Team tm = teamManager.GetTeam(TEAM.Team_2);
+		if (tm == null)
+			return;
 
-			BattleTeam bt1 = new BattleTeam();
-			if (bt1 != null)
-			{
-				bt1.team				= tm;
-				Simpleheroconfig config = new Simpleheroconfig();
-				config.heroID			= 3003;
-				bt1.CreateFormation(config, 0, this, nodeManager.GetNodeByType(NodeType.MasterB));
-				tm.AddBattleTeam(bt1);
-			}
-
-			BattleTeam bt2 = new BattleTeam();
-			if (bt2 != null)
-			{
-				bt2.team				= tm;
-				Simpleheroconfig config = new Simpleheroconfig();
-				config.heroID			= 3004;
-				bt2.CreateFormation(config, 0, this, nodeManager.GetNodeByType(NodeType.MasterB));
-				tm.AddBattleTeam(bt2);
-			}
-        }
-		else
-        {
-			foreach (var item in players)
-			{
-				TEAM camption			= (TEAM)item.camption;
-				Simpleheroconfig hero	= new Simpleheroconfig();
-				if (camption == TEAM.Team_1 || camption == TEAM.Neutral )
-				{
-					hero.heroID = 3001;
-				}
-
-				if (camption == TEAM.Team_2  )
-				{
-					hero.heroID = 3002;
-				}
-				HeroConfig config		= HeroConfigProvider.Get().GetData(hero.heroID);
-				hero.InitAttr(config);
-				battleHeros.Add(hero);
-			}
-        }
-
-		foreach (var item in battleHeros)
+		BattleSystem.Instance.sceneManager.aiManager.AddAI(tm, AIType.FriendSmart, 1, BattleSystem.Instance.battleData.aiLevel);
+		tm.aiEnable = true;
+		foreach (var item in players)
 		{
-			Team tm = teamManager.GetTeam(TEAM.Team_1);
-			if (tm == null)
-				continue;
-
-			/// 队伍的人口数
-			int Population = item.attribute[(int)HeroAttr.PopulationMax];
-			LocalPlayer.Get().playerData.currentTeam = tm;
-			BattleTeam bt1 = new BattleTeam();
+			TEAM camption			= (TEAM)item.camption;
+			Simpleheroconfig hero	= new Simpleheroconfig();
+			int[] HeroPools			= new int[5] { 3001, 3002, 3003, 3004, 3005 };
+			{
+				hero.heroID			= HeroPools[UnityEngine.Random.Range(0, 5)];
+			}
+			HeroConfig config		= HeroConfigProvider.Get().GetData(hero.heroID);
+			BattleTeam bt1			= new BattleTeam();
 			if (bt1 != null)
 			{
-				bt1.team = tm;
-				bt1.CreateFormation(item, 0, this, nodeManager.GetNodeByType( NodeType.MasterA ) );
+				bt1.team			= tm;
+				Node node			= nodeManager.GetNode( item.tag );
+				bt1.CreateFormation(hero, 0, this, node);
 				tm.AddBattleTeam(bt1);
 			}
 		}
     }
-
-	private void CreatePVEBattleTeams( Node node )
-	{
-		battleHeros.Clear();
-		if (node != null)
-		{
-			Team tm = teamManager.GetTeam(TEAM.Team_2);
-			if (tm == null)
-				return;
-
-			int[] HeroPools = new int[5]{ 3001, 3002, 3003, 3004, 3005 };
-			BattleTeam bt1 = new BattleTeam();
-			if (bt1 != null)
-			{
-				bt1.team				= tm;
-				Simpleheroconfig config = new Simpleheroconfig();
-				config.heroID			= HeroPools[UnityEngine.Random.Range(0, 5)];
-				bt1.CreateFormation(config, 0, this, node);
-				tm.AddBattleTeam(bt1);
-			}
-		}
-	}
 
 	/// <summary>
 	/// 创建战场内的建筑
@@ -397,7 +331,6 @@ public class SceneManager : Lifecycle2
                 node.sceneManager   = this;
                 node.InitSkills(nodecfg.skills);
                 node.SetNodeAngle(item.fAngle);
-				CreatePVEBattleTeams(node);
 			}
 		}
 	}
