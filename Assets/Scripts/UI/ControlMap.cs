@@ -44,6 +44,9 @@ public class ControlMap : MonoBehaviour
     /// ----------------------------------------------------------------------------------------------------
     private void OnTriggerDrag( GameObject go, Vector2 delta )
     {
+        if (CameraControl.Instance.IsSelectedNode)
+            return;
+
         var mousePos                = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
         var dis                     = Vector2.Distance(_vector2, mousePos);
         if (dis > 0.1f) 

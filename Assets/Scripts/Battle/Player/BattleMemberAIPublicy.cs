@@ -36,12 +36,6 @@ public class BattleMemberAIPublicy
     private Battlestate             mBattleStates = Battlestate.Battle;
 
     /// <summary>
-    /// 技能池子
-    /// </summary>
-    private List<ArticleEntiy>      skillpool = new List<ArticleEntiy>();
-
-
-    /// <summary>
     /// 是否游走CD中
     /// </summary>
     private bool                    Iswandering = false;
@@ -49,6 +43,12 @@ public class BattleMemberAIPublicy
     private float                   wanderMaxTimer = 5f;
 
     private float                    repelTimer = 0f;
+
+    /// <summary>
+	/// The attack time.
+	/// </summary>
+    private float                   AttackTime  = 0f;
+
     /// <summary>
     /// 
     /// </summary>
@@ -58,7 +58,6 @@ public class BattleMemberAIPublicy
         mOwer               = bm;
         mPublicy            = publicy;
     }
-
 
     /// --------------------------------------------------------------------------------------------------------
     /// <summary>
@@ -87,6 +86,12 @@ public class BattleMemberAIPublicy
         else if (mBattleStates == Battlestate.Battle)
         {
             /// 战内攻击策略
+            AttackTime += dt;
+            float AttackSpeed  = mOwer.GetAtt(ShipAttr.AttackSpeed);
+            if (AttackTime < AttackSpeed)
+                return;
+
+            AttackTime = 0f;
             attackPublicy(frame, dt);
         }
 

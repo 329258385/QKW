@@ -17,11 +17,11 @@ public class TouchHandler : MonoBehaviour
     public static Node              currentSelect;
 
     [HideInInspector]
-    public SpriteRenderer           beginHalo;
+    public static SpriteRenderer    beginHalo;
     [HideInInspector]
-    public SpriteRenderer           endHalo;
+    public static SpriteRenderer    endHalo;
     [HideInInspector]
-    public LineRenderer             line;
+    public static LineRenderer      line;
 
 	public static bool              IsPressGuid = false;
     
@@ -67,13 +67,31 @@ public class TouchHandler : MonoBehaviour
 	public void SetNode(Node node)
 	{
 		mNode           = node;
-        this.beginHalo  = BuildTypeManager.Instance.beginHalo;
-        this.endHalo    = BuildTypeManager.Instance.endHalo;
-        this.line       = BuildTypeManager.Instance.line;
+        beginHalo       = BuildTypeManager.Instance.beginHalo;
+        endHalo         = BuildTypeManager.Instance.endHalo;
+        line            = BuildTypeManager.Instance.line;
 		SetWarning (0);
 	} 
 
 
+    public static void SelectHeroNode( Node curentNode )
+    {
+        beginHalo           = BuildTypeManager.Instance.beginHalo;
+        endHalo             = BuildTypeManager.Instance.endHalo;
+        line                = BuildTypeManager.Instance.line;
+
+        beginHalo.transform.parent = curentNode.GetGO().transform;
+        beginHalo.gameObject.transform.localPosition = Vector3.zero;
+        beginHalo.gameObject.transform.localEulerAngles = new Vector3(90, 90, 0);
+        beginHalo.gameObject.transform.localScale = new Vector3(14, 14, 0);
+        beginHalo.gameObject.SetActive(true);
+        beginHalo.enabled   = true;
+        Color color         = curentNode.currentTeam.color;
+        color.a             = 1.0f;
+        beginHalo.color     = color;
+        currentNode         = curentNode;
+        currentSelect       = null;
+    }
 		
 	/// <summary>
 	/// 按下事件，isDown代表按下还是弹起
@@ -91,9 +109,6 @@ public class TouchHandler : MonoBehaviour
             if ( mNode.nodeIsHide && 
                  mNode.currentTeam.team != BattleSystem.Instance.battleData.currentTeam)
                 return;
-
-			if (BattleSystem.Instance.battleData.isReplay)
-				return;
 
             beginHalo.transform.parent                      = mNode.GetGO().transform;
 			beginHalo.gameObject.transform.localPosition    = Vector3.zero;

@@ -45,8 +45,8 @@ public class EntityMember : DisplayEntity
 	/// 所属
 	/// </summary>
 	/// <value>The ship.</value>
-	public  BattleMember			ship { get; set; }
-
+	public  BattleMember			ship	{ get; set; }
+	public BattlePlayer				player	{ get; set; }
 
 	Vector3							targetNodePos;
 
@@ -107,14 +107,6 @@ public class EntityMember : DisplayEntity
     }
 
 
-    public void OnALive()
-    {
-        if (go != null)
-        {
-            go.SetActive(true);
-        }
-    }
-
     public void OnRecycle()
 	{
 		shipState = MemberState.ORBIT;
@@ -138,11 +130,13 @@ public class EntityMember : DisplayEntity
 	private BowLoadScript   bowLoadScript;
 	protected override void InitGameObject ()
 	{
-		go			= CreateGameObject ();
+		go				= CreateGameObject ();
 		go.transform.SetParent(Game.game.sceneRoot.transform);
-		AniCtrl		= go.GetComponentInChildren<Animator>();
-		Throw		= go.GetComponentInChildren<ThrowProp>();
-		bowLoadScript = go.GetComponentInChildren<BowLoadScript>();
+		AniCtrl			= go.GetComponentInChildren<Animator>();
+		Throw			= go.GetComponentInChildren<ThrowProp>();
+		bowLoadScript	= go.GetComponentInChildren<BowLoadScript>();
+		player			= AniCtrl.GetComponent<BattlePlayer>();
+		player.entity	= this;
 		go.transform.localEulerAngles	= Vector3.zero;
 		go.transform.localScale			= Vector3.one;
 		go.gameObject.SetActive(false);
@@ -285,7 +279,7 @@ public class EntityMember : DisplayEntity
 			return true;
 		}
 		else
-        {
+		{
 			SetPosition(TargetPos);
 			shipState		= MemberState.ORBIT;
 			return false;
@@ -305,7 +299,7 @@ public class EntityMember : DisplayEntity
 	/// 暂时先定义小兵的战斗逻辑
 	/// </summary>
 	public void UpdateBattle( bool atkCity = false )
-    {
+    { 
 		AniCtrl.SetFloat(MoveHashCode, 0f);
 		Quaternion _lookAt = Quaternion.identity;
 		if (target != null && !atkCity )
@@ -313,6 +307,7 @@ public class EntityMember : DisplayEntity
 			var animatorInfo = AniCtrl.GetCurrentAnimatorStateInfo(0);
 			if (animatorInfo.normalizedTime > 1.0f)
 			{
+				IsEndAttack		= false;
 				AniCtrl.SetTrigger(AckHashCode);
 			}
 
@@ -339,6 +334,7 @@ public class EntityMember : DisplayEntity
 				var animatorInfo = AniCtrl.GetCurrentAnimatorStateInfo(0);
 				if (animatorInfo.normalizedTime > 1.0f)
 				{
+					IsEndAttack = false;
 					AniCtrl.SetTrigger(AckHashCode);
 				}
 
@@ -424,5 +420,40 @@ public class EntityMember : DisplayEntity
 	public void StartAttackAction()
     {
 		AniCtrl.SetFloat(MoveHashCode, 0f);
+	}
+
+
+	public void StopAttack()
+    {
+		AniCtrl.SetTrigger(AckHashCode);
+    }
+
+
+	public bool IsEndAttack = false;
+	public bool IsAttacking()
+    {
+		return IsEndAttack;
+    }
+
+
+	public void OnDeath()
+    {
+		AniCtrl.SetBool(IsDeathHashCode, true);
+		AniCtrl.SetInteger(IsDeathHashCode, 0);
+		if (go != null)
+		{
+			go.SetActive(false);
+		}
+	}
+
+
+	public void OnALive()
+	{
+		AniCtrl.SetBool(IsDeathHashCode, false);
+		AniCtrl.SetInteger(IsDeathHashCode, 0);
+		if (go != null)
+		{
+			go.SetActive(true);
+		}
 	}
 }

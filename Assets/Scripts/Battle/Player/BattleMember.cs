@@ -107,7 +107,7 @@ public partial class BattleMember : Lifecycle2
     private List<BufferEntiy>       bufs = new List<BufferEntiy>();
 
 
-    private BattleMemberAIPublicy   aiPublicy;
+    public BattleMemberAIPublicy   aiPublicy;
     /// <summary>
     /// 初始化
     /// </summary>
@@ -191,7 +191,16 @@ public partial class BattleMember : Lifecycle2
         attribute[(int)ShipAttr.Speed]          = config.speed;
         attribute[(int)ShipAttr.MaxHp]          = config.maxHp;
         attribute[(int)ShipAttr.Armor]          = config.Arms;
-        attribute[(int)ShipAttr.Population]     = 100;
+        if( this.unitType == BattleUnitType.Hero )
+        {
+            attribute[(int)ShipAttr.Population] = 100;
+            attribute[(int)ShipAttr.Hp]         = config.maxHp * 100;
+        }
+        else
+        {
+            attribute[(int)ShipAttr.Population] = 10;
+            attribute[(int)ShipAttr.Hp]         = config.maxHp * 10;
+        }
         return true;
     }
 
@@ -216,7 +225,7 @@ public partial class BattleMember : Lifecycle2
         if (unitType == BattleUnitType.Member && battleTeam.btState != BattleTeamState.Battle )
         {
             bool IsNeedMove = entity.UpdateMove(frame, interval);
-            if( !IsNeedMove )
+            if (!IsNeedMove)
             {
                 entity.StartAttackAction();
             }
@@ -331,6 +340,7 @@ public partial class BattleMember : Lifecycle2
 		pool.RemoveFlyShip (this);
         pool.Recycle(this);
         isALive = false;
+        entity.OnDeath();
 	}
 
 

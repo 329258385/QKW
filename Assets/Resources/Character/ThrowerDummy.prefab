@@ -2598,6 +2598,7 @@ GameObject:
   - component: {fileID: 4528369917117230}
   - component: {fileID: 95589159096932286}
   - component: {fileID: 2947272173786269210}
+  - component: {fileID: 7272411286009610970}
   m_Layer: 0
   m_Name: ThrowerDummy
   m_TagString: Untagged
@@ -2655,10 +2656,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   propToThrow: {fileID: 756408152365508421}
   hand: {fileID: 4415148900771112}
-  targetPos: {fileID: 0}
+  targetPos: {x: 0, y: 0, z: 0}
   speed: 20
   arcHeight: 1
   launched: 0
+--- !u!114 &7272411286009610970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1976342557157784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1e8478b66ee6c546ad01623c09a8d9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &79243140
 MonoBehaviour:
   m_ObjectHideFlags: 0

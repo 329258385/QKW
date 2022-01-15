@@ -378,8 +378,7 @@ public class BattleTeam
 
     private void UpdateEnterCity( int frame, float interval )
     {
-        bool bEnterCity     = true;
-        bEnterCity          = Leader.entity.UpdateMove(frame, interval);
+        bool bEnterCity = Leader.entity.UpdateMove(frame, interval);
         for (int i = 0; i < members.Count; i++)
         {
             bEnterCity      = members[i].entity.IsNeedMove();
@@ -536,9 +535,11 @@ public class BattleTeam
     public void EnterCity( Node city )
     {
         btState             = BattleTeamState.EnterCity;
+        Leader.entity.StopAttack();
         Leader.SetTargetPosition(city.GetPosition());
         for (int i = 0; i < members.Count; i++)
         {
+            members[i].entity.StopAttack();
             members[i].SetTargetPosition(city.GetPosition());
         }
     }

@@ -564,6 +564,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1951351194165779021}
   - component: {fileID: 1951351194175665209}
+  - component: {fileID: 6908036997827794002}
   m_Layer: 8
   m_Name: Werewol
   m_TagString: Untagged
@@ -605,6 +606,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &6908036997827794002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1951351194166134381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1e8478b66ee6c546ad01623c09a8d9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1951351194166134383
 GameObject:
   m_ObjectHideFlags: 0

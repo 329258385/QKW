@@ -4871,9 +4871,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41230d187f4e2ba41952523e994e3062, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  beginHalo: {fileID: 0}
-  endHalo: {fileID: 0}
-  line: {fileID: 0}
 --- !u!114 &2590390691563818407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5492,9 +5489,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41230d187f4e2ba41952523e994e3062, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  beginHalo: {fileID: 0}
-  endHalo: {fileID: 0}
-  line: {fileID: 0}
 --- !u!114 &2590390693170669313
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -201,7 +201,7 @@ public class SceneManager : Lifecycle2
 		CreatreLocalBattleTeam();
 
 		// 根据地图配置
-		CreatePVEBattleTeams(table.players);
+		// CreatePVEBattleTeams(table.players);
 	}
 
 	public void CreateBattleScene(MapConfig table, List<BuildTypeBehaviour> mapList )
@@ -226,7 +226,7 @@ public class SceneManager : Lifecycle2
 		CreatreLocalBattleTeam();
 
 		// 根据地图配置
-		CreatePVEBattleTeams(table.players);
+		//CreatePVEBattleTeams(table.players);
 	}
 
 	

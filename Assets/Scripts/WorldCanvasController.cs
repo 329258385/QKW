@@ -11,7 +11,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Helper class to display the HealthBar and FloatingText Canvas UI in WorldSpace
 /// </summary>
-public class WorldCanvasController : MonoBehaviour
+public class WorldCanvasController : MonoSingleton<WorldCanvasController>
 {
     public GameObject           uiWorld;
     public GameObject           floatingTextPrefab;
@@ -88,7 +88,7 @@ public class WorldCanvasController : MonoBehaviour
     IEnumerator AnimateOutwardsText(Text m_Text, Color RegularTextColor, Color CritTextColor, Vector3 TargetPosition, bool CriticalHit, bool HealingText, bool PlayerTakingDamage)
     {
 
-        AICombatTextData combatText = WorldCanvasController.Get().m_AICombatTextData;
+        AICombatTextData combatText = WorldCanvasController.Instance.m_AICombatTextData;
         if (CriticalHit)
         {
             m_Text.color = CritTextColor;

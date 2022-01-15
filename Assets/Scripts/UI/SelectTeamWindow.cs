@@ -195,6 +195,11 @@ public class SelectTeamWindow : BaseWindow
                 }
                 technique[3].ApplyTechnique(BattleSystem.Instance.battleData.currentBattleTeam);
             }
+            Debug.LogError(" down ");
+        }
+        else
+        {
+            Debug.LogError(" Up ");
         }
     }
 
@@ -206,6 +211,14 @@ public class SelectTeamWindow : BaseWindow
     /// ---------------------------------------------------------------------------------------------------------
     void OnSelectTeamClicked(GameObject obj, bool state)
 	{
+        //if( state )
+        //{
+        //    CameraControl.Instance.IsSelectedNode = true;
+        //}
+        //else
+        //{
+        //    CameraControl.Instance.IsSelectedNode = false;
+        //}
 
         if (curTeam == null)
             return;
@@ -238,14 +251,10 @@ public class SelectTeamWindow : BaseWindow
             currentNode     = curTeam.battleArray[2].curentNode;
         }
 
-        if( oldSelect == selectIndex )
-        {
-            return;
-        }
-
         BattleSystem.Instance.battleData.currentBattleTeam  = bt;
         BattleSystem.Instance.battleData.BattleTeamID       = selectBattle;
-        TouchHandler.currentNode                            = currentNode;
+        
+        //TouchHandler.SelectHeroNode(currentNode);
     }
 
 

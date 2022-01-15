@@ -71,7 +71,7 @@ public partial class Node
 						AudioManger.Get().PlayLaser(GetPosition());
 						#endif
 
-						if( ships[j].ChangeAttr( ShipAttr.Hp, nAttackPower) <= 0 )
+						if( ships[j].ChangeAttr( ShipAttr.Hp, -nAttackPower) <= 0 )
 							ships[j].Bomb(nodeType);
 						return;
 					}
