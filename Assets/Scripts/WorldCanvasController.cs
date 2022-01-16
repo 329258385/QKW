@@ -13,7 +13,6 @@ using UnityEngine.UI;
 /// </summary>
 public class WorldCanvasController : MonoSingleton<WorldCanvasController>
 {
-    public GameObject           uiWorld;
     public GameObject           floatingTextPrefab;
     public GameObject           healthBarPrefab;
 
@@ -22,7 +21,6 @@ public class WorldCanvasController : MonoSingleton<WorldCanvasController>
 
     void Start()
     {
-        uiWorld.SetActive(false);
         m_AICombatTextData = (AICombatTextData)Resources.Load("combattextdata") as AICombatTextData;
     }
 

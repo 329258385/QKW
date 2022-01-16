@@ -16,34 +16,34 @@ namespace KevinIglesias {
     public class ThrowProp : MonoBehaviour {
 
         //Prop to move
-        public Transform propToThrow;
+        public Transform        propToThrow;
         //Hand that holds the prop
-        public Transform hand;
+        public Transform        hand;
 
         //Target to throw the prop
-        public Vector3 targetPos;
+        public Vector3          targetPos;
 
         //Speed of the prop
-        public float speed = 10;
+        public float            speed = 10;
         
         //Maximum arc the prop will make
-        public float arcHeight = 1;
+        public float            arcHeight = 1;
         
         //Needed for checking if prop was thrown or not
-        public bool launched = false;
+        public bool             launched = false;
 
         //Character root (for parenting when prop is thrown)
-        private Transform characterRoot;
+        private Transform       characterRoot;
         
         //Different movements for different prop types
-        private bool spear;
-        private bool tomahawk;
+        private bool            spear;
+        private bool            tomahawk;
         
         //Needed for calculate prop trajectory
-        private Vector3 startPos; 
-        private Vector3 zeroPosition;
-        private Quaternion zeroRotation;
-        private Vector3 nextPos;
+        private Vector3         startPos; 
+        private Vector3         zeroPosition;
+        private Quaternion      zeroRotation;
+        private Vector3         nextPos;
         
         void Start() 
         {
@@ -58,15 +58,17 @@ namespace KevinIglesias {
         {
             if (targetPos == null) return;
             //Arc throw facing the target
-            if(launched && spear)
+            if(launched)
             {
-                float x0 = startPos.x;
-                float x1 = targetPos.x;
-                float dist = x1 - x0;
-                float nextX = Mathf.MoveTowards(propToThrow.position.x, x1, speed * Time.deltaTime);
-                float baseY = Mathf.Lerp(startPos.y, targetPos.y, (nextX - x0) / dist);
-                float arc = arcHeight * (nextX - x0) * (nextX - x1) / (-0.25f * dist * dist);
-                Vector3 nextPos = new Vector3(nextX, baseY + arc, propToThrow.position.z);
+                //float x0            = startPos.x;
+                //float x1            = targetPos.x;
+                //float dist          = x1 - x0;
+                float nextX         = Mathf.MoveTowards(startPos.x, targetPos.x, speed * Time.deltaTime);
+                float nextY         = Mathf.MoveTowards(startPos.y, targetPos.y, speed * Time.deltaTime);
+                float nextZ         = Mathf.MoveTowards(startPos.z, targetPos.z, speed * Time.deltaTime);
+               
+                //float arc           = arcHeight * (nextX - x0) * (nextX - x1) / (-0.25f * dist * dist);
+                Vector3 nextPos      = new Vector3(nextX, nextY, nextZ);
             
                 propToThrow.rotation = LookAt2D(nextPos - propToThrow.position);
                 propToThrow.position = nextPos;
@@ -77,57 +79,37 @@ namespace KevinIglesias {
                     launched = false;
                 }
             }
-            
-            //Arc throw rotating forwards
-            if(launched && tomahawk)
-            {
-                float x0 = startPos.x;
-                float x1 = targetPos.x;
-                float dist = x1 - x0;
-                float nextX = Mathf.MoveTowards(propToThrow.position.x, x1, speed * Time.deltaTime);
-                float baseY = Mathf.Lerp(startPos.y, targetPos.y, (nextX - x0) / dist);
-                float arc = arcHeight * (nextX - x0) * (nextX - x1) / (-0.25f * dist * dist);
-                Vector3 nextPos = new Vector3(nextX, baseY + arc, propToThrow.position.z);
-            
-                propToThrow.transform.Rotate(19f, 0.0f, 0.0f, Space.Self);
-                propToThrow.position = nextPos;
-     
-                float currentDistance = Mathf.Abs(targetPos.x - propToThrow.position.x);
-                if(currentDistance < 0.5f)
-                {
-                    launched = false;
-                }
-            }
         }
         
-        static Quaternion LookAt2D(Vector3 forward) {
+        static Quaternion LookAt2D(Vector3 forward) 
+        {
             return Quaternion.Euler(0, 0, (Mathf.Atan2(forward.y, forward.x) * Mathf.Rad2Deg)-90f);
         }   
         
         //Function called by 'ThrowingActionSMB' script
         public void ThrowSpear()
         {
-            tomahawk = false;
-            spear = true;
-            startPos = propToThrow.position;
+            tomahawk        = false;
+            spear           = true;
+            startPos        = propToThrow.position;
             propToThrow.SetParent(characterRoot);
-            launched = true;
+            launched        = true;
         }
         
         //Function called by 'ThrowingActionSMB' script
         public void ThrowTomahawk()
         {
-            spear = false;
-            tomahawk = true;
-            startPos = propToThrow.position;
+            spear           = false;
+            tomahawk        = true;
+            startPos        = propToThrow.position;
             propToThrow.SetParent(characterRoot);
-            launched = true;
+            launched        = true;
         }
         
         //Function called by 'ThrowingActionSMB' script
         public void RecoverProp()
         {
-            launched = false;
+            launched        = false;
             propToThrow.SetParent(hand);
             propToThrow.localPosition = zeroPosition;
             propToThrow.localRotation = zeroRotation;

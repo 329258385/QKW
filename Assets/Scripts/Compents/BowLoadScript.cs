@@ -19,17 +19,13 @@ using UnityEngine;
 namespace KevinIglesias {
 	public class BowLoadScript : MonoBehaviour
 	{
-	   
-		public Transform		bow;
 		public Transform		arrowLoad;
-		
-		//Bow Blendshape
-		SkinnedMeshRenderer		bowSkinnedMeshRenderer;
 		
 		//Arrow draw & rotation
 		public bool				arrowOnHand;
 		private bool			bThrow = false;
-		private Vector3			startPos = Vector3.zero;
+
+		public Vector3			startPos = Vector3.zero;
 		public Vector3			targetPos = Vector3.zero;
 		public float			speed = 10;
 		public float			arcHeight = 1;
@@ -39,12 +35,6 @@ namespace KevinIglesias {
 	   
 		void Awake()
 		{
-			
-			if(bow != null)
-			{
-				bowSkinnedMeshRenderer = bow.GetComponent<SkinnedMeshRenderer>();
-			}
-			
 			if(arrowToDraw != null)
 			{
 				arrowToDraw.gameObject.SetActive(false);
@@ -57,64 +47,60 @@ namespace KevinIglesias {
 
 		void Update()
 		{
-			//Bow blendshape animation
-			if(bowSkinnedMeshRenderer != null && bow != null && arrowLoad != null)
-			{
-				float bowWeight = Mathf.InverseLerp(0, -0.7f, arrowLoad.localPosition.z);
-				bowSkinnedMeshRenderer.SetBlendShapeWeight(0, bowWeight*100);
-			}
-			
 			//Draw arrow from quiver and rotate it
 			if(arrowToDraw != null && arrowToShoot != null && arrowLoad != null)
 			{
-				if(arrowLoad.localPosition.y == 0.5f)
+				if(arrowLoad.localPosition.y >= 0.4f && !arrowOnHand )
 				{
 					if(arrowToDraw != null)
 					{
 						arrowOnHand = true;
-						bThrow = false;
+						bThrow		= false;
 						arrowToDraw.gameObject.SetActive(true);
 					}
 				}
 					
-				if(arrowLoad.localPosition.y > 0.5f)
+				if(arrowLoad.localPosition.y > 0.5f && arrowOnHand )
 				{
 					if(arrowToDraw != null && arrowToShoot != null)
 					{
 						bThrow		= true;
-						startPos	= arrowToShoot.position;
 						arrowToDraw.gameObject.SetActive(false);
 						arrowToShoot.gameObject.SetActive(true);
-					}
-				}
-					
-				if(arrowLoad.localScale.z < 1f)
-				{
-					if(arrowToShoot != null)
-					{
-						arrowToShoot.gameObject.SetActive(false);
-						arrowOnHand = false;
+						startPos	= arrowToShoot.position;
 					}
 				}
 
-				if( bThrow )
+                if (arrowLoad.localScale.z < 1f)
                 {
-					float x0		= startPos.x;
-					float x1		= targetPos.x;
-					float dist		= x1 - x0;
-					float nextX		= Mathf.MoveTowards(arrowToShoot.position.x, x1, speed * Time.deltaTime);
-					float baseY		= Mathf.Lerp(startPos.y, targetPos.y, (nextX - x0) / dist);
-					float arc		= arcHeight * (nextX - x0) * (nextX - x1) / (-0.25f * dist * dist);
-					Vector3 nextPos = new Vector3(nextX, baseY + arc, arrowToShoot.position.z);
+                    if (arrowToShoot != null)
+                    {
+                        arrowToShoot.gameObject.SetActive(false);
+                    }
+                }
 
-					arrowToShoot.rotation = LookAt2D(nextPos - arrowToShoot.position);
-					arrowToShoot.position = nextPos;
+                if ( bThrow && arrowToShoot.gameObject.activeSelf )
+                {
+					Vector3 fireDirection = targetPos - startPos;
+					EffectManager.Get().AddLaserLine(startPos, Quaternion.LookRotation(fireDirection.normalized));
+					//float x0 = arrowToShoot.position.x;
+					//float x1 = targetPos.x;
+					//float dist = x1 - x0;
+					//float nextX = Mathf.MoveTowards(startPos.x, targetPos.x, speed * Time.deltaTime);
+					//float nextY = Mathf.MoveTowards(startPos.y, targetPos.y, speed * Time.deltaTime);
+					//float nextZ = Mathf.MoveTowards(startPos.z, targetPos.z, speed * Time.deltaTime);
 
-					float currentDistance = Mathf.Abs(targetPos.x - arrowToShoot.position.x);
-					if (currentDistance < 0.5f)
-					{
-						bThrow = false;
-					}
+					//float arc = arcHeight * (nextX - x0) * (nextX - x1) / (-0.25f * dist * dist);
+					//Vector3 nextPos		= new Vector3(nextX, nextY, nextZ);
+					//arrowToShoot.rotation = LookAt2D(targetPos - arrowToShoot.position);
+					//arrowToShoot.position = nextPos;
+
+					//float currentDistance = Mathf.Abs(targetPos.x - arrowToShoot.position.x);
+					//if (currentDistance < 0.5f)
+					//{
+					//    bThrow			  = false;
+					//	arrowOnHand		  = false;
+					//}
 				}
 			}
 		}
