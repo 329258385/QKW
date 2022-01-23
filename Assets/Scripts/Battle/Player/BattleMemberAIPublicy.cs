@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Solarmax;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -42,12 +43,19 @@ public class BattleMemberAIPublicy
     private float                   wanderTimer = 0f;
     private float                   wanderMaxTimer = 5f;
 
-    private float                    repelTimer = 0f;
+    private float                   repelTimer = 0f;
 
     /// <summary>
 	/// The attack time.
 	/// </summary>
     private float                   AttackTime  = 0f;
+    private List<TechniqueEntiy>    techniques = new List<TechniqueEntiy>();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public EventHandlerGroup        EventGroup { get; set; }
+
 
     /// <summary>
     /// 
@@ -66,6 +74,13 @@ public class BattleMemberAIPublicy
     /// --------------------------------------------------------------------------------------------------------
     public void AotuBattle( int frame, float dt )
     {
+        /// 更新技能CD
+        TechniqueEntiy technique = null;
+        foreach ( var instance in techniques )
+        {
+            instance.Tick( frame, dt );
+        }
+
         /// 索敌策略
         searchEntiyPublicy(frame, dt);
         if ( mBattleStates == Battlestate.Move )
@@ -307,9 +322,14 @@ public class BattleMemberAIPublicy
     /// 求救
     /// </summary>
     /// --------------------------------------------------------------------------------------------------------
-    private void callHelpPublicy()
+    private TechniqueEntiy UseSkillPublicy( TechniqueEntiy technique )
     {
-
+        if( technique != null )
+        {
+            technique.ApplyTechnique();
+            technique.StardCD();
+        }
+        return null;
     }
 
 

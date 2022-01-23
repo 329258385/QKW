@@ -6,15 +6,26 @@ using UnityEngine;
 /// <summary>
 /// 技能对象
 /// </summary>
-public class TechniqueEntiy : Lifecycle2
+public class TechniqueEntiy
 {
 
     public SkillConfig          proto;
 
     /// <summary>
+    /// 技能使用者
+    /// </summary>
+    public BattleMember         sender;
+
+    /// <summary>
     /// 目标列表
     /// </summary>
     private List<BattleMember>  targetList = new List<BattleMember>();
+
+    /// <summary>
+    /// 技能携带效果列表
+    /// </summary>
+    private List<ApplyEffect>   effects = new List<ApplyEffect>();
+    private List<ApplyEffect>   dels = new List<ApplyEffect>();
 
 
     public float                coodown = 0f;
@@ -29,12 +40,12 @@ public class TechniqueEntiy : Lifecycle2
     /// <summary>
     /// 创建技能
     /// </summary>
-    static public TechniqueEntiy CreateTechnique( int nTechniqueID )
+    static public TechniqueEntiy CreateTechnique( BattleMember member, int nTechniqueID )
     {
         TechniqueEntiy entity = new TechniqueEntiy();
         if( entity != null )
         {
-            entity.InitByID(nTechniqueID);
+            entity.InitByID(member, nTechniqueID);
         }
         return entity;
     }
@@ -44,19 +55,13 @@ public class TechniqueEntiy : Lifecycle2
     /// 技能 初始化接口
     /// </summary>
     /// ----------------------------------------------------------------------------------------------------------
-    public bool Init()
-    {
-
-        return true;
-    }
-
-
-    public bool InitByID( int nID )
+    public bool InitByID( BattleMember member, int nID )
     {
         SkillConfig config = SkillConfigProvider.Get().GetData(nID);
         if (config == null)
             return false;
 
+        sender      = member;
         proto       = config;
         coodown     = config.cd;
         canUse      = true;
@@ -75,21 +80,24 @@ public class TechniqueEntiy : Lifecycle2
             coodown -= interval;
             if (coodown <= 0)
             {
-                canUse = true;
+                canUse  = true;
                 coodown = 0;
             }
         }
-    }
 
 
-    /// ----------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// 更新技能的当前是否使用状态
-    /// </summary>
-    /// ----------------------------------------------------------------------------------------------------------
-    public void UpdateEnable()
-    {
+        foreach( var effect in effects )
+        {
+            ApplyEffect.State st = effect.Tick(interval);
+            if (st == ApplyEffect.State.Finished)
+                dels.Add(effect);
+        }
 
+        foreach( var ef in dels )
+        {
+            effects.Remove(ef);
+        }
+        dels.Clear();
     }
 
 
@@ -121,63 +129,27 @@ public class TechniqueEntiy : Lifecycle2
     /// 主动释放技能
     /// </summary>
     /// ----------------------------------------------------------------------------------------------------------
-    public void ApplyTechnique( BattleTeam castTeam )
+    public void ApplyTechnique( )
     {
         if ( canUse )
         {
-            if (!IsCanUseTechnique(castTeam.Leader))
-                return;
-
-            /// 技能选择目标
-            targetList.Clear();
-            switch( proto.target )
+            foreach( var effect in effects )
             {
-                case TargetType.Self:
-                    {
-                        targetList.Add(castTeam.Leader);
-                    }
-                    break;
-
-                case TargetType.SelfTeam:
-                    {
-
-                    }
-                    break;
-
-                case TargetType.Eneny:
-                    {
-                        //targetList.Add(castTeam.Leader.targetShip);
-                    }
-                    break;
-
-                case TargetType.EnenyeTeam:
-                    {
-
-                    }
-                    break;
+                effect.DoEffect();
             }
-
-
-            /// 作用buffer 到目标身上
-            for (int i = 0; i < targetList.Count; i++)
-            {
-                if( proto.bufferID > 0 )
-                {
-                    BufferEntiy buffer = BufferEntiy.CreateBufferEntiy(proto.bufferID, proto.effectLife );
-                    targetList[i].AddBuffer(buffer);
-                }
-            }
-
-            /// 释放者，播放释放特效
-            if( !string.IsNullOrEmpty(proto.displayID) )
-            {
-                PlayTechniqueEffect(castTeam.Leader, targetList.Count > 0 ? targetList[0] : null );
-            }
-
-            canUse      = false;
-            coodown     = proto.cd;
         }
     }
+
+
+    public void StardCD( )
+    {
+        if (proto == null)
+        {
+            coodown     = proto.cd;
+            canUse      = false;
+        }
+    }
+
 
     /// ----------------------------------------------------------------------------------------------------------
     /// <summary>
@@ -196,35 +168,19 @@ public class TechniqueEntiy : Lifecycle2
 
     /// ----------------------------------------------------------------------------------------------------------
     /// <summary>
-    /// 判断技能当前状态是否能用
-    /// </summary>
-    /// ----------------------------------------------------------------------------------------------------------
-    public bool IsEnable()
-    {
-        return bEnable;
-    }
-
-
-    /// ----------------------------------------------------------------------------------------------------------
-    /// <summary>
     /// 播放技能特效
     /// </summary>
     /// ----------------------------------------------------------------------------------------------------------
-    private void PlayTechniqueEffect(BattleMember castShip, BattleMember targetShip )
+    private void PlayTechniqueEffect( BattleMember targetShip )
     {
-        if (proto == null || castShip == null )
-        {
-            return ;
-        }
-
         if( string.IsNullOrEmpty(proto.displayID) )
         {
             return;
         }
 
         /// 播放特效
-        GameObject parent   = castShip.entity.go;
-        Vector3 start       = castShip.GetPosition();
+        GameObject parent   = sender.entity.go;
+        Vector3 start       = sender.GetPosition();
         if( targetShip != null )
         {
             Vector3 end     = targetShip.GetPosition();
@@ -233,7 +189,7 @@ public class TechniqueEntiy : Lifecycle2
         }
         else
         {
-            GameObject go   = castShip.entity.go;
+            GameObject go   = sender.entity.go;
             Vector3 dir     = go.transform.forward;
             EffectManager.Get().PlayParticleEffect(start, Quaternion.LookRotation(dir), "", proto.effectLife, parent);
         }
@@ -275,7 +231,7 @@ public class TechniqueEntiy : Lifecycle2
                     {
                         targetList.Add(ships[j]);
                     }
-                }
+                                                                                                                                                        }
             }
         }
     }
@@ -369,6 +325,7 @@ public class TechniqueEntiy : Lifecycle2
             return;
         }
     }
+
 
     /// ----------------------------------------------------------------------------------------------------------
     /// <summary>

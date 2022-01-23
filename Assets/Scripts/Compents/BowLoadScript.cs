@@ -81,8 +81,11 @@ namespace KevinIglesias {
 
                 if ( bThrow && arrowToShoot.gameObject.activeSelf )
                 {
-					Vector3 fireDirection = targetPos - startPos;
+					Vector3 fireDirection				= targetPos - startPos;
 					EffectManager.Get().AddLaserLine(startPos, Quaternion.LookRotation(fireDirection.normalized));
+					//EffectManager.Get().PlayParticleEffect(startPos, Quaternion.LookRotation(fireDirection.normalized), "vfx_bullet_03");
+					bThrow				= false;
+
 					//float x0 = arrowToShoot.position.x;
 					//float x1 = targetPos.x;
 					//float dist = x1 - x0;

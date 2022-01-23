@@ -72,7 +72,17 @@ public enum ShipAttr
     AttackRange,        // 攻击范围
     WarningRange,       // 警戒范围
     AttackPower,        // 攻击强度
-    MAX,
+	HitRate,			// 命中率
+	DamageAdds,			// 伤害加成
+	DamageReduction,	// 伤害减免
+	Dodge,				// 闪避
+	Immune,				// 免疫
+	ImmuneDeadly,		// 免疫致命
+	Invincible,			// 无敌
+	Counterattack,      // 反伤
+	SuckBlood,			// 吸血
+
+	MAX,
 }
 
 
