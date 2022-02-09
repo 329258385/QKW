@@ -193,7 +193,7 @@ public class SelectTeamWindow : BaseWindow
                     Tips.Make(Tips.TipsType.FlowUp, "技能CD中", 1.0f);
                     return;
                 }
-                technique[3].ApplyTechnique(BattleSystem.Instance.battleData.currentBattleTeam);
+                technique[3].ApplyTechnique();
             }
             Debug.LogError(" down ");
         }

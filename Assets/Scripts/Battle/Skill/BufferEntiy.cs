@@ -114,10 +114,6 @@ public class BufferEntiy : Lifecycle2
     {
         bDestroy = false;
         effectFrameNum = 1;
-        if ( config.logicID > 0 )
-        {
-            ApplyEffect.DoEffect(effectShip, null, config);
-        }
     }
 
 
@@ -203,7 +199,7 @@ public class BufferEntiy : Lifecycle2
     /// ----------------------------------------------------------------------------------------------------------
     private void DoIntervalEffect( )
     {
-        ApplyEffect.DoEffect( effectShip, null , config );
+        
     }
 }
 

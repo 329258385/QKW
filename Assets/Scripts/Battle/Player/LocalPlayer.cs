@@ -67,21 +67,21 @@ public class LocalPlayer : Singleton<LocalPlayer>
     private void InitPlayerTechnique( NetPlayer player )
     {
         /// 打击
-        TechniqueEntiy technique = TechniqueEntiy.CreateTechnique(101901);
+        TechniqueEntiy technique = TechniqueEntiy.CreateTechnique(null, 101901);
         if (technique != null)
         {
             vecTechniques.Add(technique);
         }
 
         /// 干扰
-        technique = TechniqueEntiy.CreateTechnique(101301);
+        technique = TechniqueEntiy.CreateTechnique( null, 101301);
         if (technique != null)
         {
             vecTechniques.Add(technique);
         }
 
         /// 磁盾
-        technique = TechniqueEntiy.CreateTechnique(101401);
+        technique = TechniqueEntiy.CreateTechnique( null, 101401);
         if( technique != null )
         {
             vecTechniques.Add(technique);
@@ -89,21 +89,21 @@ public class LocalPlayer : Singleton<LocalPlayer>
 
 
         /// 盾寻
-        technique = TechniqueEntiy.CreateTechnique(102001);
+        technique = TechniqueEntiy.CreateTechnique( null, 102001);
         if (technique != null)
         {
             vecTechniques.Add(technique);
         }
 
         /// 突防
-        technique = TechniqueEntiy.CreateTechnique(102201);
+        technique = TechniqueEntiy.CreateTechnique( null, 102201);
         if (technique != null)
         {
             vecTechniques.Add(technique);
         }
 
         /// 充能
-        technique = TechniqueEntiy.CreateTechnique(101501);
+        technique = TechniqueEntiy.CreateTechnique( null, 101501);
         if (technique != null)
         {
             vecTechniques.Add(technique);

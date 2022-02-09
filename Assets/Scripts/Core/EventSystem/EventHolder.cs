@@ -15,10 +15,12 @@ namespace Solarmax
             public uint m_id = 0;
             public uint m_key = 0;
 			public uint m_customData = 0;
+			public IEventInterface m_EI = null;
 			public bool m_bDeleteFlag = false;
         }
         Dictionary<EventID, List<KEventHandler>> m_Events = new Dictionary<EventID, List<KEventHandler>>();
 
+		private int		m_handlingEventStack;
         // 上次呼吸时间
         private float   m_lastBreatheTime = 0;
         private uint    nextID = 1;
@@ -59,7 +61,7 @@ namespace Solarmax
 		 *		eventID:		事件id
 		 *		pEventData:		事件的关联数据
 		 */
-		public void OnEvent(KEventData EventData)
+		public void OnEvent( KEvent EventData)
 		{
 			if (m_handlingEventStack >= MAX_EVENT_STACKS)
 			{

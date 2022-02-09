@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Solarmax;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -77,7 +78,7 @@ public class ApplyEffect
     }
 
 
-    public virtual bool OnceHit( BattleMember target, float hurtMult, double realHurt = 0 )
+    public virtual bool OnceHit(BattleMember target, float hurtMult, float realHurt = 0 )
     {
         if (target == null) return false;
         if( IsHited( target, hurtMult ) )
@@ -96,7 +97,7 @@ public class ApplyEffect
         float attAttack     = _sender.GetAtt(ShipAttr.AttackPower);
         float defense       = target.GetAtt( ShipAttr.Armor);
         float hurt          = attAttack - defense;
-        float hurtDefens    = _sender.GetAtt(ShipAttr.AttackPower ) * 0.1d;
+        float hurtDefens    = _sender.GetAtt(ShipAttr.AttackPower ) * 0.1f;
 
         hurt                = hurt > hurtDefens ? hurt : hurtDefens;
         hurt                = hurt * (1.0f + att) * hurtMult + realHurt;
@@ -112,7 +113,7 @@ public class ApplyEffect
         }
 
         /// 减血
-        target.ChangeAttr(ShipAttr.Hp, -hurt);
+        target.ChangeAttr(ShipAttr.Hp, -(int)hurt);
 
         // 反伤
         var cea = target.GetAtt(ShipAttr.Counterattack);
@@ -124,7 +125,7 @@ public class ApplyEffect
 
         // 吸血
         float s = _sender.GetAtt(ShipAttr.SuckBlood);
-        _sender.ChangeAttr(ShipAttr.Hp, s - ceaHurt);
+        _sender.ChangeAttr(ShipAttr.Hp, (int)(s - ceaHurt));
 
         // 被击事件
         if( hurt > 0 )
@@ -133,8 +134,8 @@ public class ApplyEffect
             hit.Src         = _sender;
             hit.Target      = target;
             hit.technique   = null;
-            hit.hurt        = hurt;
-            target.aiPublicy.EventGroup.fireEvent(hit);
+            hit.hurt        = (int)hurt;
+            target.aiPublicy.EventGroup.FireEvent(hit);
         }
 
         if( !target.isALive )
@@ -143,8 +144,9 @@ public class ApplyEffect
             Solarmax.KMonster ed = new Solarmax.KMonster();
             ed.killer       = _sender;
             ed.dead         = target;
-            _sender.aiPublicy.EventGroup.fireEvent(ed);
+            _sender.aiPublicy.EventGroup.FireEvent(ed);
         }
+        return true;
     }
 
 

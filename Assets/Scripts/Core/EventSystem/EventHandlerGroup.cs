@@ -72,7 +72,7 @@ public class EventHandlerGroup : Singleton<EventHandlerGroup>
 
     public uint RegEvent( Solarmax.EventID eventID, uint key )
     {
-        m_eventList.RegEventHandler(eventID, key);
+        return m_eventList.RegEventHandler(eventID, key);
     }
 
     public void RemoveEvent( Solarmax.EventID eventID, uint key )
