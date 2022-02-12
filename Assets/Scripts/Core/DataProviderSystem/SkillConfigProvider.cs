@@ -38,10 +38,10 @@ namespace Solarmax
     public class SkillConfig : ICfgEntry
     {
 		public int              id;
-        public int              type;   // 0 道具攻击， 1 buffer 攻击
+        public int              type;                       // 0 道具攻击， 1 buffer 攻击
         public TargetType       target;
         public CastType         cast;
-        public int              scope;
+        public int              scope;                      // 动作码
         public float            cd;
         public float            effectLife;
 
@@ -53,8 +53,8 @@ namespace Solarmax
 		public string           icon;
         public string           disable;
         public string           tips;
-		public int              bufferID;       // 技能携带bufferID
-		public string           displayID;      // 技能表现效果
+		public int              bufferID;                   // 技能携带bufferID
+		public string           displayID;                  // 技能表现效果
 
 
         public bool Load( XElement element)
