@@ -2,11 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Solarmax;
-
-
-
-
-
+using TimeLines;
 
 public partial class BattleMember : Lifecycle2
 {
@@ -95,7 +91,7 @@ public partial class BattleMember : Lifecycle2
 	/// <summary>
 	/// 飞船实体
 	/// </summary>
-	public EntityMember         entity { get; set; }
+	public EntityMember             entity { get; set; }
 
 
     /// <summary>
@@ -107,7 +103,10 @@ public partial class BattleMember : Lifecycle2
     private List<BufferEntiy>       bufs = new List<BufferEntiy>();
 
 
-    public BattleMemberAIPublicy   aiPublicy;
+    public BattleMemberAIPublicy    aiPublicy;
+
+    public DelayActionFrame         ActonTicks;
+
     /// <summary>
     /// 初始化
     /// </summary>
@@ -182,6 +181,7 @@ public partial class BattleMember : Lifecycle2
         isALive         = false;
         currentNode     = null;
 
+        ActonTicks      = new DelayActionFrame();
         aiPublicy       = new BattleMemberAIPublicy();
         aiPublicy.Init(this, BattleMemberAIPublicy.Publicy.active);
         attribute[(int)ShipAttr.AttackRange]    = config.attackrange;
@@ -216,6 +216,9 @@ public partial class BattleMember : Lifecycle2
         {
             return;
         }
+
+        /// 延迟逻辑
+        ActonTicks.Tick( interval );
 
         if (!isNeedUpdate)
         {

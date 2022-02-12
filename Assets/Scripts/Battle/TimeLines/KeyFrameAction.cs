@@ -70,8 +70,6 @@ namespace TimeLines
 
     public class EffectKeyFrameExportArgs : KeyFrameArgs
     {
-        [ArgsNote("特效路径", "以Resources为根")]
-        public string EffectPath = "";
         [ArgsNote("骨骼点的名字", "骨骼点上要放BonePoint脚本并设置")]
         public string BonePoint = "";
         [ArgsNote("特效命名", "强制取消会用到")]
@@ -93,7 +91,6 @@ namespace TimeLines
             {
                 Foldout         = Foldout,
                 Operation       = Operation,
-                EffectPath      = EffectPath,
                 BonePoint       = BonePoint,
                 EffectName      = EffectName,
                 LifeTime        = LifeTime,

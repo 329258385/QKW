@@ -428,12 +428,18 @@ public class EntityMember : DisplayEntity
 		AniCtrl.SetTrigger(AckHashCode);
     }
 
+	public void PlayAction( int nAction, float speed )
+    {
+		AniCtrl.SetTrigger(AckHashCode);
+		AniCtrl.speed = speed;
+		AniCtrl.SetInteger("Action", nAction);
+	}
 
 	public bool IsEndAttack = false;
-	public bool IsAttacking()
+	public void SetAniSpeed( float speed )
     {
-		return IsEndAttack;
-    }
+		AniCtrl.speed		= speed;
+	}
 
 
 	public void OnDeath()

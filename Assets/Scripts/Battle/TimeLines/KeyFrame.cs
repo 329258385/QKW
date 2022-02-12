@@ -133,14 +133,27 @@ namespace TimeLines
             {
                 if( kArgs.Operation == KeyFrameArgs.OperationType.TurnOn )
                 {
+                    if( Args.Source.isALive )
+                    {
+                        float speed     = Args.TimeScale;
+                        var aNames      = kArgs.ActionName.Split('.');
+                        var nameIndex   = UnityEngine.Random.Range(0, aNames.Length);
 
-                    float speed  = Args.TimeScale;
-                    var   aNames = kArgs.ActionName.Split('.');
-                    var nameIndex = UnityEngine.Random.Range(0, aNames.Length);
+                        /// 释放动作
+                        Args.Source.entity.PlayAction(int.Parse(aNames[nameIndex]), speed );
 
-                    // 播放动作
+                        /// 增加延迟处理逻辑
+                        Args.Source.ActonTicks.AddDelayAction(kArgs.ActionFileLegth / speed, () =>
+                        {
+                            Args.Source.entity.SetAniSpeed( 1.0f );
+                            if (Args != null && Args.OnActionFinishd != null)
+                                Args.OnActionFinishd();
+                        });
+                    }
+                    else
+                    {
 
-
+                    }
                 }
                 base.Execute(args);
             }
@@ -178,17 +191,68 @@ namespace TimeLines
 
         public override void Execute(KeyFrameArgs args)
         {
-
+            var kArgs = args as SoundKeyFrameExportArgs;
+            if( Args.Source != null )
+            {
+                var paths   = kArgs.SoundPath.Split(',');
+                var sel     = UnityEngine.Random.Range( 0, paths.Length );
+                AudioManger.Get().PlayEffect(paths[sel] );
+            }
             base.Execute(args);
+        }
+
+        public override void Stop(KeyFrameArgs action)
+        {
+            base.Stop(action);
         }
     }
 
 
     public class EffectKeyFrame : KeyFrame
     {
+        private EffectKeyFrameExportArgs    kArgs = null;
         public EffectKeyFrame( float time, ActionArgs args ) : base( time, args )
         {
 
+        }
+
+
+        public override void Execute( KeyFrameArgs args)
+        {
+            kArgs = args as EffectKeyFrameExportArgs;
+            if( Args.Source != null )
+            {
+                if( kArgs.Operation == KeyFrameArgs.OperationType.TurnOff )
+                {
+
+                }
+                else if ( kArgs.Operation == KeyFrameArgs.OperationType.TurnOn )
+                {
+                    Vector3 bornPos     = Args.Source.GetPosition();
+                    if( kArgs.ZeroPos == false )
+                    {
+                        ;// bornPos = Args.Source.GetBonePoint( kArgs.BonePoint ).position;
+                    }
+                    else
+                    {
+                        ;// bornPos = string.IsNullOrEmpty( kArgs.BonePoint) ? Args.Source.GetPosition()
+                         //                                                : Args.Source.GetBonePoint(kArgs.BonePoint).position;
+                    }
+
+                    EffectManager.Get().PlayParticleEffect(bornPos, Quaternion.identity, kArgs.EffectName, kArgs.LifeTime );
+                }
+            }
+            base.Execute(args);
+        }
+
+
+        public override void Stop(KeyFrameArgs action)
+        {
+            if( kArgs != null )
+            {
+
+            }
+            base.Stop(action);
         }
     }
 }
