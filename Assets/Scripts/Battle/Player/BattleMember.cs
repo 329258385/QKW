@@ -4,13 +4,38 @@ using System.Collections.Generic;
 using Solarmax;
 using TimeLines;
 
+
+
+public enum BattleMemberStatus
+{
+    status_Unknown      = 0,        // 未知
+    status_Move,                    // 移动
+    status_Attack,                  // 攻击
+    status_Dead,                    // 死亡
+    status_Escape,                  // 溃逃
+}
+
+
+public enum MemberEvents
+{
+    OnAttrChange,
+    HPChange,
+    MaxHPChange,
+
+    ReleaseSkill,           // 释放技能
+
+    DisplayAction,          // 播放动作
+}
+
 public partial class BattleMember : Lifecycle2
 {
 
     public enum BattleUnitType
     {
-        Member,
-        Hero,
+        bmt_Unknown = 0,        // 未知
+        bmt_Soldier,                    // 士兵
+        bmt_Hero,                       // 英雄
+        bmt_Commander,                  // 主帅
     }
 
 
@@ -23,12 +48,6 @@ public partial class BattleMember : Lifecycle2
 	/// 所在建筑
 	/// </summary>
 	public Node                 currentNode { get; set; }
-
-    /// <summary>
-    /// 当前位置格子
-    /// </summary>
-    public HexmapNode           currentHexNode { get; set; }
-
 
     /// <summary>
     /// 当前队伍
@@ -48,7 +67,7 @@ public partial class BattleMember : Lifecycle2
     /// <summary>
     /// 战斗单元类型
     /// </summary>
-    public BattleUnitType       unitType = BattleUnitType.Member;
+    public BattleUnitType       unitType = BattleUnitType.bmt_Soldier;
 
 
     /// <summary>
@@ -71,22 +90,22 @@ public partial class BattleMember : Lifecycle2
     /// 队伍信息
     /// </summary>
     /// <value>The real team.</value>
-    private Team                realTeam { get; set; }
+    private Team                    realTeam { get; set; }
 
     /// <summary>
     /// 对象池
     /// </summary>
-    ShipManager                 pool { get; set; }
+    ShipManager                     pool { get; set; }
 
 	/// <summary>
 	/// 是否在被使用
 	/// </summary>
-    public bool                 isALive { get; set; }
+    public bool                     isALive { get; set; }
 
     /// <summary>
     /// 是否需要更新逻辑
     /// </summary>
-    public bool                 isNeedUpdate = false;
+    public bool                     isNeedUpdate = false;
 
 	/// <summary>
 	/// 飞船实体
@@ -105,6 +124,9 @@ public partial class BattleMember : Lifecycle2
 
     public BattleMemberAIPublicy    aiPublicy;
 
+    /// <summary>
+    /// 延迟逻辑处理单元
+    /// </summary>
     public DelayActionFrame         ActonTicks;
 
     /// <summary>
@@ -112,7 +134,7 @@ public partial class BattleMember : Lifecycle2
     /// </summary>
     public BattleMember()
 	{
-        unitType = BattleUnitType.Member;
+        unitType                    = BattleUnitType.bmt_Soldier;
     }
 
 
@@ -191,7 +213,7 @@ public partial class BattleMember : Lifecycle2
         attribute[(int)ShipAttr.Speed]          = config.speed;
         attribute[(int)ShipAttr.MaxHp]          = config.maxHp;
         attribute[(int)ShipAttr.Armor]          = config.Arms;
-        if( this.unitType == BattleUnitType.Hero )
+        if( this.unitType == BattleUnitType.bmt_Hero )
         {
             attribute[(int)ShipAttr.Population] = 100;
             attribute[(int)ShipAttr.Hp]         = config.maxHp * 100;
@@ -225,7 +247,7 @@ public partial class BattleMember : Lifecycle2
             return;
         }
 
-        if (unitType == BattleUnitType.Member && battleTeam.btState != BattleTeamState.Battle )
+        if (unitType == BattleUnitType.bmt_Soldier && battleTeam.btState != BattleTeamState.Battle )
         {
             bool IsNeedMove = entity.UpdateMove(frame, interval);
             if (!IsNeedMove)
@@ -234,7 +256,7 @@ public partial class BattleMember : Lifecycle2
             }
         }
 
-        if (unitType == BattleUnitType.Hero && battleTeam.btState == BattleTeamState.Defensive)
+        if (unitType == BattleUnitType.bmt_Hero && battleTeam.btState == BattleTeamState.Defensive)
         {
             bool IsNeedMove = entity.UpdateMove(frame, interval);
             if (!IsNeedMove)
@@ -244,17 +266,6 @@ public partial class BattleMember : Lifecycle2
         }
 
         entity.Tick(frame, interval);
-
-        //HexmapNode hexnode = HexMap.Instance.Vector3ToNode( GetPosition() );
-        //if( hexnode != null )
-        //{
-        //    if( currentHexNode != null && hexnode != currentHexNode )
-        //    {
-        //        HexMap.Instance.ModifyNodeCost(currentHexNode, -1f);
-        //        currentHexNode = hexnode;
-        //        HexMap.Instance.ModifyNodeCost(currentHexNode,  1f);
-        //    }
-        //}
 
         if (battleTeam.btState == BattleTeamState.Battle )
         {
@@ -481,5 +492,115 @@ public partial class BattleMember : Lifecycle2
     public void PriorityEncircleCity( )
     {
         entity.PriorityEncircleCity();
+    }
+
+    private TechniqueEntiy currentSkill;
+    private bool    _isUseTechnique = false;
+    private Vector3 _vForwardDir = Vector3.zero;
+    // --------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 转向
+    /// </summary>
+    /// --------------------------------------------------------------------------------------------------------
+    public void RotateToTarget()
+    {
+        if(_isUseTechnique && currentSkill != null && currentSkill.IsApplyTechnique() )
+        {
+
+        }
+    }
+
+    /// <summary>
+    /// 事件系统
+    /// </summary>
+    public EventHandlerGroup            EventGroup { get; set; }
+
+    // --------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 属性变化
+    /// </summary>
+    /// --------------------------------------------------------------------------------------------------------
+    protected void OnAttrChange( ShipAttr attrid, int oldVal, int newValue )
+    {
+        EventGroup.fireEvent((int)MemberEvents.OnAttrChange, this, new EventArgs_ThreeVal<ShipAttr, int, int>(attrid, oldVal, newValue ));
+        switch( attrid )
+        {
+            case ShipAttr.Hp:
+                {
+                    bool oldDead = false;
+                    bool newDead = newValue <= 0;
+                    if (oldVal != 0)
+                    {
+                        EventGroup.fireEvent((int)MemberEvents.HPChange, this, new EventArgs_SinVal<bool>(newValue < oldVal));
+                    }
+                    if (oldDead == false && newDead)
+                    {
+                        ;//Die();
+                    }
+                    break;
+                }
+                break;
+
+            case ShipAttr.MaxHp:
+                {
+                    if (oldVal == GetAtt(ShipAttr.Hp) || newValue < GetAtt(ShipAttr.Hp))
+                    {
+                        SetAtt(ShipAttr.Hp, newValue);
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+
+    // --------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 技能是否能使用
+    /// </summary>
+    /// --------------------------------------------------------------------------------------------------------
+    public bool CanUseTechnique( TechniqueEntiy pTechnique, BattleMember target )
+    {
+        if ( pTechnique == null) return false;
+        if (_isUseTechnique ) return false;
+
+        return pTechnique.IsApplyTechnique();
+    }
+
+
+    // --------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 使用技能
+    /// </summary>
+    /// --------------------------------------------------------------------------------------------------------
+    public void UseTechnique(TechniqueEntiy pTechnique,  BattleMember target )
+    {
+        if( pTechnique != null )
+        {
+            pTechnique.StardCD();
+
+            _isUseTechnique         = true;
+            currentSkill            = pTechnique;
+            currentSkill.ApplyTechnique();
+
+            /// 通知使用技能事件
+            if( pTechnique.proto.scope > 0 )
+            {
+                ActionArgs args = new ActionArgs()
+                {
+                    SkillID         = -1,
+                    Source          = this,
+                    Target          = target,
+                    TargetPos       = Vector3.zero,
+                    TimeScale       = 1.0f,
+                    OnActionFinishd = currentSkill.OnActionFinish,
+                    OnLaunchFinishd = currentSkill.OnLaunchFinish,
+                };
+
+                EventGroup.fireEvent((int)MemberEvents.DisplayAction, this, new EventArgs_DouVal<string, ActionArgs>("", args));
+            }
+            EventGroup.fireEvent((int)MemberEvents.ReleaseSkill, this, null);
+        }
     }
 }

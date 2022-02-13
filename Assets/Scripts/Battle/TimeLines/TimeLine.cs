@@ -49,6 +49,15 @@ namespace TimeLines
             }
         }
 
+        public void ReSet(ActionArgs args)
+        {
+            End = false;
+            for (int i = 0; i < _keyFrames.Count; i++)
+            {
+                _keyFrames[i].ReSet(args);
+            }
+        }
+
         public void Stop()
         {
             for (int i = 0; i < _keyFrames.Count; i++)
@@ -102,6 +111,18 @@ namespace TimeLines
                 }
             }
 
+        }
+
+        public TimeLine Clone(ActionArgs args)
+        {
+            return null;
+            //var tl = new TimeLine(LineType, args) { _keyFrames = new List<KeyFrame>() };
+            //for (int i = 0; i < _keyFrames.Count; i++)
+            //{
+            //    var kf = _keyFrames[i].Clone(args);
+            //    tl.AddKeyFrames(kf);
+            //}
+            //return tl;
         }
     }
 }

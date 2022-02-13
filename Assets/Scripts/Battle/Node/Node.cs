@@ -311,7 +311,7 @@ public abstract partial class Node : Lifecycle3
 
         //获取一个ship对象
         ship             = nodeManager.sceneManager.shipManager.Alloc();
-		ship.unitType	 = BattleMember.BattleUnitType.Member;
+		ship.unitType	 = BattleMember.BattleUnitType.bmt_Soldier;
 		ship.sceneManager = nodeManager.sceneManager;
 		ship.currentNode = this;
 		ship.InitMember(config, (TEAM)team);
@@ -331,7 +331,7 @@ public abstract partial class Node : Lifecycle3
 		Team teamData	= nodeManager.sceneManager.teamManager.GetTeam((TEAM)team);
 		if ( hero != null )
         {
-			hero.unitType	  = BattleMember.BattleUnitType.Hero;
+			hero.unitType	  = BattleMember.BattleUnitType.bmt_Hero;
 			hero.sceneManager = nodeManager.sceneManager;
 			hero.currentNode  = this;
 			hero.InitMember(config, (TEAM)team);

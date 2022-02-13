@@ -171,69 +171,21 @@ public class TechniqueEntiy
     /// 播放技能特效
     /// </summary>
     /// ----------------------------------------------------------------------------------------------------------
-    private void PlayTechniqueEffect( BattleMember targetShip )
+    public void OnActionFinish( )
     {
-        if( string.IsNullOrEmpty(proto.displayID) )
-        {
-            return;
-        }
-
-        /// 播放特效
-        GameObject parent   = sender.entity.go;
-        Vector3 start       = sender.GetPosition();
-        if( targetShip != null )
-        {
-            Vector3 end     = targetShip.GetPosition();
-            Vector3 dir     = (end - start).normalized;
-            EffectManager.Get().PlayParticleEffect(start, Quaternion.LookRotation(dir), "", proto.effectLife, parent );
-        }
-        else
-        {
-            GameObject go   = sender.entity.go;
-            Vector3 dir     = go.transform.forward;
-            EffectManager.Get().PlayParticleEffect(start, Quaternion.LookRotation(dir), "", proto.effectLife, parent);
-        }
+        
     }
 
 
-   
+
     /// ----------------------------------------------------------------------------------------------------------
     /// <summary>
     /// 计算技能目标,飞行中的飞船
     /// </summary>
     /// ----------------------------------------------------------------------------------------------------------
-    private void CalcTargetFlyShips(BattleMember self )
+    public void OnLaunchFinish(bool isFinish, int hitCond)
     {
-        if ( proto == null || self == null )
-        {
-            return;
-        }
-
-
-        Vector3 curPos              = self.GetPosition();
-        Team currentTeam            = self.currentTeam;
-        SceneManager sceneManager   = BattleSystem.Instance.sceneManager;
-        ShipManager shipManager     = BattleSystem.Instance.sceneManager.shipManager;
-        if( shipManager != null && sceneManager != null )
-        {
-            for (int i = 1; i < (int)TEAM.TeamMax; i++)
-            {
-                // 增加隐星效果
-                Team targetTeam  = sceneManager.teamManager.GetTeam((TEAM)i);
-                if (targetTeam == null)
-                    continue;
-                
-                List<BattleMember> ships = sceneManager.nodeManager.sceneManager.shipManager.GetFlyShip((TEAM)i);
-                for (int j = 0; j < ships.Count; j++)
-                {
-                    float fDistance = (curPos - ships[j].GetPosition()).magnitude;
-                    if ( fDistance < proto.scope )
-                    {
-                        targetList.Add(ships[j]);
-                    }
-                                                                                                                                                        }
-            }
-        }
+       
     }
 
 

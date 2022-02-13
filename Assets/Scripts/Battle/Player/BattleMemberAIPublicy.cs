@@ -411,7 +411,7 @@ public class BattleMemberAIPublicy
             foreach (var member in members)
             {
                 float distance      = (mOwer.GetPosition() - member.GetPosition()).sqrMagnitude;
-                if (distance <= fMax && member.isALive && member.unitType == BattleMember.BattleUnitType.Member)
+                if (distance <= fMax && member.isALive && member.unitType == BattleMember.BattleUnitType.bmt_Soldier )
                 {
                     nearestEnemy    = member;
                     fMax            = distance;

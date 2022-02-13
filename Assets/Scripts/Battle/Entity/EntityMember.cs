@@ -177,7 +177,7 @@ public class EntityMember : DisplayEntity
 	private float mPreJump1Timer = 0f;
 	void UpdatePreJump1(int frame, float dt)
 	{
-		if (ship.unitType == BattleMember.BattleUnitType.Member)
+		if (ship.unitType == BattleMember.BattleUnitType.bmt_Soldier )
 			return;
 
 		//是否瞬移
