@@ -231,12 +231,12 @@ namespace TimeLines
                     Vector3 bornPos     = Args.Source.GetPosition();
                     if( kArgs.ZeroPos == false )
                     {
-                        ;// bornPos = Args.Source.GetBonePoint( kArgs.BonePoint ).position;
+                        bornPos = Args.Source.entity.GetBonePoint( kArgs.BonePoint ).position;
                     }
                     else
                     {
-                        ;// bornPos = string.IsNullOrEmpty( kArgs.BonePoint) ? Args.Source.GetPosition()
-                         //                                                : Args.Source.GetBonePoint(kArgs.BonePoint).position;
+                        bornPos = string.IsNullOrEmpty( kArgs.BonePoint) ? Args.Source.GetPosition()
+                                                                         : Args.Source.entity.GetBonePoint(kArgs.BonePoint).position;
                     }
 
                     EffectManager.Get().PlayParticleEffect(bornPos, Quaternion.identity, kArgs.EffectName, kArgs.LifeTime );

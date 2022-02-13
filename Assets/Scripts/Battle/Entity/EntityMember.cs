@@ -50,6 +50,7 @@ public class EntityMember : DisplayEntity
 
 	Vector3							targetNodePos;
 
+	private BonePointGroup			bpGroups;
 	/// <summary>
 	/// 修改皮肤属性
 	/// </summary>
@@ -78,7 +79,7 @@ public class EntityMember : DisplayEntity
 	/// </summary>
 	public EntityMember(string name, bool silent) : base(name, silent)
 	{
-        
+		bpGroups = new BonePointGroup();
 	}
 
     public override bool Init ( )
@@ -140,6 +141,7 @@ public class EntityMember : DisplayEntity
 		go.transform.localEulerAngles	= Vector3.zero;
 		go.transform.localScale			= Vector3.one;
 		go.gameObject.SetActive(false);
+		bpGroups.InitBone(go);
 		ModifySkin();
 	}
 
@@ -461,5 +463,14 @@ public class EntityMember : DisplayEntity
 		{
 			go.SetActive(true);
 		}
+	}
+
+	public Transform GetBonePoint(string bpName)
+	{
+		Transform tf = bpGroups.GetBonePoint(bpName);
+		if (tf == null)
+			return go.transform;
+
+		return tf;
 	}
 }
