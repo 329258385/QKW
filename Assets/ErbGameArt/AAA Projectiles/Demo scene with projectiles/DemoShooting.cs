@@ -25,7 +25,10 @@ public class DemoShooting : MonoBehaviour
     //Double-click protection
     private float buttonSaver = 0f;
 
-    void Start ()
+    //For Camera shake 
+    public Animation camAnim;
+
+    void Start()
     {
         if (Screen.dpi < 1) windowDpi = 1;
         if (Screen.dpi < 200) windowDpi = 1;
@@ -38,6 +41,7 @@ public class DemoShooting : MonoBehaviour
         //Single shoot
         if (Input.GetButtonDown("Fire1"))
         {
+            camAnim.Play(camAnim.clip.name);
             Instantiate(Prefabs[Prefab], FirePoint.transform.position, FirePoint.transform.rotation);
         }
 
@@ -59,7 +63,7 @@ public class DemoShooting : MonoBehaviour
         if ((Input.GetKey(KeyCode.D) || Input.GetAxis("Horizontal") > 0) && buttonSaver >= 0.4f)// right button
         {
             buttonSaver = 0f;
-            Counter(+1);         
+            Counter(+1);
         }
         buttonSaver += Time.deltaTime;
 
@@ -103,9 +107,9 @@ public class DemoShooting : MonoBehaviour
             Prefab = Prefabs.Length - 1;
         }
     }
-  
+
     //To rotate fire point
-    void RotateToMouseDirection (GameObject obj, Vector3 destination)
+    void RotateToMouseDirection(GameObject obj, Vector3 destination)
     {
         direction = destination - obj.transform.position;
         rotation = Quaternion.LookRotation(direction);

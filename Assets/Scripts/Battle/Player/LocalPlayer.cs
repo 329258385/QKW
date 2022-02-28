@@ -45,22 +45,22 @@ public class LocalPlayer : Singleton<LocalPlayer>
     {
         /// 配置编队
         Simpleheroconfig hero   = new Simpleheroconfig();
-        hero.heroID             = 3004;
+        hero.heroID             = 3007;
         HeroConfig config       = HeroConfigProvider.Get().GetData(hero.heroID);
         hero.InitAttr(config);
         battleTeam.Add(hero);
 
         Simpleheroconfig hero1  = new Simpleheroconfig();
-        hero1.heroID            = 3005;
+        hero1.heroID            = 3006;
         config                  = HeroConfigProvider.Get().GetData(hero1.heroID);
         hero1.InitAttr(config);
         battleTeam.Add(hero1);
 
-        Simpleheroconfig hero2  = new Simpleheroconfig();
+        /*Simpleheroconfig hero2  = new Simpleheroconfig();
         hero2.heroID            = 3001;
         config                  = HeroConfigProvider.Get().GetData(hero2.heroID);
         hero2.InitAttr(config);
-        battleTeam.Add(hero2);
+        battleTeam.Add(hero2);*/
     }
 
 

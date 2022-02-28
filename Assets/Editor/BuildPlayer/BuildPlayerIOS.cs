@@ -12,9 +12,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
-#if !UNITY_EDITOR_WIN
-using UnityEditor.iOS.Xcode;
-#endif
+#if UNITY_EDITOR_IOS
+ using UnityEditor.iOS.Xcode;
+
 
 public static class BuildPlayerIOS
 {
@@ -619,3 +619,6 @@ public static class BuildPlayerIOS
         return result;
     }
 }
+
+
+#endif
