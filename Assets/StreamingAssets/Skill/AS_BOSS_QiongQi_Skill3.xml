@@ -1,0 +1,35 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Skill3" Speed="1" ActionFileLegth="0" BackPos="0,0,0" BackTime="1" StayTime="1" RecoveryTime="1" DisableHeadIK="False" DisableBodyIK="False" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="1">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\QiongQi_BigAttack_xuanfeng_pre" BonePoint="" EffectName="skill3" LifeTime="-1" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0.44">
+      <Action Operation="TurnOn" SoundPath="SkillSound\HuJiao" SoundName="HuJiao" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.52">
+      <Action Operation="TurnOn" SoundPath="SkillSound\ZhuGeLiangShoot" SoundName="ZhuGeLiangShoot" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.84">
+      <Action Operation="TurnOn" SoundPath="SkillSound\ZhuGeLiangShoot" SoundName="ZhuGeLiangShoot" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="1.2">
+      <Action Operation="TurnOn" SoundPath="SkillSound\ZhuGeLiangShoot" SoundName="ZhuGeLiangShoot" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="1.52">
+      <Action Operation="TurnOn" SoundPath="SkillSound\ZhuGeLiangShoot" SoundName="ZhuGeLiangShoot" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="1.68">
+      <Action Operation="TurnOn" SoundPath="SkillSound\ZhouYuAttack" SoundName="ZhouYuAttack" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="1.72">
+      <Action Operation="TurnOn" SoundPath="SkillSound\DongZhuoSkillAttack" SoundName="DongZhuoSkillAttack" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

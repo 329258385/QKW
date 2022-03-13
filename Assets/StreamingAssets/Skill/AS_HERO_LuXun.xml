@@ -1,0 +1,23 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Skill" Speed="1" ActionFileLegth="1" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0.12">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\LuXun_BigAttack" BonePoint="" EffectName="baodian" LifeTime="-1" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+    <Frame Point="0.2">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\LuXun_BigAttack_wuqi" BonePoint="weapon" EffectName="qianyao" LifeTime="-1" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0">
+      <Action Operation="TurnOn" SoundPath="Skill\LuXun_YuYin_01,Skill\LuXun_YuYin_02" SoundName="LuXun_YuYin_01,LuXun_YuYin_02" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.8">
+      <Action Operation="TurnOn" SoundPath="SkillSound\LuXunBigAttack" SoundName="LuXunBigAttack" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

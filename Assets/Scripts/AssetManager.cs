@@ -26,11 +26,9 @@ public class AssetManager : Singleton<AssetManager>
 	{
 		/////////////////////////////////////////
 		/// 建筑
-        AddSprite ("BlackKnight");
-		AddSprite ("FylingDemon");
-		AddSprite ("LizardWarrior");
-		AddSprite ("RatAssassin");
-		AddSprite ("Werewol");
+        AddSprite ("Hero001");
+		AddSprite ("Hero002");
+		AddSprite ("Hero003");
 		AddSprite ("Archer");
 		AddSprite ("ShieldWarrior");
 		AddSprite ("ThrowerDummy");
@@ -74,11 +72,9 @@ public class AssetManager : Singleton<AssetManager>
 	{
 		/////////////////////////////////////////
 		/// 角色
-		RemoveResources("BlackKnight");
-		RemoveResources("FylingDemon");
-		RemoveResources("LizardWarrior");
-		RemoveResources("RatAssassin");
-		RemoveResources("Werewol");
+		RemoveResources("Hero001");
+		RemoveResources("Hero002");
+		RemoveResources("Hero003");
 		RemoveResources("Archer");
 		RemoveResources("ShieldWarrior");
 		RemoveResources("ThrowerDummy");

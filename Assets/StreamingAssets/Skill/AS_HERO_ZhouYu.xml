@@ -1,0 +1,32 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Skill" Speed="1" ActionFileLegth="1" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\ZhouYu_BigAttack_wuqi" BonePoint="Weapon" EffectName="Weapon" LifeTime="-1" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\Zhouyu_BigAttack_Huoxing" BonePoint="" EffectName="Huoxing" LifeTime="3" AutoDestroy="True" BuildBone="False" AutoScale="False" ZeroPos="True" />
+    </Frame>
+    <Frame Point="0.76">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\ZhouYu_BigAttack" BonePoint="Top" EffectName="baodian" LifeTime="-1" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0.04">
+      <Action Operation="TurnOn" SoundPath="SkillSound\ManShout3" SoundName="ManShout3" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.04">
+      <Action Operation="TurnOn" SoundPath="SkillSound\ZhouYuXuLi01" SoundName="ZhouYuXuLi01" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.08">
+      <Action Operation="TurnOn" SoundPath="Skill\ZhouYu_YuYin_01,Skill\ZhouYu_YuYin_02" SoundName="ZhouYu_YuYin_01,ZhouYu_YuYin_02" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.28">
+      <Action Operation="TurnOn" SoundPath="SkillSound\ZhouYu_Effect_01" SoundName="ZhouYu_Effect_01" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

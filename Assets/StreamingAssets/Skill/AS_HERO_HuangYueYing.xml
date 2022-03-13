@@ -1,0 +1,36 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Skill" Speed="1" ActionFileLegth="1.3" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\HuangYueYing_BigAttack_Pre" BonePoint="LaunchEffect" EffectName="xuli" LifeTime="-1" AutoDestroy="True" BuildBone="True" />
+    </Frame>
+    <Frame Point="0.8">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\HuangYueYing_BigAttack_muzzle" BonePoint="Smoke" EffectName="Smoke" LifeTime="-1" AutoDestroy="True" BuildBone="True" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="0" TypeName="Launch">
+    <Frame Point="0.9">
+      <Action Operation="TurnOn" LaunchPath="Launch\Launch_HERO_HuangYueYing" BonePoint="LaunchEffect" HitCond="-1" AsFinish="True" Speed="70" LaunchDirection="-1" HitEffectName="" SkillId="-1" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="4" TypeName="Shake">
+    <Frame Point="0.8">
+      <Action Operation="TurnOn" Duration="0.2" XForce="0.5" YForce="0.5" ZForce="0.5" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0">
+      <Action Operation="TurnOn" SoundPath="SkillSound\HuangYueYingXuLi" SoundName="HuangYueYingXuLi" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.04">
+      <Action Operation="TurnOn" SoundPath="Skill\HuangYueYing_YuYin_01,Skill\HuangYueYing_YuYin_02" SoundName="HuangYueYing_YuYin_01,HuangYueYing_YuYin_02" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.8">
+      <Action Operation="TurnOn" SoundPath="SkillSound\HuangYueYingBigShoot" SoundName="HuangYueYingBigShoot" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

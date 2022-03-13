@@ -1,0 +1,7 @@
+<Skill Loop="0">
+  <TimeLines Type="0" TypeName="Launch">
+    <Frame Point="0.3">
+      <Action Operation="TurnOn" LaunchPath="Launch/Launch_HERO_WuShi" BonePoint="" HitCond="-1" AsFinish="True" Speed="100" LaunchDirection="-1" HitEffectName="" SkillId="-1" />
+    </Frame>
+  </TimeLines>
+</Skill>

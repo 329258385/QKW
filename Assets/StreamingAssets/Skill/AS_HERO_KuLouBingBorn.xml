@@ -1,0 +1,13 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Born" Speed="1" ActionFileLegth="1" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\ZhangJiao_BigAttack_skull" BonePoint="" EffectName="born" LifeTime="4" AutoDestroy="True" BuildBone="True" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound" />
+</Skill>

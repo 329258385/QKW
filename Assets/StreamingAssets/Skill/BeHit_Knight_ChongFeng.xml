@@ -1,0 +1,8 @@
+<Skill Loop="0">
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\QiBing_chongfeng_fanwei" BonePoint="" EffectName="QiBing_chongfeng_fanwei" LifeTime="-1" AutoDestroy="True" BuildBone="True" />
+      <Action Operation="TurnOff" EffectPath="EffectPerfab\Skill\QiBing_chongfeng" BonePoint="" EffectName="QiBing_chongfeng" LifeTime="-1" AutoDestroy="True" BuildBone="True" />
+    </Frame>
+  </TimeLines>
+</Skill>

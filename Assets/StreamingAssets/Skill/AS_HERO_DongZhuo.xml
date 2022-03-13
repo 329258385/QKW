@@ -1,0 +1,34 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Skill" Speed="1" ActionFileLegth="1" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\DongZhuo_BigAttack_pre" BonePoint="Body" EffectName="pre" LifeTime="-1" AutoDestroy="True" BuildBone="True" />
+    </Frame>
+    <Frame Point="1">
+      <Action Operation="TurnOff" EffectPath="EffectPerfab\Skill\DongZhuo_BigAttack_pre" BonePoint="Body" EffectName="pre" LifeTime="-1" AutoDestroy="True" BuildBone="True" />
+    </Frame>
+    <Frame Point="1.04">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\DongZhuo_BigAttack" BonePoint="Body" EffectName="chaofeng" LifeTime="-1" AutoDestroy="True" BuildBone="True" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="4" TypeName="Shake">
+    <Frame Point="1.04">
+      <Action Operation="TurnOn" Duration="0.3" XForce="0.6" YForce="0.6" ZForce="0.6" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="-0.04">
+      <Action Operation="TurnOn" SoundPath="Skill\DongZhuo_YuYin_01,Skill\DongZhuo_YuYin_02" SoundName="DongZhuo_YuYin_01,DongZhuo_YuYin_02" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.92">
+      <Action Operation="TurnOn" SoundPath="SkillSound\DongZhuoAttack" SoundName="DongZhuoAttack" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="1.4">
+      <Action Operation="TurnOn" SoundPath="SkillSound\DongZhuoAttack" SoundName="DongZhuoAttack" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

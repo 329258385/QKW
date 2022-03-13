@@ -1,0 +1,17 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Attack" Speed="1" ActionFileLegth="1" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="0" TypeName="Launch">
+    <Frame Point="1">
+      <Action Operation="TurnOn" LaunchPath="Launch/Launch_Soldier_FangShi" BonePoint="" HitCond="-1" AsFinish="True" Speed="30" LaunchDirection="-1" HitEffectName="" SkillId="-1" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="1">
+      <Action Operation="TurnOn" SoundPath="Skill\Hit\Hit_Magic_1,Skill\Hit\Hit_Magic_2" SoundName="MH1,MH2" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

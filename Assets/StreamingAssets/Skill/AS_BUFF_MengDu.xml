@@ -1,0 +1,7 @@
+<Skill Loop="0">
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\Mengdu_buff" BonePoint="Body" EffectName="MengDu" LifeTime="-1" AutoDestroy="True" BuildBone="True" />
+    </Frame>
+  </TimeLines>
+</Skill>

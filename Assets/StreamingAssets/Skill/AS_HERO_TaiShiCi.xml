@@ -1,0 +1,37 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Skill" Speed="1" ActionFileLegth="1.667" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\TaiShiCi_BigAttack_pre" BonePoint="" EffectName="pre" LifeTime="-1" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="0" TypeName="Launch">
+    <Frame Point="1">
+      <Action Operation="TurnOn" LaunchPath="Launch/Launch_HERO_TaiShiCi_BigAttack" BonePoint="Body" HitCond="-1" AsFinish="True" Speed="40" LaunchDirection="-1" HitEffectName="" SkillId="-1" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0">
+      <Action Operation="TurnOn" SoundPath="Skill\TaiShiCi_YuYin_01,Skill\TaiShiCi_YuYin_02" SoundName="TaiShiCi_YuYin_01,TaiShiCi_YuYin_02" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.08">
+      <Action Operation="TurnOn" SoundPath="SkillSound\TaiShiCi_Effect_01" SoundName="TaiShiCi_Effect_01" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="1">
+      <Action Operation="TurnOn" SoundPath="SkillSound\LuXunBigAttack" SoundName="LuXunBigAttack" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.84">
+      <Action Operation="TurnOn" SoundPath="SkillSound\DiaoChanShoot" SoundName="DiaoChanShoot" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="1.68">
+      <Action Operation="TurnOn" SoundPath="SkillSound\TaiShiCi_Effect_02" SoundName="TaiShiCi_Effect_02" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="1.72">
+      <Action Operation="TurnOn" SoundPath="SkillSound\DongZhuoSkillAttack" SoundName="DongZhuoSkillAttack" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

@@ -1,0 +1,28 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="BigAttack" Speed="1" ActionFileLegth="1" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0.04">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\GuanYu_BigAttack_sp_xuli" BonePoint="" EffectName="xuli" LifeTime="-1" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="4" TypeName="Shake">
+    <Frame Point="1.2">
+      <Action Operation="TurnOn" Duration="0.4" XForce="0.6" YForce="0.6" ZForce="0.6" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0">
+      <Action Operation="TurnOn" SoundPath="SkillSound\GuanYuBigAttack" SoundName="GuanYuBigAttack" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.04">
+      <Action Operation="TurnOn" SoundPath="Skill\GuanYu_YuYin_01,Skill\GuanYu_YuYin_02" SoundName="GuanYu_YuYin_0,GuanYu_YuYin_02" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.8">
+      <Action Operation="TurnOn" SoundPath="SkillSound\HuangZhongBoom" SoundName="HuangZhongBoom" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

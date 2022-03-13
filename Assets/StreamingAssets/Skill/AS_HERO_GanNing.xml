@@ -1,0 +1,23 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Skill" Speed="1" ActionFileLegth="1" BackPos="0,0,0" BackTime="1" StayTime="1" RecoveryTime="1" DisableHeadIK="False" DisableBodyIK="False" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="4" TypeName="Shake">
+    <Frame Point="0.7">
+      <Action Operation="TurnOn" Duration="0.4" XForce="0.6" YForce="0.6" ZForce="0.6" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0">
+      <Action Operation="TurnOn" SoundPath="Skill\GanNing_YuYin_01,Skill\GanNing_YuYin_02" SoundName="GanNing_YuYin_01,GanNing_YuYin_02" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.32">
+      <Action Operation="TurnOn" SoundPath="Show\DaQiao_Effect_01" SoundName="DaQiao_Effect_01" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.4">
+      <Action Operation="TurnOn" SoundPath="Show\ZhangBao_Effect_03" SoundName="ZhangBao_Effect_03" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

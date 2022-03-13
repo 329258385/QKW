@@ -1,0 +1,7 @@
+<Skill Loop="0">
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\General_Buff_fire_small" BonePoint="Top" EffectName="cuihuo" LifeTime="-1" AutoDestroy="True" BuildBone="True" />
+    </Frame>
+  </TimeLines>
+</Skill>

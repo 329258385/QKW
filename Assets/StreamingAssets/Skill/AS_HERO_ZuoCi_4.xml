@@ -1,0 +1,29 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Skill" Speed="1" ActionFileLegth="1" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\ZuoCi_BigAttack_pro_dian" BonePoint="Body" EffectName="pre" LifeTime="-1" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\ZuoCi_BigAttack_pro_huo" BonePoint="Body" EffectName="pre" LifeTime="-1" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\ZuoCi_BigAttack_pro_du" BonePoint="Body" EffectName="pre" LifeTime="-1" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0">
+      <Action Operation="TurnOn" SoundPath="SkillSound\ZuoCiXuLi" SoundName="ZuoCiXuLi" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.24">
+      <Action Operation="TurnOn" SoundPath="Skill\ZuoCi_YuYin_01,Skill\ZuoCi_YuYin_02" SoundName="ZuoCi_YuYin_01,ZuoCi_YuYin_02" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="1">
+      <Action Operation="TurnOn" SoundPath="SkillSound\ZuoCi_Effect_04" SoundName="ZuoCi_Effect_04" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

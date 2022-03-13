@@ -1,0 +1,13 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Hit" Speed="1" ActionFileLegth="1" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\JiGuanShou_BigAttack3_Chongfeng_Hit" BonePoint="" EffectName="chongfeng_hit" LifeTime="-1" AutoDestroy="True" BuildBone="True" />
+      <Action Operation="TurnOff" EffectPath="EffectPerfab\Skill\JiGuanShou_BigAttack3_Chongfeng" BonePoint="" EffectName="chongfeng" LifeTime="-1" AutoDestroy="True" BuildBone="True" />
+    </Frame>
+  </TimeLines>
+</Skill>

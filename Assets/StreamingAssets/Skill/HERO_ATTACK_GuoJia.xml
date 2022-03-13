@@ -1,0 +1,17 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Attack" Speed="1" ActionFileLegth="1" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="0" TypeName="Launch">
+    <Frame Point="0.92">
+      <Action Operation="TurnOn" LaunchPath="Launch\Launch_HERO_GuoJia" BonePoint="" AsFinish="True" Speed="40" LaunchDirection="-1" HitEffectName="" SkillId="-1" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0.92">
+      <Action Operation="TurnOn" SoundPath="SkillSound\GuoJiaAttack" SoundName="GuoJiaAttack" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

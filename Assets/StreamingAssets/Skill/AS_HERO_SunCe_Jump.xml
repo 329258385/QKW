@@ -1,0 +1,7 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Run" Speed="-1" ActionFileLegth="0.533" />
+    </Frame>
+  </TimeLines>
+</Skill>

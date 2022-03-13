@@ -1,0 +1,7 @@
+<Skill Loop="0">
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab/General_Attack_Miss" BonePoint="Top" EffectName="miss" LifeTime="1" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+  </TimeLines>
+</Skill>

@@ -1,0 +1,12 @@
+<Skill Loop="0">
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab/Skill/DiaoChan_BigAttack_lijian" BonePoint="Head" EffectName="lijian" LifeTime="-1" AutoDestroy="True" BuildBone="True" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0">
+      <Action Operation="TurnOn" SoundPath="SkillSound\DiaoChanHit" SoundName="DiaoChanHit" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

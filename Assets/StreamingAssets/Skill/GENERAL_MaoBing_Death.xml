@@ -1,0 +1,7 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Death" Speed="1" ActionFileLegth="1" />
+    </Frame>
+  </TimeLines>
+</Skill>

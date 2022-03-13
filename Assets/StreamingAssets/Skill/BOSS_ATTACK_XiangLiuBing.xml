@@ -1,0 +1,15 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Attack_L,Attack_R" Speed="1" ActionFileLegth="1" BackPos="0,0,0" BackTime="1" StayTime="1" RecoveryTime="1" DisableHeadIK="False" DisableBodyIK="False" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0.08">
+      <Action Operation="TurnOn" SoundPath="SkillSound\She" SoundName="She" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.72">
+      <Action Operation="TurnOn" SoundPath="SkillSound\Bing" SoundName="Bing" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

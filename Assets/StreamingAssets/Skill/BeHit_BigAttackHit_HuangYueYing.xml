@@ -1,0 +1,7 @@
+<Skill Loop="0">
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0">
+      <Action Operation="TurnOn" SoundPath="SkillSound\HuangYueYingBoom" SoundName="HuangYueYingBoom" Loop="False" />
+    </Frame>
+  </TimeLines>
+</Skill>

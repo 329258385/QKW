@@ -1,0 +1,43 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="BigAttack" Speed="1" ActionFileLegth="1" BackPos="0,0,0" BackTime="1" StayTime="1" RecoveryTime="1" DisableHeadIK="False" DisableBodyIK="False" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0.04">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\ShiTouRen_BigAttack" BonePoint="" EffectName="baozha" LifeTime="-1" AutoDestroy="True" BuildBone="False" AutoScale="True" ZeroPos="False" />
+    </Frame>
+    <Frame Point="1.2">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\ShiTouRen_BigAttack_buff" BonePoint="" EffectName="def" LifeTime="-1" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+    <Frame Point="1.24">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\ShiTouRen_BigAttack_buffglow" BonePoint="HouBei" EffectName="buffglow" LifeTime="-1" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+    <Frame Point="7.2">
+      <Action Operation="TurnOff" EffectPath="EffectPerfab\Skill\ShiTouRen_BigAttack_buff" BonePoint="" EffectName="def" LifeTime="-1" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+    <Frame Point="7.24">
+      <Action Operation="TurnOff" EffectPath="EffectPerfab\Skill\ShiTouRen_BigAttack_buffglow" BonePoint="HouBei" EffectName="buffglow" LifeTime="-1" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="4" TypeName="Shake">
+    <Frame Point="1.2">
+      <Action Operation="TurnOn" Duration="0.5" XForce="0.5" YForce="0.5" ZForce="0.5" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0.32">
+      <Action Operation="TurnOn" SoundPath="SkillSound\ZhangBao_Monster_Attack" SoundName="ZhangBao_Monster_Attack" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.76">
+      <Action Operation="TurnOn" SoundPath="SkillSound\ZhangBao_Monster_Attack" SoundName="ZhangBao_Monster_Attack" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="1.16">
+      <Action Operation="TurnOn" SoundPath="SkillSound\LuZhi_Effect_Skill_01" SoundName="LuZhi_Effect_Skill_01" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="1.24">
+      <Action Operation="TurnOn" SoundPath="SkillSound\ZhangBaoBoom" SoundName="ZhangBaoBoom" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

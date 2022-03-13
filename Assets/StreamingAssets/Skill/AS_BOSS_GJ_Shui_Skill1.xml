@@ -1,0 +1,23 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Skill3" Speed="1" ActionFileLegth="0.6666667" BackPos="0,0,0" BackTime="1" StayTime="1" RecoveryTime="1" DisableHeadIK="False" DisableBodyIK="False" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="4" TypeName="Shake">
+    <Frame Point="0.68">
+      <Action Operation="TurnOn" Duration="0.2" XForce="0.3" YForce="0.3" ZForce="0.3" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0.08">
+      <Action Operation="TurnOn" SoundPath="SkillSound/CaiMao_Effect_01" SoundName="CaiMao_Effect_01" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.72">
+      <Action Operation="TurnOn" SoundPath="SkillSound/XiaoQiaoBoom" SoundName="XiaoQiaoBoom" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.76">
+      <Action Operation="TurnOn" SoundPath="SkillSound/DuYe" SoundName="DuYe" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

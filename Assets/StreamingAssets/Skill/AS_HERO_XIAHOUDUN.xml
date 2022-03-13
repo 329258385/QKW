@@ -1,0 +1,20 @@
+<Skill Loop="0">
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0.04">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\XiaHouDun_BigAttack02_3" BonePoint="" EffectName="BigAttack02_3" LifeTime="-1" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="4" TypeName="Shake">
+    <Frame Point="0.04">
+      <Action Operation="TurnOn" Duration="0.2" XForce="0.6" YForce="0.6" ZForce="0.6" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0.04">
+      <Action Operation="TurnOn" SoundPath="SkillSound\XiaHouDunBoom" SoundName="XiaHouDunBoom" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.08">
+      <Action Operation="TurnOn" SoundPath="Skill\XiaHouDun_YuYin_01,Skill\XiaHouDun_YuYin_02" SoundName="XiaHouDun_YuYin_01,XiaHouDun_YuYin_02" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

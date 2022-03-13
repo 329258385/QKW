@@ -1,0 +1,12 @@
+<Skill Loop="0">
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\General_BigAttack_Hit" BonePoint="Body" EffectName="axeHit" LifeTime="1" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0">
+      <Action Operation="TurnOn" SoundPath="SkillSound\ZhangBao_Monster_Attack" SoundName="ZhangBao_Monster_Attack" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

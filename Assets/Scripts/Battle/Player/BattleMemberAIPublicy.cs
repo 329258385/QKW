@@ -7,64 +7,71 @@ using UnityEngine;
 
 
 
+public enum BattleMemberStatus
+{
+    status_Unknown = 0,             // 未知
+    status_Move,                    // 移动
+    status_Attack,                  // 攻击
+    status_Dead,                    // 死亡
+    status_Escape,                  // 溃逃
+    status_Wander,                  // 游走
+    status_AtkCity,                 // 围城
+    status_Repel,                   // 击退
+}
+
+
+/// <summary>
+/// 战斗单元类型
+/// </summary>
+public enum BattleMemberType
+{
+    BMT_0,          // 轻步兵
+    BMT_1,          // 重步兵
+    BMT_2,          // 盾排兵
+    BMT_3,          // 轻骑兵
+    BMT_4,          // 重骑兵
+    BMT_5,          // 弓箭兵
+    BMT_6,          // 飞行兵
+    BMT_7,          // 炮兵兵
+}
+
 
 public class BattleMemberAIPublicy
 {
-    /// <summary>
-    /// 战斗状态
-    /// </summary>
-    public enum Battlestate
-    {
-        Move,                       // 移动
-        Escape,                     // 逃跑
-        Repel,                      // 击退
-        Battle,                     // 战斗
-        Wander,                     // 选择游走点
-        SerachEntiy,                // 索敌
-        AtkCity,
-        Death,
-    }
-
-
-    public enum Publicy
-    {
-        active,                     // 主动攻击
-        defense,                    // 主动防御，然后攻击
-    }
-
     private BattleMember            mOwer = null;
-    private Publicy                 mPublicy = Publicy.active;
-    private Battlestate             mBattleStates = Battlestate.Battle;
+
+    /// <summary>
+    /// 当前状态
+    /// </summary>
+    private BattleMemberStatus      _eStatus = BattleMemberStatus.status_Unknown;
 
     /// <summary>
     /// 是否游走CD中
     /// </summary>
     private bool                    Iswandering = false;
-    private float                   wanderTimer = 0f;
-    private float                   wanderMaxTimer = 5f;
-
-    private float                   repelTimer = 0f;
 
     /// <summary>
-	/// The attack time.
-	/// </summary>
-    private float                   AttackTime  = 0f;
+    /// 技能池子
+    /// </summary>
     private List<TechniqueEntiy>    techniques = new List<TechniqueEntiy>();
 
-    /// <summary>
-    /// 
-    /// </summary>
     public EventHandlerGroup        EventGroup { get; set; }
 
+    /// <summary>
+    /// 攻击间隔
+    /// </summary>
+    private float                   attacktimer = 0.0f;
 
     /// <summary>
-    /// 
+    /// 游走间隔
     /// </summary>
-    /// <param name="bm"></param>
-    public void Init( BattleMember bm, Publicy publicy )
+    private float                   wandertimer = 0.0f;
+
+
+
+    public BattleMemberAIPublicy( BattleMember bm )
     {
         mOwer               = bm;
-        mPublicy            = publicy;
     }
 
     /// --------------------------------------------------------------------------------------------------------
@@ -83,65 +90,39 @@ public class BattleMemberAIPublicy
 
         /// 索敌策略
         searchEntiyPublicy(frame, dt);
-        if ( mBattleStates == Battlestate.Move )
+        if ( _eStatus == BattleMemberStatus.status_Move )
         {
-            bool IsNeedMove     = mOwer.entity.UpdateMove( frame, dt );
-            if (!IsNeedMove)
+            if (!mOwer.entity.UpdateMove(frame, dt))
             {
-                mBattleStates   = Battlestate.Battle;
+                _eStatus = BattleMemberStatus.status_Attack;
                 return;
             }
         }
 
-        else if ( mBattleStates == Battlestate.SerachEntiy )
+        if (_eStatus == BattleMemberStatus.status_Attack)
         {
-            searchEntiyPublicy( frame, dt );
-        }
 
-        else if (mBattleStates == Battlestate.Battle)
-        {
-            /// 战内攻击策略
-            AttackTime += dt;
-            float AttackSpeed  = mOwer.GetAtt(ShipAttr.AttackSpeed);
-            if (AttackTime < AttackSpeed)
-                return;
-
-            AttackTime = 0f;
             attackPublicy(frame, dt);
         }
 
-        else if( mBattleStates == Battlestate.Wander )
+        if(_eStatus == BattleMemberStatus.status_Wander )
         {
-            if( !Iswandering )
-            {
-                wanderPublicy(frame, dt);
-            }
-
-            /// 游走逻辑
-            if (Iswandering)
-            {
-                wanderTimer     += dt;
-                if (wanderTimer >= wanderMaxTimer)
-                {
-                    wanderTimer = 0f;
-                    Iswandering = false;
-                }
-            }
+             wanderPublicy(frame, dt);
         }
 
-        else if ( mBattleStates == Battlestate.AtkCity )
+        if (_eStatus == BattleMemberStatus.status_AtkCity )
         {
             // 攻城
             atkCityPublicy();
         }
 
-        else if ( mBattleStates == Battlestate.Escape )
+        if (_eStatus == BattleMemberStatus.status_Escape )
         {
             /// 逃跑逻辑
             OnEscape();
         }
 
-        else if( mBattleStates == Battlestate.Repel )
+        if( _eStatus == BattleMemberStatus.status_Repel )
         {
             /// 击退逻辑
             OnRepel( frame, dt );
@@ -220,21 +201,15 @@ public class BattleMemberAIPublicy
     ///  --------------------------------------------------------------------------------------------------------
     private void attackPublicy( int frame, float dt )
     {
-        if( mOwer.entity.target == null ) return;
+        attacktimer         += dt;
+        if (attacktimer < mOwer.GetAtt(ShipAttr.AttackSpeed))
+            return;
+
+        attacktimer          = 0.0f;
+        if ( mOwer.entity.target == null ) return;
         if( IsAtkRange() )
         {
-            if( IsAlertRange() && mPublicy == Publicy.defense )
-            {
-                mBattleStates       = Battlestate.Wander;
-            }
-            else
-            {
-                mOwer.entity.UpdateBattle();
-            }
-        }
-        else
-        {
-            mBattleStates           = Battlestate.SerachEntiy;
+            mOwer.entity.UpdateBattle();
         }
     }
 
@@ -249,26 +224,18 @@ public class BattleMemberAIPublicy
         mOwer.entity.target = FindNearestEnemy();
         if( mOwer.entity.target != null )
         {
-            float fAlertRange   = mOwer.GetAtt(ShipAttr.WarningRange);
             float fAtkRange     = mOwer.GetAtt(ShipAttr.AttackRange);
             Vector3 moveDir     = mOwer.GetPosition() - mOwer.entity.target.GetPosition();
             float distance      = moveDir.magnitude;
 
-            if( /*distance >= fAlertRange &&*/ distance < fAtkRange )
+            if( distance < fAtkRange )
             {
-                mBattleStates   = Battlestate.Battle;
+                _eStatus        =  BattleMemberStatus.status_Attack;
             }
-            //else if ( distance < fAlertRange )
-            //{
-            //    moveDir         = moveDir.normalized;
-            //    Vector3 tarPos  = mOwer.GetPosition() - moveDir * fAlertRange;
-            //    mBattleStates   = Battlestate.Move;
-            //    mOwer.SetTargetPosition(tarPos);
-            //}
             else if( distance > fAtkRange )
             {
-                Vector3 tarPos      = mOwer.entity.target.GetPosition();
-                mBattleStates       = Battlestate.Move;
+                _eStatus        = BattleMemberStatus.status_Move;
+                Vector3 tarPos  = mOwer.entity.target.GetPosition();
                 mOwer.SetTargetPosition(tarPos);
             }
         }
@@ -277,11 +244,11 @@ public class BattleMemberAIPublicy
             if( IsNeedAtkCity() )
             {
                 if ( IsAtkCity())
-                    mBattleStates   = Battlestate.AtkCity;
+                    _eStatus        = BattleMemberStatus.status_AtkCity;
                 else
                 {
                     Vector3 tarPos  = mOwer.entity.targetNode.GetPosition();
-                    mBattleStates   = Battlestate.Move;
+                    _eStatus        = BattleMemberStatus.status_Move;
                     mOwer.SetTargetPosition(tarPos);
                 }
             }
@@ -295,25 +262,17 @@ public class BattleMemberAIPublicy
     /// --------------------------------------------------------------------------------------------------------
     private void wanderPublicy( int frame, float dt )
     {
-        if (mPublicy == Publicy.defense)
+        int curHP           = this.mOwer.GetAtt(ShipAttr.Hp);
+        int maxHP           = this.mOwer.GetAtt(ShipAttr.MaxHp);
+        if( curHP < (int)(maxHP * 0.5f) && !Iswandering )
         {
-            int curHP           = this.mOwer.GetAtt(ShipAttr.Hp);
-            int maxHP           = this.mOwer.GetAtt(ShipAttr.MaxHp);
-            if( curHP < (int)(maxHP * 0.5f) && !Iswandering )
-            {
-                Vector3 target  = HexMap.Instance.Find3x3MinCost( mOwer.GetPosition() );
-                Iswandering     = true;
-                wanderTimer     = 0f;
-                mOwer.SetTargetPosition(target);
-            }
-
-            mOwer.entity.UpdateMove( frame, dt );
+            Vector3 target  = HexMap.Instance.Find3x3MinCost( mOwer.GetPosition() );
+            Iswandering     = true;
+            wandertimer     = 0f;
+            mOwer.SetTargetPosition(target);
         }
 
-        if( mPublicy == Publicy.active )
-        {
-
-        }
+        mOwer.entity.UpdateMove( frame, dt );
     }
 
 
@@ -364,13 +323,12 @@ public class BattleMemberAIPublicy
 
 
     /// <summary>
-    /// 逃跑
+    /// 逃跑逻辑
     /// </summary>
     private void OnEscape()
     {
 
     }
-
 
     /// <summary>
     /// 击退
@@ -380,15 +338,42 @@ public class BattleMemberAIPublicy
         bool IsNeedMove   = mOwer.entity.UpdateMove(frame, dt);
         if (!IsNeedMove)
         {
-            mBattleStates = Battlestate.Battle;
+            this._eStatus =  BattleMemberStatus.status_Attack;
             return;
         }
 
-        repelTimer += dt;
-        if( repelTimer > 1.5f )
-        {
+        //repelTimer += dt;
+        //if( repelTimer > 1.5f )
+        //{
 
-        }
+        //}
+    }
+
+    public void MovetoTargetPos()
+    {
+        _eStatus = BattleMemberStatus.status_Move;
+    }
+
+    public void Attack()
+    {
+        _eStatus = BattleMemberStatus.status_Attack;
+    }
+
+
+    public void Dead()
+    {
+        _eStatus = BattleMemberStatus.status_Dead;
+    }
+
+
+    public void EnterEscape()
+    {
+        _eStatus = BattleMemberStatus.status_Escape;
+    }
+
+    public void ExitEscape()
+    {
+        _eStatus = BattleMemberStatus.status_Dead;
     }
 
     /// --------------------------------------------------------------------------------------------------------

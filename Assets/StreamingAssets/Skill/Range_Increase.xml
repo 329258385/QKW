@@ -1,0 +1,7 @@
+<Skill Loop="0">
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\jinengditu" BonePoint="" EffectName="jinengditu" LifeTime="60" AutoDestroy="False" BuildBone="True" />
+    </Frame>
+  </TimeLines>
+</Skill>

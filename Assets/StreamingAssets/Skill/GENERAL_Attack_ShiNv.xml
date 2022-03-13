@@ -1,0 +1,12 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Attack" Speed="1" ActionFileLegth="1" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="0" TypeName="Launch">
+    <Frame Point="0.2">
+      <Action Operation="TurnOn" LaunchPath="Launch/Arrow" BonePoint="Body" AsFinish="True" Speed="30" LaunchDirection="-1" HitEffectName="" SkillId="-1" />
+    </Frame>
+  </TimeLines>
+</Skill>

@@ -1,0 +1,28 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Skill" Speed="2" ActionFileLegth="0.533" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\LvBu_BigAttack" BonePoint="Dash" EffectName="chongfeng" LifeTime="0.6" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+    <Frame Point="0.04">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\zhaoyun_BigAttack_smoke" BonePoint="" EffectName="smoke" LifeTime="0.6" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+  </TimeLines>
+    <TimeLines Type="5" TypeName="Component">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ComponentName="GhostEffect" FunName="Play" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0.04">
+      <Action Operation="TurnOn" SoundPath="Skill\LvBu_YuYin_01,Skill\LvBu_YuYin_02" SoundName="LvBu_YuYin_01,LvBu_YuYin_02" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.68">
+      <Action Operation="TurnOn" SoundPath="SkillSound\LuBu_Effect_Skill_01" SoundName="LuBu_Effect_Skill_01" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

@@ -1,0 +1,7 @@
+<Skill Loop="0">
+  <TimeLines Type="6" TypeName="Line">
+    <Frame Point="0">
+      <Action Operation="TurnOn" Path="EffectPerfab\Skill\Line_Xiliangyouma_taosuo" Name="taosuo" Duration="1.3" Start="1" StartBind="Body" End="2" EndBind="Body" />
+    </Frame>
+  </TimeLines>
+</Skill>

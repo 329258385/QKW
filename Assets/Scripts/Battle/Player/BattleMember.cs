@@ -6,15 +6,6 @@ using TimeLines;
 
 
 
-public enum BattleMemberStatus
-{
-    status_Unknown      = 0,        // 未知
-    status_Move,                    // 移动
-    status_Attack,                  // 攻击
-    status_Dead,                    // 死亡
-    status_Escape,                  // 溃逃
-}
-
 
 public enum MemberEvents
 {
@@ -204,8 +195,7 @@ public partial class BattleMember : Lifecycle2
         currentNode     = null;
 
         ActonTicks      = new DelayActionFrame();
-        aiPublicy       = new BattleMemberAIPublicy();
-        aiPublicy.Init(this, BattleMemberAIPublicy.Publicy.active);
+        aiPublicy       = new BattleMemberAIPublicy(this);
         attribute[(int)ShipAttr.AttackRange]    = config.attackrange;
         attribute[(int)ShipAttr.AttackSpeed]    = config.attackspeed;
         attribute[(int)ShipAttr.WarningRange]   = config.WarningRange;
@@ -537,7 +527,6 @@ public partial class BattleMember : Lifecycle2
                     {
                         ;//Die();
                     }
-                    break;
                 }
                 break;
 

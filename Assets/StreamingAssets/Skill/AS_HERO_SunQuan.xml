@@ -1,0 +1,17 @@
+<Skill Loop="0">
+  <TimeLines Type="0" TypeName="Launch">
+    <Frame Point="0">
+      <Action Operation="TurnOn" LaunchPath="Launch/Launch_HERO_SunQuan" BonePoint="Shoot" HitCond="-1" AsFinish="True" Speed="110" LaunchDirection="-1" HitEffectName="" SkillId="-1" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\SunQuan_BigAttack_Muzzle" BonePoint="Body" EffectName="Muzzle" LifeTime="-1" AutoDestroy="True" BuildBone="True" />
+    </Frame>
+  </TimeLines>
+    <TimeLines Type="1" TypeName="Sound">
+        <Frame Point="0">
+      <Action Operation="TurnOn" SoundPath="SkillSound\SunQuanShoot" SoundName="SunQuanShoot" Loop="False" Volume="100" />
+    </Frame>
+     </TimeLines>
+</Skill>

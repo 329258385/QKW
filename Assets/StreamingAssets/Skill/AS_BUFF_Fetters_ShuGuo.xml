@@ -1,0 +1,7 @@
+<Skill Loop="0">
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0.12">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\Shuguoshili_Shixue_buff" BonePoint="" EffectName="Shuguoshili_Shixue" LifeTime="-1" AutoDestroy="True" BuildBone="True" />
+    </Frame>
+  </TimeLines>
+</Skill>

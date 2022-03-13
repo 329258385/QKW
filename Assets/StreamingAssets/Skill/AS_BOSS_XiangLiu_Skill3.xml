@@ -1,0 +1,23 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Skill3" Speed="1" ActionFileLegth="1" BackPos="0,0,0" BackTime="1" StayTime="1" RecoveryTime="1" DisableHeadIK="False" DisableBodyIK="False" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\XiangLiu_BigAttack_HanQi_Pre" BonePoint="Head" EffectName="hanqiPre" LifeTime="-1" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+    <Frame Point="1.1">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\XiangLiu_BigAttack_HanQi" BonePoint="" EffectName="hanqi" LifeTime="5" AutoDestroy="True" BuildBone="False" AutoScale="False" ZeroPos="True" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0.08">
+      <Action Operation="TurnOn" SoundPath="SkillSound\XiangLiuBingShe_Skill_02" SoundName="XiangLiuBingShe_Skill_02" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.64">
+      <Action Operation="TurnOn" SoundPath="SkillSound\HuangYueYingXuLi" SoundName="HuangYueYingXuLi" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

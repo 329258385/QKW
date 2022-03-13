@@ -1,0 +1,10 @@
+<Skill Loop="0">
+  <TimeLines Type="6" TypeName="Line">
+    <Frame Point="0">
+      <Action Operation="TurnOn" Path="EffectPerfab\Skill\Line_SunQuanYinJi_1" Name="yinjiLine" Duration="0.5" Start="1" StartBind="Body" End="2" EndBind="Body" />
+    </Frame>
+    <Frame Point="0">
+      <Action Operation="TurnOn" Path="EffectPerfab\Skill\Line_SunQuanYinJi_2" Name="yinjiLine" Duration="0.5" Start="1" StartBind="Body" End="2" EndBind="Body" />
+    </Frame>
+  </TimeLines>
+</Skill>

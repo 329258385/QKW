@@ -1,0 +1,21 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Skill_TZ" Speed="-1" ActionFileLegth="0.533" />
+    </Frame>
+    <Frame Point="1.4">
+      <Action Operation="TurnOn" ActionName="Run" Speed="1" ActionFileLegth="1" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0.08">
+      <Action Operation="TurnOn" SoundPath="SkillSound\SunCeHorseCall" SoundName="SunCeHorseCall" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.12">
+      <Action Operation="TurnOn" SoundPath="Skill\SunCe_YuYin_01,Skill\SunCe_YuYin_02" SoundName="SunCe_YuYin_01,SunCe_YuYin_02" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="1.4">
+      <Action Operation="TurnOn" SoundPath="SkillSound\SunCeHorseRun" SoundName="SunCeHorseRun" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

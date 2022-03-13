@@ -1,0 +1,20 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Skill" Speed="1" ActionFileLegth="1" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\Weiyan_BigAttack" BonePoint="" EffectName="weiyanBAtk" LifeTime="-1" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0.12">
+      <Action Operation="TurnOn" SoundPath="SkillSound\WeiYan_Effect_01" SoundName="WeiYan_Effect_01" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.28">
+      <Action Operation="TurnOn" SoundPath="Skill\WeiYan_YuYin_01,Skill\WeiYan_YuYin_02" SoundName="WeiYan_YuYin_01,WeiYan_YuYin_02" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

@@ -1,0 +1,15 @@
+<Skill Loop="0">
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\Linglongwei_Hit" BonePoint="Body" EffectName="arrowHit" LifeTime="1" AutoDestroy="True" BuildBone="True" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0">
+      <Action Operation="TurnOn" SoundPath="Skill\None,Skill\BeHit\BeHit_Arrow_1,Skill\BeHit\BeHit_Arrow_2" SoundName="None,BH1,BH2" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="1">
+      <Action Operation="TurnOff" SoundPath="Skill\None,Skill\BeHit\BeHit_Arrow_1,Skill\BeHit\BeHit_Arrow_2" SoundName="None,BH1,BH2" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

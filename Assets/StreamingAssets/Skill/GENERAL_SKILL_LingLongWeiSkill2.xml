@@ -1,0 +1,18 @@
+<Skill Loop="0">
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\Linglongwei_bao" BonePoint="Body" EffectName="skill" LifeTime="2" AutoDestroy="True" BuildBone="False" AutoScale="True" ZeroPos="False" />
+    </Frame>
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\Linglongwei_boom" BonePoint="" EffectName="skill" LifeTime="2" AutoDestroy="True" BuildBone="False" AutoScale="True" ZeroPos="False" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0.18">
+      <Action Operation="TurnOn" SoundPath="SkillSound/XiaoQiaoBoom01" SoundName="XiaoQiaoBoom01" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.22">
+      <Action Operation="TurnOn" SoundPath="SkillSound/DiaoChanHit" SoundName="DiaoChanHit" Loop="True" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

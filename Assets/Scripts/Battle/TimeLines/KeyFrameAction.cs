@@ -119,12 +119,12 @@ namespace TimeLines
         {
             return new SoundKeyFrameExportArgs()
             {
-                Foldout = Foldout,
-                Operation = Operation,
-                SoundPath = SoundPath,
-                SoundName = SoundName,
-                Loop = Loop,
-                Volume = Volume,
+                Foldout     = Foldout,
+                Operation   = Operation,
+                SoundPath   = SoundPath,
+                SoundName   = SoundName,
+                Loop        = Loop,
+                Volume      = Volume,
             };
         }
     }
@@ -150,6 +150,96 @@ namespace TimeLines
                 XForce      = XForce,
                 YForce      = YForce,
                 ZForce      = ZForce,
+            };
+        }
+    }
+
+    public class LaunchKeyFrameExportArgs : KeyFrameArgs
+    {
+        [ArgsNote("发射物路径", "以Resources为根")]
+        public string   LaunchPath = "";
+        [ArgsNote("骨骼点的名字", "骨骼点上要放BonePoint脚本并设置")]
+        public string   BonePoint = "";
+        [ArgsNote("对应的Hit", "")]
+        public int      HitCond = -1;
+
+        [ArgsNote("作为结束标志", "勾选代表该发射物落地/命中后即通知技能结束")]
+        public bool     AsFinish = false;
+        [ArgsNote("是否更改发射物速度", "默认表示不更改")]
+        public int      Speed = 30;
+        [ArgsNote("发射物方向", "-1:默认,1:天空")]
+        public int      LaunchDirection = -1;
+        [ArgsNote("打击特效", "打击到目标点时播放")]
+        public string   HitEffectName = "";
+        [ArgsNote("发射物技能", "技能ID")]
+        public int      SkillId = -1;
+
+
+        public override KeyFrameArgs Clone()
+        {
+            return new LaunchKeyFrameExportArgs()
+            {
+                Foldout         = Foldout,
+                Operation       = Operation,
+                LaunchPath      = LaunchPath,
+                BonePoint       = BonePoint,
+                AsFinish        = AsFinish,
+                HitCond         = HitCond,
+                Speed           = Speed,
+                LaunchDirection = LaunchDirection,
+                HitEffectName   = HitEffectName,
+                SkillId = SkillId
+            };
+        }
+    }
+
+    public class LineKeyFrameExportArgs : KeyFrameArgs
+    {
+        [ArgsNote("特效路径", "")]
+        public string       Path = "";
+        [ArgsNote("特效命名", "")]
+        public string       Name = "";
+        [ArgsNote("持续时间", "")]
+        public float        Duration = -1;
+        [ArgsNote("起点", "1:释放者 2:技能目标")]
+        public int          Start = -1;
+        [ArgsNote("起点绑点", "")]
+        public string       StartBind = "";
+        [ArgsNote("终点", "1:释放者 2:技能目标")]
+        public int          End = -1;
+        [ArgsNote("终点绑点", "")]
+        public string       EndBind = "";
+
+        public override KeyFrameArgs Clone()
+        {
+            return new LineKeyFrameExportArgs()
+            {
+                Foldout     = Foldout,
+                Operation   = Operation,
+                Path        = Path,
+                Name        = Name,
+                Duration    = Duration,
+                Start       = Start,
+                StartBind   = StartBind,
+                End         = End,
+                EndBind     = EndBind,
+            };
+        }
+    }
+
+    public class ComponentKeyFrameExportArgs : KeyFrameArgs
+    {
+        [ArgsNote("脚本名字", "预制体上的脚本")]
+        public string           ComponentName = "";
+        [ArgsNote("方法名", "...")]
+        public string           FunName = "";
+
+        public override KeyFrameArgs Clone()
+        {
+            return new ComponentKeyFrameExportArgs()
+            {
+                ComponentName   = ComponentName,
+                FunName         = FunName
             };
         }
     }

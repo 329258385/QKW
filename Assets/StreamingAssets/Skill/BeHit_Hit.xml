@@ -1,0 +1,12 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Hit" Speed="1" ActionFileLegth="1" />
+    </Frame>
+  </TimeLines>  
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\Gaojiqibing_chongfeng" BonePoint="Foot" EffectName="chongfengDust" LifeTime="5" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+  </TimeLines>
+</Skill>

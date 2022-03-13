@@ -1,0 +1,15 @@
+<Skill Loop="0">
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\dajishi_Hit" BonePoint="Body" EffectName="hit" LifeTime="1" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0">
+      <Action Operation="TurnOn" SoundPath="Skill/BeHit/BeHit_Blunt_1" SoundName="BeHit_Blunt_1" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.04">
+      <Action Operation="TurnOn" SoundPath="Show/ZhaoYun_Effect_01" SoundName="ZhaoYun_Effect_01" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

@@ -309,7 +309,7 @@ public class EntityMember : DisplayEntity
 			var animatorInfo = AniCtrl.GetCurrentAnimatorStateInfo(0);
 			if (animatorInfo.normalizedTime > 1.0f)
 			{
-				IsEndAttack		= false;
+				IsEndAttack				= false;
 				AniCtrl.SetTrigger(AckHashCode);
 			}
 
@@ -357,7 +357,6 @@ public class EntityMember : DisplayEntity
 				ship.SetAtt(ShipAttr.AttackSpeed, BattleSystem.Instance.battleData.rand.Range(30, 60));
 			}
         }
-		
 	}
 
 	/// ---------------------------------------------------------------------------------------------------------

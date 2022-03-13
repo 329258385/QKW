@@ -1,0 +1,17 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Attack" Speed="1" ActionFileLegth="1" />
+    </Frame>
+  </TimeLines>
+    <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\Yuangongsheshou_pre" BonePoint="Body" EffectName="skill" LifeTime="1" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="0" TypeName="Launch">
+    <Frame Point="0.8">
+      <Action Operation="TurnOn" LaunchPath="Launch/Launch_HERO_Yuangongsheshou" BonePoint="Body" HitCond="-1" AsFinish="True" Speed="180" LaunchDirection="-1" HitEffectName="" SkillId="-1" />
+    </Frame>
+  </TimeLines>
+</Skill>

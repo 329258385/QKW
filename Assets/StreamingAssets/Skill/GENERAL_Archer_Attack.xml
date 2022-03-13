@@ -1,0 +1,17 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Attack" Speed="1" ActionFileLegth="1" />
+    </Frame>
+  </TimeLines>
+    <TimeLines Type="0" TypeName="Launch">
+    <Frame Point="0.2">
+      <Action Operation="TurnOn" LaunchPath="Launch/Arrow" BonePoint="Body" HitCond="-1" AsFinish="True" Speed="30" LaunchDirection="-1" HitEffectName="" SkillId="-1" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0.2">
+      <Action Operation="TurnOn" SoundPath="Skill\None,Skill\Hit\Hit_Arrow_1,Skill\Hit\Hit_Arrow_2" SoundName="None,H1,H2" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

@@ -1,0 +1,10 @@
+<Skill Loop="0">
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\QiBing_chongfeng_Hero" BonePoint="" EffectName="mb_chongfeng_H" LifeTime="1" AutoDestroy="True" BuildBone="True" />
+    </Frame>
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\Gaojiqibing_chongfeng" BonePoint="Foot" EffectName="chongfengDust" LifeTime="2" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+  </TimeLines>
+</Skill>

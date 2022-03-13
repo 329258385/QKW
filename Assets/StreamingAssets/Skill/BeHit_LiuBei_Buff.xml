@@ -1,0 +1,15 @@
+<Skill Loop="0">
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0.0004">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\LiuBei_BigAttack_buff03" BonePoint="" EffectName="guang" LifeTime="-1" AutoDestroy="True" BuildBone="True" />
+    </Frame>
+    <Frame Point="0.04">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\LiuBei_BigAttack_buff02" BonePoint="Head" EffectName="gongji" LifeTime="6" AutoDestroy="True" BuildBone="True" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0.04">
+      <Action Operation="TurnOn" SoundPath="SkillSound\LiuBeiLight" SoundName="LiuBeiLight" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

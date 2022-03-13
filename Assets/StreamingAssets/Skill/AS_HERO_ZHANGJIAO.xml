@@ -1,0 +1,29 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Skill" Speed="1" ActionFileLegth="1" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\ZhangJiao_BigAttack" BonePoint="" EffectName="BigAttack" LifeTime="-1" AutoDestroy="True" BuildBone="True" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0">
+      <Action Operation="TurnOn" SoundPath="SkillSound\ZhangJiaoXuLi" SoundName="ZhangJiaoXuLi" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.04">
+      <Action Operation="TurnOn" SoundPath="Skill\ZhangJiao_YuYin_01,Skill\ZhangJiao_YuYin_02" SoundName="ZhangJiao_YuYin_01,ZhangJiao_YuYin_02" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="1.6">
+      <Action Operation="TurnOn" SoundPath="SkillSound\ZhangJiao_Effect_Sikll_02" SoundName="ZhangJiao_Effect_Sikll_02" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="1.72">
+      <Action Operation="TurnOn" SoundPath="SkillSound\ZhangBaoBoom" SoundName="ZhangBaoBoom" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="1.84">
+      <Action Operation="TurnOn" SoundPath="SkillSound\ZhangJiao_Effect_Sikll_01" SoundName="ZhangJiao_Effect_Sikll_01" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

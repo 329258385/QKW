@@ -1,0 +1,28 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="BigAttack2" Speed="-1" ActionFileLegth="2" BackPos="0,0,0" BackTime="1" StayTime="1" RecoveryTime="1" DisableHeadIK="False" DisableBodyIK="False" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\Yazhaifuren_BigAttack2_Qiangxi_pre" BonePoint="" EffectName="xuli" LifeTime="-1" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="0" TypeName="Launch">
+    <Frame Point="1.36">
+      <Action Operation="TurnOn" LaunchPath="Launch\Launch_HERO_YaZhaiFuRen_BigAttack2_Qiangxi" BonePoint="LaunchPoint" HitCond="-1" AsFinish="False" Speed="70" LaunchDirection="-1" HitEffectName="" SkillId="219232" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0.36">
+      <Action Operation="TurnOn" SoundPath="SkillSound\SunShangXiang_Effect_01" SoundName="SunShangXiang_Effect_01" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="1.16">
+      <Action Operation="TurnOn" SoundPath="SkillSound\YuanShu_Effect_01" SoundName="YuanShu_Effect_01" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="1.52">
+      <Action Operation="TurnOn" SoundPath="SkillSound\GuoJiaAttack" SoundName="GuoJiaAttack" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

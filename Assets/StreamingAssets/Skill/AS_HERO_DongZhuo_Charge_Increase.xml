@@ -1,0 +1,15 @@
+<Skill Loop="0">
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\DongZhuo_BigAttack_pre" BonePoint="pre" EffectName="pre" LifeTime="-1" AutoDestroy="True" BuildBone="True" />
+    </Frame>
+    <Frame Point="0.04">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\jinengditu" BonePoint="" EffectName="range" LifeTime="-1" AutoDestroy="True" BuildBone="True" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="BigAttack_Charge" Speed="1" ActionFileLegth="1" />
+    </Frame>
+  </TimeLines>
+</Skill>

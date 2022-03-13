@@ -1,0 +1,20 @@
+<Skill Loop="0">
+  <TimeLines Type="3" TypeName="Action">
+    <Frame Point="0">
+      <Action Operation="TurnOn" ActionName="Skill" Speed="1" ActionFileLegth="1.667" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="2" TypeName="Effect">
+    <Frame Point="0">
+      <Action Operation="TurnOn" EffectPath="EffectPerfab\Skill\Caimao_BigAttack" BonePoint="" EffectName="skill" LifeTime="-1" AutoDestroy="True" BuildBone="True" AutoScale="True" ZeroPos="False" />
+    </Frame>
+  </TimeLines>
+  <TimeLines Type="1" TypeName="Sound">
+    <Frame Point="0.08">
+      <Action Operation="TurnOn" SoundPath="SkillSound\CaiMao_Effect_01" SoundName="CaiMao_Effect_01" Loop="False" Volume="100" />
+    </Frame>
+    <Frame Point="0.2">
+      <Action Operation="TurnOn" SoundPath="Skill\CaiMao_YuYin_01,Skill\CaiMao_YuYin_02" SoundName="CaiMao_YuYin_01.CaiMao_YuYin_02" Loop="False" Volume="100" />
+    </Frame>
+  </TimeLines>
+</Skill>

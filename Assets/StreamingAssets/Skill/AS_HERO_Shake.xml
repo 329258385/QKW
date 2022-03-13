@@ -1,0 +1,7 @@
+<Skill Loop="0">
+  <TimeLines Type="4" TypeName="Shake">
+    <Frame Point="0.7">
+      <Action Operation="TurnOn" Duration="0.5" XForce="0.5" YForce="0.5" ZForce="0.5" />
+    </Frame>
+  </TimeLines>
+</Skill>

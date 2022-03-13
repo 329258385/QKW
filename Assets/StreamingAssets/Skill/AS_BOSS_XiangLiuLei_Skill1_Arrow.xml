@@ -1,0 +1,7 @@
+<Skill Loop="0">
+  <TimeLines Type="0" TypeName="Launch">
+    <Frame Point="0">
+      <Action Operation="TurnOn" LaunchPath="Launch/Launch_Boss_XiangLiulei_BigAttack_ShanDian" BonePoint="Body" HitCond="-1" AsFinish="True" Speed="60" LaunchDirection="-1" HitEffectName="EffectPerfab\Skill\XiangLiu_Lei_BigAttack_ShanDian" SkillId="-1" />
+    </Frame>
+  </TimeLines>
+</Skill>
