@@ -4,6 +4,9 @@ using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CySkillEditor;
+using TimeLines;
+
 
 [Serializable]
 public class TimelinesContent : ScriptableObject
@@ -23,26 +26,15 @@ public class TimelinesContent : ScriptableObject
     }
 
     private float                       totalPixelWidthOfTimeline = 1.0f;
-    private bool                        ZoomInvert = false;
-    private float                       ZoomFactor = 0.01f;
     private float                       FloatingWidth = 100.0f;
+    private float                       lineHeight = 18.0f;
     private bool                        extendingFloatingWidth = false;
     private float                       additionalFloatingWidth = 0.0f;
-    private float                       lineHeight = 18.0f;
+    private float                       baseFloatingWidth = 200.0f;
 
 
-    [SerializeField]
-    private float                       baseFloatingWidth = 250.0f;
-    private float                       BaseFloatingWidth
-    {
-        get { return baseFloatingWidth; }
-        set { baseFloatingWidth = value; }
-    }
-
-
-    [SerializeField]
     private TimeLineSequencer           currentSequence;
-    private TimeLineSequencer           CurrentSequence
+    public TimeLineSequencer            CurrentSequence
     {
         get { return currentSequence; }
         set
@@ -52,7 +44,6 @@ public class TimelinesContent : ScriptableObject
         }
     }
 
-    [SerializeField]
     private TimelinesWindow             sequenceWindow;
     public TimelinesWindow              SequenceWindow
     {
@@ -60,165 +51,168 @@ public class TimelinesContent : ScriptableObject
         set { sequenceWindow = value; }
     }
 
-    private Rect FloatingArea
+    private Rect                        FloatingArea
     {
         get;
         set;
     }
 
-    private Rect ScrubArea
+    private Rect                        ScrubArea
     {
         get;
         set;
     }
 
-    private Rect HierarchyArea
+    private Rect                        HierarchyArea
     {
         get;
         set;
 
     }
-    private Rect VisibleArea
+    private Rect                        VisibleArea
     {
         get;
         set;
     }
 
-    private Rect LabelArea
-    {
-        get;
-        set;
-    }
-    private Rect TotalArea
+    private Rect                        TotalArea
     {
         get;
         set;
     }
 
-    private Rect HorizontalScrollArea
+    private Rect                        HorizontalScrollArea
     {
         get;
         set;
     }
 
-    private Rect VerticalScrollArea
-    {
-        get;
-        set;
-    }
-    private Rect DisplayArea
+    private Rect                        VerticalScrollArea
     {
         get;
         set;
     }
 
     [SerializeField]
-    private Texture cachedDragTexture;
-    private Texture DragAreaTexture
-    {
-        get
-        {
-            if (!cachedDragTexture)
-                cachedDragTexture = Resources.Load("DragAreaTexture", typeof(Texture)) as Texture;
-            return cachedDragTexture;
-        }
-        set {; }
-    }
-
-    [SerializeField]
-    private Rect SelectableArea
+    private Rect                        SelectionArea
     {
         get;
         set;
     }
 
     [SerializeField]
-    private Rect SelectionArea
+    private Rect                        DisplayArea
     {
         get;
         set;
     }
 
     [SerializeField]
-    private bool IsDragging
+    private bool                        IsDragging
     {
         get;
         set;
     }
 
     [SerializeField]
-    private bool HasStartedDrag
+    private bool                        HasStartedDrag
     {
         get;
         set;
     }
 
     [SerializeField]
-    private bool HasProcessedInitialDrag
+    private bool                        HasProcessedInitialDrag
     {
         get;
         set;
     }
 
     [SerializeField]
-    private bool IsBoxSelecting
+    private bool                        IsBoxSelecting
     {
         get;
         set;
     }
 
     [SerializeField]
-    private bool IsDuplicating
+    private bool                        IsDuplicating
     {
         get;
         set;
     }
 
     [SerializeField]
-    private bool HasDuplicated
+    private bool                        HasDuplicated
     {
         get;
         set;
     }
 
     [SerializeField]
-    private Vector2 DragStartPosition
+    private Vector2                     DragStartPosition
     {
         get;
         set;
     }
 
     [SerializeField]
-    public bool ScrubHandleDrag
+    public bool                         ScrubHandleDrag
     {
         get;
         private set;
     }
 
+    private float                       XScale
+    {
+        get
+        {
+            return (totalPixelWidthOfTimeline / ScrubArea.width);
+        }
+    }
+
+    private float                       XScroll
+    {
+        get
+        {
+            return ScrollInfo.currentScroll.x;
+        }
+    }
+
+    private float                       YScroll
+    {
+        get
+        {
+            return ScrollInfo.currentScroll.y;
+        }
+    }
+
+
+
     [SerializeField]
-    private JZoomInfo zoomInfo;
-    private JZoomInfo ZoomInfo
+    private JZoomInfo                   zoomInfo;
+    private JZoomInfo                   ZoomInfo
     {
         get { return zoomInfo; }
         set { zoomInfo = value; }
     }
 
     [SerializeField]
-    private JScrollInfo scrollInfo;
-    private JScrollInfo ScrollInfo
+    private JScrollInfo                 scrollInfo;
+    private JScrollInfo                 ScrollInfo
     {
         get { return scrollInfo; }
         set { scrollInfo = value; }
     }
 
-    private List<TimeLineType>       showTypeList = new List<TimeLineType> { TimeLineType.Effect };
-    private int                      CountClip = 0;
-    private bool                     hasObjectsUnderMouse = false;
-    private List<List<TimelineBase>> TypeList;
+    private List<TimeLineType>          showTypeList = new List<TimeLineType> { TimeLineType.Animation };
+    private int                         CountClip = 0;
+    private bool                        hasObjectsUnderMouse = false;
+
 
     //目录fold字典
-    private Dictionary<int, bool> foldStateDict;
-    public Dictionary<int, bool> FoldStateDict
+    private Dictionary<int, bool>       foldStateDict;
+    public Dictionary<int, bool>        FoldStateDict
     {
         get
         {
@@ -237,6 +231,11 @@ public class TimelinesContent : ScriptableObject
         set { foldStateDict = value; }
     }
 
+    protected float ConvertTimeToXPos(float time)
+    {
+        float xPos = DisplayArea.width * (time / CurrentSequence.Duration);
+        return DisplayArea.x + ((xPos * XScale) - XScroll);
+    }
 
     private void OnEnable()
     {
@@ -246,6 +245,7 @@ public class TimelinesContent : ScriptableObject
             ScrollInfo              = ScriptableObject.CreateInstance<JScrollInfo>();
             ScrollInfo.Reset();
         }
+
         if (ZoomInfo == null)
         {
             ZoomInfo                = ScriptableObject.CreateInstance<JZoomInfo>();
@@ -254,11 +254,6 @@ public class TimelinesContent : ScriptableObject
 
         if (currentSequence)
             UpdateCachedMarkerInformation();
-    }
-
-    private void OnDestroy()
-    {
-        
     }
 
     private float TimeToContentX( float time )
@@ -287,7 +282,7 @@ public class TimelinesContent : ScriptableObject
                     GUILayout.BeginHorizontal();
                     {
                         //时间标尺背景
-                        GUILayout.Box("Floating", USEditorUtility.ContentBackground, GUILayout.Width(FloatingWidth), GUILayout.Height(lineHeight));
+                        GUILayout.Box("Floating", USEditorUtility.ContentBackground, GUILayout.Width(200), GUILayout.Height(lineHeight));
                         if (UnityEngine.Event.current.type == EventType.Repaint)
                         {
                             if (FloatingArea != GUILayoutUtility.GetLastRect())
@@ -331,7 +326,7 @@ public class TimelinesContent : ScriptableObject
                 {
                     if (VerticalScrollArea != GUILayoutUtility.GetLastRect())
                     {
-                        VerticalScrollArea = GUILayoutUtility.GetLastRect();
+                        VerticalScrollArea      = GUILayoutUtility.GetLastRect();
                         SequenceWindow.Repaint();
                         UpdateCachedMarkerInformation();
                     }
@@ -360,18 +355,24 @@ public class TimelinesContent : ScriptableObject
         GUILayout.EndVertical();
     }
 
+    /// -------------------------------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 显示布局
+    /// </summary>
+    /// -------------------------------------------------------------------------------------------------------------------------------------------------
     public void OnGUI()
     {
         LayoutAreas();
         if (CurrentSequence == null)
             return;
-        ///标签区域
-        GUI.Box(FloatingArea, "", USEditorUtility.ContentBackground);
-        //右边标尺区域
-        GUI.Box(ScrubArea, "", USEditorUtility.ScrubBarBackground);
 
-        float widthOfContent = ScrubArea.x + (CurrentSequence.Duration / ZoomInfo.meaningOfEveryMarker * ZoomInfo.currentXMarkerDist);
+
+        ///标签区域、右边标尺区域
+        GUI.Box(FloatingArea,   "", USEditorUtility.ContentBackground);
+        GUI.Box(ScrubArea,      "", USEditorUtility.ScrubBarBackground);
+
         //绘制 时间标尺 当前时间刻度
+        float widthOfContent    = ScrubArea.x + (CurrentSequence.Duration / ZoomInfo.meaningOfEveryMarker * ZoomInfo.currentXMarkerDist);
         GUILayout.BeginArea(ScrubArea);
         {
             foreach (var cachedMarker in cachedMarkerData)
@@ -382,17 +383,17 @@ public class TimelinesContent : ScriptableObject
             }
 
             // Render our scrub Handle
-            float currentScrubPosition = TimeToContentX(CurrentSequence.RunningTime);
-
-            float halfScrubHandleWidth = 5.0f;
-            Rect scrubHandleRect = new Rect(currentScrubPosition - halfScrubHandleWidth, 0.0f, halfScrubHandleWidth * 2.0f, ScrubArea.height);
-            GUI.color = new Color(1.0f, 0.1f, 0.1f, 0.65f);
+            float currentScrubPosition  = TimeToContentX(CurrentSequence.RunningTime);
+            float halfScrubHandleWidth  = 5.0f;
+            Rect scrubHandleRect        = new Rect(currentScrubPosition - halfScrubHandleWidth, 0.0f, halfScrubHandleWidth * 2.0f, ScrubArea.height);
+            GUI.color                   = new Color(1.0f, 0.1f, 0.1f, 0.65f);
             GUI.DrawTexture(scrubHandleRect, USEditorUtility.TimelineScrubHead);
-            GUI.color = Color.white;
+
 
             // Render the running time here
-            scrubHandleRect.x += scrubHandleRect.width;
-            scrubHandleRect.width = 100.0f;
+            GUI.color                   = Color.white;
+            scrubHandleRect.x           += scrubHandleRect.width;
+            scrubHandleRect.width       = 100.0f;
             GUI.Label(scrubHandleRect, CurrentSequence.RunningTime.ToString("#.####"));
 
             if (UnityEngine.Event.current.type == EventType.MouseDown)
@@ -406,50 +407,27 @@ public class TimelinesContent : ScriptableObject
                 sequenceWindow.SetRunningTime(mousePosOnTimeline);
                 UnityEngine.Event.current.Use();
             }
-
         }
         GUILayout.EndArea();
 
-        //UpdateGrabHandle();
+        UpdateGrabHandle();
 
-        float height = TotalArea.height;
-        if (TotalArea.height < HierarchyArea.height)
-            height = HierarchyArea.height;
-        float temp = ScrollInfo.currentScroll.x;
-        ScrollInfo.currentScroll.y = GUI.VerticalScrollbar(VerticalScrollArea, ScrollInfo.currentScroll.y, HierarchyArea.height, 0.0f, height);
-        ScrollInfo.currentScroll.x = GUI.HorizontalScrollbar(HorizontalScrollArea, ScrollInfo.currentScroll.x, FloatingWidth + HierarchyArea.width, 0.0f, widthOfContent);
-        ScrollInfo.currentScroll.x = Mathf.Clamp(ScrollInfo.currentScroll.x, 0, widthOfContent);
-        ScrollInfo.currentScroll.y = Mathf.Clamp(ScrollInfo.currentScroll.y, 0, TotalArea.height);
-        if (temp != ScrollInfo.currentScroll.x)
-        {
-            UpdateCachedMarkerInformation();
-        }
         ContentGUI();
 
         // Render our red line
-        Rect scrubMarkerRect = new Rect(ScrubArea.x + TimeToContentX(CurrentSequence.RunningTime), HierarchyArea.y, 1.0f, HierarchyArea.height);
+        Rect scrubMarkerRect                = new Rect(ScrubArea.x + TimeToContentX(CurrentSequence.RunningTime), HierarchyArea.y, 1.0f, HierarchyArea.height);
         if (scrubMarkerRect.x < HierarchyArea.x)
             return;
-        GUI.color = new Color(1.0f, 0.1f, 0.1f, 0.65f);
+        GUI.color                           = new Color(1.0f, 0.1f, 0.1f, 0.65f);
         GUI.DrawTexture(scrubMarkerRect, USEditorUtility.TimelineScrubTail);
-        GUI.color = Color.white;
+        GUI.color                           = Color.white;
     }
 
     private void ContentGUI()
     {
         GUILayout.BeginArea(HierarchyArea);
         {
-            if (UnityEngine.Event.current.type == EventType.ScrollWheel)
-            {
-                ScrollInfo.currentScroll.x += UnityEngine.Event.current.delta.x;
-                ScrollInfo.currentScroll.y += 2 * UnityEngine.Event.current.delta.y;
-                float widthOfContent = ScrubArea.x + (CurrentSequence.Duration / ZoomInfo.meaningOfEveryMarker * ZoomInfo.currentXMarkerDist);
-                ScrollInfo.currentScroll.x = Mathf.Clamp(ScrollInfo.currentScroll.x, 0, widthOfContent);
-                UpdateCachedMarkerInformation();
-                UnityEngine.Event.current.Use();
-            }
             GUILayout.BeginVertical();
-
             GUILayout.Box("", USEditorUtility.ContentBackground, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
             if (UnityEngine.Event.current.type == EventType.Repaint)
             {
@@ -459,15 +437,14 @@ public class TimelinesContent : ScriptableObject
                     SequenceWindow.Repaint();
                 }
             }
-            GUILayout.BeginArea(VisibleArea);
 
+            GUILayout.BeginArea(VisibleArea);
             GUILayout.BeginScrollView(ScrollInfo.currentScroll, GUIStyle.none, GUIStyle.none);
 
             GUILayout.BeginVertical();
-
             DrawSideBarAndTimeLines();
-
             GUILayout.EndVertical();
+
             if (UnityEngine.Event.current.type == EventType.Repaint)
             {
                 if (TotalArea != GUILayoutUtility.GetLastRect())
@@ -477,7 +454,6 @@ public class TimelinesContent : ScriptableObject
                 }
             }
             GUILayout.EndScrollView();
-
             GUILayout.EndArea();
 
             //  SelectionArea = VisibleArea;
@@ -487,24 +463,23 @@ public class TimelinesContent : ScriptableObject
             // Render our mouse drag box.
             if (IsBoxSelecting && HasStartedDrag)
             {
-                Vector2 mousePosition = UnityEngine.Event.current.mousePosition;
-                Vector2 origin = DragStartPosition;
-                Vector2 destination = mousePosition;
-
+                Vector2 mousePosition       = UnityEngine.Event.current.mousePosition;
+                Vector2 origin              = DragStartPosition;
+                Vector2 destination         = mousePosition;
                 if (mousePosition.x < DragStartPosition.x)
                 {
-                    origin.x = mousePosition.x;
-                    destination.x = DragStartPosition.x;
+                    origin.x                = mousePosition.x;
+                    destination.x           = DragStartPosition.x;
                 }
 
                 if (mousePosition.y < DragStartPosition.y)
                 {
-                    origin.y = mousePosition.y;
-                    destination.y = DragStartPosition.y;
+                    origin.y                = mousePosition.y;
+                    destination.y           = DragStartPosition.y;
                 }
 
-                Vector2 mouseDelta = destination - origin;
-                SelectionArea = new Rect(origin.x, origin.y, mouseDelta.x, mouseDelta.y);
+                Vector2 mouseDelta          = destination - origin;
+                SelectionArea               = new Rect(origin.x, origin.y, mouseDelta.x, mouseDelta.y);
                 if (!EditorGUIUtility.isProSkin)
                     GUI.Box(SelectionArea, "", USEditorUtility.USeqSkin.box);
                 else
@@ -512,7 +487,6 @@ public class TimelinesContent : ScriptableObject
 
                 SequenceWindow.Repaint();
             }
-
         }
         GUILayout.EndVertical();
         GUILayout.EndArea();
@@ -526,9 +500,11 @@ public class TimelinesContent : ScriptableObject
         SequenceWindow.Repaint();
     }
 
+    /// --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
     /// 侧边栏渲染
     /// </summary>
+    /// --------------------------------------------------------------------------------------------------------------------------
     private void DrawSideBarAndTimeLines()
     {
         CountClip = 0;
@@ -540,7 +516,6 @@ public class TimelinesContent : ScriptableObject
             }
         }
 
-        TypeList                        = CurrentSequence.SortedTimelinesLists;
         TimelineContainer[] containers  = CurrentSequence.SortedTimelineContainers;
         for (int i = 0; i < containers.Length; i++)
         {
@@ -550,98 +525,289 @@ public class TimelinesContent : ScriptableObject
             GUILayout.Box(new GUIContent("", ""), USEditorUtility.USeqSkin.GetStyle("TimelinePaneBackground"), GUILayout.Height(lineHeight), GUILayout.MaxWidth(FloatingWidth));
             Rect FloatingRect = GUILayoutUtility.GetLastRect();
             GUILayout.Box(new GUIContent("", ""), USEditorUtility.USeqSkin.GetStyle("TimelinePaneBackground"), GUILayout.Height(lineHeight), GUILayout.ExpandWidth(true));
-
             GUILayout.EndHorizontal();
             FloatingRect.width -= lineHeight + 1;
 
-            bool CurcontainerfoldState = false;
+
             if (FoldStateDict.ContainsKey(i + 1))
             {
-                Rect temp = FloatingRect;
-                temp.width = 20;
-                FoldStateDict[i + 1] = EditorGUI.Foldout(temp, FoldStateDict[i + 1], "");
-                CurcontainerfoldState = FoldStateDict[i + 1];
-                Rect temp1 = FloatingRect;
-                temp1.x += 20;
-                //  temp1.y -= 1;
-                temp1.width -= 20;
-                //  temp1.height -=2;
+                Rect temp               = FloatingRect;
+                temp.width              = 20;
+                FoldStateDict[i + 1]    = EditorGUI.Foldout(temp, FoldStateDict[i + 1], "");
+                Rect temp1              = FloatingRect;
+                temp1.x                 += 20;
+                temp1.width             -= 20;
                 if (GUI.Button(temp1, new GUIContent(container.AffectedObject.name, "模型"), EditorStyles.toolbarButton))
                 {
                     ResetSelection();
-                    //Selection.activeGameObject = container.gameObject;
+                    Selection.activeGameObject = container.gameObject;
                 }
 
-                Rect menuBtn = FloatingRect;
-                menuBtn.x = menuBtn.x + menuBtn.width;
-                menuBtn.width = lineHeight;
+                Rect menuBtn            = FloatingRect;
+                menuBtn.x               = menuBtn.x + menuBtn.width;
+                menuBtn.width           = lineHeight;
                 if (GUI.Button(menuBtn, new GUIContent("", USEditorUtility.DeleteButton, "Delete Timelines"), USEditorUtility.ToolbarButtonSmall))
                 {
-                    //GameObject.DestroyImmediate(container.gameObject);
+                    GameObject.DestroyImmediate(container.gameObject);
                 }
             }
 
-            if (CurcontainerfoldState)
+
             {
-                foreach (TimeLineType type in showTypeList)
+                // TODO: 遍历操作
+                GUILayout.BeginVertical();
+                GUILayout.BeginHorizontal();
+                GUILayout.Box(new GUIContent("", ""), USEditorUtility.USeqSkin.GetStyle("TimelinePaneBackground"), GUILayout.Height(lineHeight), GUILayout.MaxWidth(FloatingWidth));
+                Rect FloatingRect1 = GUILayoutUtility.GetLastRect();
+                GUILayout.Box(new GUIContent("", ""), USEditorUtility.USeqSkin.GetStyle("TimelinePaneBackground"), GUILayout.Height(lineHeight), GUILayout.ExpandWidth(true));
+                GUILayout.EndHorizontal();
+                GUILayout.EndVertical();
+
+                FloatingRect1.x         = +20;
+                FloatingRect1.width     -= (20 + lineHeight + 1);
+
+                Rect menuBtn            = FloatingRect1;
+                menuBtn.x               = menuBtn.x + menuBtn.width + 1.0f;
+                menuBtn.width           = lineHeight;
+                if (GUI.Button(menuBtn, new GUIContent("", USEditorUtility.MoreButton, "Add Timeline"), USEditorUtility.ToolbarButtonSmall))
+                {
+                    TimelineBase line = container.AddNewTimeline(TimeLineType.Animation);
+                    if (line != null)
+                        AddNewAnimationTrack(line);
+                }
+
+
+                TimelineBase[] timelines = CurrentSequence.SortedTimelines;
+                for (int k = 0; k < timelines.Length; k++)
                 {
                     // TODO: 遍历操作
-                    int index = (int)type;
                     GUILayout.BeginVertical();
-                    GUILayout.BeginHorizontal();
-                    GUILayout.Box(new GUIContent("", ""), USEditorUtility.USeqSkin.GetStyle("TimelinePaneBackground"), GUILayout.Height(lineHeight), GUILayout.MaxWidth(FloatingWidth));
-                    Rect FloatingRect1 = GUILayoutUtility.GetLastRect();
-                    GUILayout.Box(new GUIContent("", ""), USEditorUtility.USeqSkin.GetStyle("TimelinePaneBackground"), GUILayout.Height(lineHeight), GUILayout.ExpandWidth(true));
-
-                    GUILayout.EndHorizontal();
+                    TimelineBase line = timelines[k];
+                    if (line != null && line.TimelineContainer == container)
+                    {
+                        SideBarAndLineForAnimation(line);
+                    }
                     GUILayout.EndVertical();
+                }
+            }
+        }
+        GUILayout.EndVertical();
+    }
 
-                    FloatingRect1.x = +20;
-                    FloatingRect1.width -= (20 + lineHeight + 1);
-                    int foldkey = (i + 1) * 100 + index;
-                    bool Curfoldstate = false;
-                    if (FoldStateDict.ContainsKey(foldkey))
-                    {
-                        FoldStateDict[foldkey] = EditorGUI.Foldout(FloatingRect1, FoldStateDict[foldkey], Enum.GetName(typeof(TimeLineType), type));
-                        Curfoldstate = FoldStateDict[foldkey];
-                    }
 
-                    Rect menuBtn = FloatingRect1;
-                    menuBtn.x = menuBtn.x + menuBtn.width + 1.0f;
-                    menuBtn.width = lineHeight;
-                    if (GUI.Button(menuBtn, new GUIContent("", USEditorUtility.MoreButton, "Add Timeline"), USEditorUtility.ToolbarButtonSmall))
-                    {
-                        TimelineBase line = container.AddNewTimeline(type);
-                        if (line != null )
-                            AddNewTrack(line);
-                    }
+    private void UpdateGrabHandle()
+    {
+        FloatingWidth = additionalFloatingWidth + baseFloatingWidth;
+        Rect resizeHandle = new Rect(FloatingWidth - 10.0f, ScrubArea.y, 10.0f, ScrubArea.height);
+        GUILayout.BeginArea(resizeHandle, "", "box");
 
-                    if (Curfoldstate)
-                    {
-                        List<TimelineBase> timelines = TypeList[index];
-                        for (int k = 0; k < timelines.Count; k++)
-                        {
-                            GUILayout.BeginVertical();
-                            TimelineBase line = timelines[k];
-                            if (line.TimelineContainer == container)
-                            {
-                                #region ExtensionRegion
-                                //SideBarAndLineForAnimation(line);
-                                //SideBarAndLineForParticle(line);
-                                //SideBarAndLineForSound(line);
-                                //SideBarAndLineForTranform(line);
-                                //SideBarAndLineForEvent(line);
-                                //SideBarAndLineForTrajectory(line);
-                                //SideBarAndLineForCamera(line);
-                                //SideBarAndLineForEffect(line);
-                                #endregion
-                            }
-                            GUILayout.EndVertical();
-                        }
-                    }
+        if (UnityEngine.Event.current.type == EventType.MouseDown && UnityEngine.Event.current.button == 0)
+            extendingFloatingWidth = true;
+
+        if (extendingFloatingWidth && UnityEngine.Event.current.type == EventType.MouseDrag)
+        {
+            additionalFloatingWidth += UnityEngine.Event.current.delta.x;
+            FloatingWidth = additionalFloatingWidth + baseFloatingWidth;
+            UpdateCachedMarkerInformation();
+            SequenceWindow.Repaint();
+        }
+        GUILayout.EndArea();
+
+        if (UnityEngine.Event.current.type == EventType.MouseUp)
+            extendingFloatingWidth = false;
+    }
+
+    /// ------------------------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 时间线的侧边栏绘制
+    /// </summary>
+    /// ------------------------------------------------------------------------------------------------------------------------------------------
+    private void SideBarAndLineForAnimation(TimelineBase timeline)
+    {
+        if (timeline is TimelineAnimation)
+        {
+            GUILayout.BeginVertical();
+            TimelineAnimation animationline = (TimelineAnimation)timeline;
+            for (int j = 0; j < animationline.AnimationTracks.Count; j++)
+            {
+                GUILayout.BeginHorizontal();
+                GUIStyle st                 = USEditorUtility.USeqSkin.GetStyle("TimelinePaneBackground");
+                GUILayout.Box(new GUIContent("" + animationline.AffectedObject.name, ""), st, GUILayout.Height(lineHeight), GUILayout.MaxWidth(FloatingWidth));
+                Rect FloatingRect           = GUILayoutUtility.GetLastRect();
+                GUILayout.Box(new GUIContent("", "AnimationTimeline for" + animationline.AffectedObject.name + "Track" + j ), st, GUILayout.Height(lineHeight), GUILayout.ExpandWidth(true));
+                Rect ContentRect            = GUILayoutUtility.GetLastRect();
+                GUILayout.EndHorizontal();
+
+                Rect addRect                = FloatingRect;
+                Rect labelRect              = addRect;
+                labelRect.x                 += 40;
+                labelRect.width             -= (lineHeight + 41);
+                GUI.Label(labelRect, "Track " + j);
+
+                //轨道名字
+                Rect nameRect               = addRect;
+                nameRect.x                  += 40 + lineHeight + 40;
+                nameRect.width              -= (lineHeight + 120);
+                
+                Rect enableRect             = addRect;
+                enableRect.x                = addRect.x + addRect.width - 2 * lineHeight - 2.0f; ;
+                enableRect.width            = lineHeight;
+                animationline.AnimationTracks[j].Enable = GUI.Toggle(enableRect, animationline.AnimationTracks[j].Enable, new GUIContent("", USEditorUtility.EditButton, "Enable The Timeline"));
+
+                addRect.x                   = addRect.x + addRect.width - lineHeight - 1.0f;
+                addRect.width               = lineHeight;
+                GenericMenu contextMenu     = new GenericMenu();
+                if (GUI.Button(addRect, new GUIContent("", USEditorUtility.EditButton, "Options for this Timeline"), USEditorUtility.ToolbarButtonSmall))
+                {
+                    contextMenu             = MenuForAnimationTimeLine(animationline, animationline.AnimationTracks[j]);
+                    contextMenu.ShowAsContext();
+                }
+
+                if (timelineClipRenderDataMap.ContainsKey(animationline.AnimationTracks[j]))
+                {
+                    ///时间线背景 区域 只接受右键
+                    DisplayArea             = ContentRect;
+                    GUI.BeginGroup(DisplayArea);
+                    List<JClipRenderData> renderDataList = timelineClipRenderDataMap[animationline.AnimationTracks[j]];
+                    AnimationGUI(animationline, animationline.AnimationTracks[j], renderDataList.ToArray());
+                    GUI.EndGroup();
+
                 }
             }
             GUILayout.EndVertical();
+        }
+    }
+
+
+    /// ------------------------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 时间线右键点击的菜单
+    /// </summary>
+    /// ------------------------------------------------------------------------------------------------------------------------------------------
+    private GenericMenu MenuForAnimationTimeLine(TimelineAnimation Animationline, AnimationTrack linetrack)
+    {
+        GenericMenu contextMenu     = new GenericMenu();
+        float newTime               = (((UnityEngine.Event.current.mousePosition.x + XScroll) / DisplayArea.width) * Animationline.Sequence.Duration) / XScale;
+
+        foreach ( var effect in Enum.GetValues( typeof(EffectType)))
+        {
+            string name             = Enum.GetName(typeof(EffectType), (EffectType)effect);
+            contextMenu.AddItem(new GUIContent("AddClip/" + name),
+                                false, (obj) => AddNewTrackClip(((AnimationTrack)((object[])obj)[0]), ((EffectType)((object[])obj)[1]), ((float)((object[])obj)[2])),
+                                new object[] { linetrack, (EffectType)effect, newTime });
+        }
+
+        //删除时间线
+        contextMenu.AddItem(new GUIContent("DeleteLine"),
+                            false, (obj) => RemoveTrackClip(((AnimationTrack)((object[])obj)[0])), new object[] { linetrack } );
+        return contextMenu;
+    }
+
+
+    /// ------------------------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 绘制动作片段UI
+    /// </summary>
+    /// ------------------------------------------------------------------------------------------------------------------------------------------
+    private void AnimationGUI(TimelineAnimation Animationline, AnimationTrack linetrack, JClipRenderData[] renderDataList)
+    {
+        GenericMenu contextMenu     = new GenericMenu();
+        ///event 右键点击
+        bool isContext              = UnityEngine.Event.current.type == EventType.MouseDown && UnityEngine.Event.current.button == 1;
+        bool isChoose               = UnityEngine.Event.current.type == EventType.MouseDown && UnityEngine.Event.current.button == 0 && UnityEngine.Event.current.clickCount == 1;
+        bool hasBox                 = false;
+        Rect DisplayAreaTemp        = DisplayArea;
+        DisplayAreaTemp.x           = 0;
+        DisplayAreaTemp.y           = 0;
+        for (int j = 0; j < renderDataList.Length; j++)
+        {
+            JClipRenderData renderdata = renderDataList[j];
+            KeyFrameClipData animationClipData = (KeyFrameClipData)renderdata.ClipData;
+            AnimationTrack track = animationClipData.Track;
+            if (linetrack != track)
+            {
+                continue;
+            }
+            var startX              = ConvertTimeToXPos(animationClipData.StartTime);
+            var endX                = ConvertTimeToXPos(animationClipData.StartTime + animationClipData.PlaybackDuration);
+            var transitionX         = ConvertTimeToXPos(animationClipData.StartTime + 0.2f);
+            var handleWidth         = 2.0f;
+
+            Rect renderRect         = new Rect(startX, DisplayArea.y, endX - startX, DisplayArea.height);
+            Rect transitionRect     = new Rect(startX, DisplayArea.y, transitionX - startX, DisplayArea.height);
+            Rect leftHandle         = new Rect(startX, DisplayArea.y, handleWidth * 2.0f, DisplayArea.height);
+            Rect rightHandle        = new Rect(endX - (handleWidth * 2.0f), DisplayArea.y, handleWidth * 2.0f, DisplayArea.height);
+            Rect labelRect          = new Rect();
+
+            Rect renderRecttemp     = renderRect;
+            renderRecttemp.x        -= DisplayArea.x;
+            renderRecttemp.y        = 0;
+            Rect transitionRecttemp = transitionRect;
+            transitionRecttemp.y    = 0;
+            transitionRecttemp.x    -= DisplayArea.x;
+            Rect leftHandletemp     = leftHandle;
+            leftHandletemp.y        = 0;
+            leftHandletemp.x        -= DisplayArea.x;
+            Rect rightHandletemp    = rightHandle;
+            rightHandletemp.x       -= DisplayArea.x;
+            rightHandletemp.y = 0;
+
+            //GUI.color = new Color(70 / 255.0f, 147 / 255.0f, 236 / 255.0f, 1);
+            GUI.color = ColorTools.GetGrandientColor((float)renderdata.index / (float)CountClip);
+            if (SelectedObjects.Contains(renderdata))
+            {
+                GUI.color = ColorTools.SelectColor;// Color.yellow;
+            }
+
+            GUI.Box(renderRecttemp, "", USEditorUtility.NormalWhiteOutLineBG);
+            GUI.Box(leftHandletemp, "");
+            GUI.Box(rightHandletemp, "");
+
+            labelRect                   = renderRecttemp;
+            labelRect.width             = DisplayArea.width;
+
+            renderdata.renderRect       = renderRect;
+            renderdata.labelRect        = renderRect;
+            renderdata.renderPosition   = new Vector2(startX, DisplayArea.y);
+            renderdata.transitionRect   = transitionRect;
+            renderdata.leftHandle       = leftHandle;
+            renderdata.rightHandle      = rightHandle;
+            renderdata.ClipData         = animationClipData;
+            
+
+            GUI.color                   = Color.black;
+            labelRect.x                 += 4.0f;
+            GUI.Label(labelRect, "" );
+
+            GUI.color = Color.white;
+            if( isContext && renderRecttemp.Contains( UnityEngine.Event.current.mousePosition ))
+            {
+                hasBox = true;
+                contextMenu.AddItem(new GUIContent("DeleteClip"), false, (obj) => RemoveAnimationClip(((JClipRenderData)((object[])obj)[0])), new object[] { renderdata });
+            }
+
+            if (isContext && renderRecttemp.Contains(UnityEngine.Event.current.mousePosition))
+            {
+                UnityEngine.Event.current.Use();
+                contextMenu.ShowAsContext();
+            }
+        }
+
+        if (!hasBox && isChoose && DisplayAreaTemp.Contains(UnityEngine.Event.current.mousePosition) && (UnityEngine.Event.current.control || UnityEngine.Event.current.command))
+        {
+            Selection.activeGameObject = Animationline.gameObject;
+            EditorGUIUtility.PingObject(Animationline.gameObject);
+
+        }
+        if (!hasBox && isContext && DisplayAreaTemp.Contains(UnityEngine.Event.current.mousePosition))
+        {
+            contextMenu = MenuForAnimationTimeLine(Animationline, linetrack);
+
+        }
+        if (!hasBox && isContext && DisplayAreaTemp.Contains(UnityEngine.Event.current.mousePosition))
+        {
+            UnityEngine.Event.current.Use();
+            contextMenu.ShowAsContext();
         }
     }
 
@@ -720,6 +886,11 @@ public class TimelinesContent : ScriptableObject
         }
     }
 
+    /// ------------------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 事件处理接口
+    /// </summary>
+    /// ------------------------------------------------------------------------------------------------------------------------------------
     public void HandleEvent(EventType eventType, int button, Vector2 mousePosition)
     {
         hasObjectsUnderMouse = false;
@@ -828,7 +999,7 @@ public class TimelinesContent : ScriptableObject
         }
     }
 
-    [SerializeField]
+
     private List<UnityEngine.Object>        selectedObjects = new List<UnityEngine.Object>();
     public List<UnityEngine.Object>         SelectedObjects
     {
@@ -872,42 +1043,185 @@ public class TimelinesContent : ScriptableObject
 
     public void DeleteSelection()
     {
-        foreach (var selectedObject in SelectedObjects)
-        {
-            JClipRenderData clip = selectedObject as JClipRenderData;
-            RemoveClip(clip);
-        }
         SelectedObjects.Clear();
     }
 
-    /// <summary>
-    /// 移除可见渲染块
-    /// </summary>
-    /// <param name="clip"></param>
-    private void RemoveClip(JClipRenderData clip)
-    {
-        //RemoveAnimationClip(clip);
-        //RemoveParticleClip(clip);
-        //RemoveSoundClip(clip);
-        //RemoveKeyFrame(clip);
-        //RemoveTrajectoryClip(clip);
-        //RemoveEffectClip(clip);
-    }
 
-    public void AddNewTrack( TimelineBase line )
+    /// -------------------------------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 移除时间线
+    /// </summary>
+    /// -------------------------------------------------------------------------------------------------------------------------------------------------
+    private void AddNewAnimationTrack(TimelineBase line)
     {
-        if (CurrentSequence)
+        if (line is TimelineAnimation)
         {
-            #region ExtensionRegion
-            //AddNewAnimationTrack(line);
-            //AddNewSoundTrack(line);
-            //AddNewParticleTrack(line);
-            //AddNewTransFormTrack(line);
-            //AddNewEventTrack(line);
-            //AddNewTrajectoryTrack(line);
-            //AddNewCameraTrack(line);
-            //AddNewEffectTrack(line);
-            #endregion
+            TimelineAnimation tline = (TimelineAnimation)line;
+            var track               = ScriptableObject.CreateInstance<AnimationTrack>();
+            tline.AddTrack(track);
+            AddRenderDataForAnimation(tline);
         }
     }
+
+    /// -------------------------------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 移除时间线
+    /// </summary>
+    /// -------------------------------------------------------------------------------------------------------------------------------------------------
+    private void RemoveAnimationTimeline(TimelineAnimation line, AnimationTrack track)
+    {
+        if (timelineClipRenderDataMap.ContainsKey(track))
+        {
+            timelineClipRenderDataMap.Remove(track);
+        }
+
+        line.RemoveTrack(track);
+        TimelineContainer contain = line.TimelineContainer;
+        if (line.AnimationTracks.Count == 0)
+            DestroyImmediate(line.gameObject);
+        //删除的是最后一个 删除掉container
+        if (contain.transform.childCount == 0)
+        {
+            DestroyImmediate(contain.gameObject);
+        }
+    }
+
+
+    /// -------------------------------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 增加节点数据
+    /// </summary>
+    /// -------------------------------------------------------------------------------------------------------------------------------------------------
+    private void AddNewTrackClip(AnimationTrack track, EffectType type, float time )
+    {
+        var clipData                = ScriptableObject.CreateInstance<KeyFrameClipData>();
+        TimelineAnimation line      = (TimelineAnimation)track.TimeLine;
+        clipData.TargetObject       = line.AffectedObject.gameObject;
+        clipData.StartTime          = time;
+        clipData.PlaybackDuration   = 1;
+        clipData.Track              = track;
+        track.AddClip(clipData);
+
+        if ( timelineClipRenderDataMap.ContainsKey(track))
+        {
+            var cachedData          = ScriptableObject.CreateInstance<JClipRenderData>();
+            cachedData.ClipData     = null;
+            timelineClipRenderDataMap[track].Add(cachedData);
+        }
+        else
+        {
+            var cachedData          = ScriptableObject.CreateInstance<JClipRenderData>();
+            cachedData.ClipData     = null;
+            List<JClipRenderData> list = new List<JClipRenderData>();
+            list.Add(cachedData);
+            timelineClipRenderDataMap.Add(track, list);
+        }
+    }
+
+
+    /// -------------------------------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 删除节点数据
+    /// </summary>
+    /// -------------------------------------------------------------------------------------------------------------------------------------------------
+    private void RemoveTrackClip( AnimationTrack track )
+    {
+        if( timelineClipRenderDataMap.ContainsKey( track ))
+        {
+            timelineClipRenderDataMap.Remove(track);
+        }
+
+        TimelineAnimation line = (TimelineAnimation)track.TimeLine;
+        line.RemoveTrack(track);
+
+        
+        if( line.AnimationTracks.Count == 0 )
+        {
+            DestroyImmediate(line.gameObject);
+        }
+
+        TimelineContainer container = line.TimelineContainer;
+        if( container.Timelines.Length == 0 )
+        {
+            DestroyImmediate(container.gameObject);
+        }
+    }
+
+    /// -------------------------------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 为时间线添加绘制片段数据
+    /// </summary>
+    /// -------------------------------------------------------------------------------------------------------------------------------------------------
+    private void AddRenderDataForAnimation(TimelineBase timeline)
+    {
+        if ( timeline is TimelineAnimation)
+        {
+            TimelineAnimation animationline     = (TimelineAnimation)timeline;
+            List<JClipRenderData> list          = new List<JClipRenderData>();
+            for (int k = 0; k < animationline.AnimationTracks.Count; k++)
+            {
+                AnimationTrack track            = animationline.AnimationTracks[k];
+                for (int l = 0; l < track.TrackClips.Count; l++)
+                {
+                    KeyFrameClipData animationClipData = track.TrackClips[l];
+                    var cachedData              = ScriptableObject.CreateInstance<JClipRenderData>();
+                    cachedData.ClipData         = animationClipData;
+                    list.Add(cachedData);
+                }
+                if (!timelineClipRenderDataMap.ContainsKey(track))
+                {
+                    timelineClipRenderDataMap.Add(track, list);
+                }
+            }
+        }
+    }
+
+
+    /// -------------------------------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 添加动作片段
+    /// </summary>
+    /// -------------------------------------------------------------------------------------------------------------------------------------------------
+    private void AddNewAnimationState(TimelineAnimation line, AnimationTrack track, float time, string stateName )
+    {
+        var clipData            = ScriptableObject.CreateInstance<KeyFrameClipData>();
+        clipData.TargetObject   = line.AffectedObject.gameObject;
+        clipData.StartTime      = time;
+        clipData.PlaybackDuration = 0.2f;
+        clipData.Track          = track;
+        track.AddClip(clipData);
+        if( timelineClipRenderDataMap.ContainsKey(track))
+        {
+            var cacheData       = ScriptableObject.CreateInstance<JClipRenderData>();
+            cacheData.ClipData  = clipData;
+            timelineClipRenderDataMap[track].Add(cacheData);
+        }
+        else
+        {
+            var cacheData       = ScriptableObject.CreateInstance<JClipRenderData>();
+            cacheData.ClipData  = clipData;
+            List<JClipRenderData> list = new List<JClipRenderData>();
+            list.Add(cacheData);
+            timelineClipRenderDataMap.Add(track, list);
+        }
+    }
+
+
+    /// -------------------------------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 移除一个动作片段
+    /// </summary>
+    /// -------------------------------------------------------------------------------------------------------------------------------------------------
+    private void RemoveAnimationClip( JClipRenderData clip )
+    {
+        if( clip.ClipData is KeyFrameClipData )
+        {
+            KeyFrameClipData anidata = (KeyFrameClipData)clip.ClipData;
+            if (timelineClipRenderDataMap.ContainsKey(anidata.Track))
+                if (timelineClipRenderDataMap[anidata.Track].Contains(clip))
+                    timelineClipRenderDataMap[anidata.Track].Remove(clip);
+            anidata.Track.RemoveClip(anidata);
+        }
+    }
+        
 }

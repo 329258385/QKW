@@ -150,6 +150,18 @@ public static class USEditorUtility
         set {; }
     }
 
+    private static GUIStyle normalWhiteOutLineBG;
+    public static GUIStyle NormalWhiteOutLineBG
+    {
+        get
+        {
+            if (normalWhiteOutLineBG == null)
+                normalWhiteOutLineBG = USeqSkin.GetStyle("NormalWhiteOutLineBG");
+            return normalWhiteOutLineBG;
+        }
+        set {; }
+    }
+
     private static GUIStyle         toolbarButtonSmall;
     public static GUIStyle ToolbarButtonSmall
     {

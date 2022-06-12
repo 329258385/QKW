@@ -71,17 +71,20 @@ public class TimelinesWindow : EditorWindow
             ContentRenderer.SequenceWindow = this;
         }
 
+        if(Selection.activeTransform == null )
+        {
+            return;
+        }
         EditorApplication.update    -= SequenceUpdate;
         EditorApplication.update    += SequenceUpdate;
 
         TimeLineSequencer sequence   = Selection.activeTransform.GetComponent<TimeLineSequencer>();
-        if(sequence != null && CurrentSequence.TimelineContainerCount < 1 )
+        if(sequence != null )
         {
-            TimelineContainer container = CurrentSequence.CreateNewTimelineContainer( Selection.activeTransform );
-            if( container != null )
+            CurrentSequence          = sequence;
+            if(ContentRenderer != null )
             {
-                container.AddNewTimeline(TimeLineType.Effect);
-                container.AddNewTimeline(TimeLineType.Animation);
+                ContentRenderer.OnSequenceChange(CurrentSequence);
             }
         }
     }
