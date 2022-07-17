@@ -33,6 +33,10 @@ public class AssetManager : Singleton<AssetManager>
 		AddSprite ("ShieldWarrior");
 		AddSprite ("ThrowerDummy");
 		AddSprite ("BloodSlider");
+		
+		// 这里还要加
+		AddSprite ("orc_chieftain");
+		AddSprite ("ACS17");
 
 
 		/////////////////////////////////////////

@@ -186,7 +186,7 @@ public class SelectTeamWindow : BaseWindow
                 //technique[2].ApplyTechnique(BattleSystem.Instance.battleData.currentBattleTeam);
                 curTeam.battleArray[selectIndex].UpdateBattleTeamFormation(Formation.FormationSurround );
             }
-            if (obj.name.Equals("A4"))
+            /*if (obj.name.Equals("A4"))
             {
                 if (!technique[3].IsApplyTechnique())
                 {
@@ -194,7 +194,7 @@ public class SelectTeamWindow : BaseWindow
                     return;
                 }
                 technique[3].ApplyTechnique();
-            }
+            }*/
             Debug.LogError(" down ");
         }
         else
