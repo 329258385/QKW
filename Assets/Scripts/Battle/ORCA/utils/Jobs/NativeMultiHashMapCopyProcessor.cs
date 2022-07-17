@@ -7,10 +7,10 @@ namespace Nebukam.JobAssist
         where TValue : struct
     {
 
-        protected NativeMultiHashMap<TKey, TValue> m_outputMap = new NativeMultiHashMap<TKey, TValue>(0, Allocator.Persistent);
+        protected NativeParallelMultiHashMap<TKey, TValue> m_outputMap = new NativeParallelMultiHashMap<TKey, TValue>(0, Allocator.Persistent);
 
-        public NativeMultiHashMap<TKey, TValue> inputMap { get; set; }
-        public NativeMultiHashMap<TKey, TValue> outputMap { get { return m_outputMap; } set { m_outputMap = value; } }
+        public NativeParallelMultiHashMap<TKey, TValue> inputMap { get; set; }
+        public NativeParallelMultiHashMap<TKey, TValue> outputMap { get { return m_outputMap; } set { m_outputMap = value; } }
 
         protected override void InternalLock() { }
         protected override void InternalUnlock() { }

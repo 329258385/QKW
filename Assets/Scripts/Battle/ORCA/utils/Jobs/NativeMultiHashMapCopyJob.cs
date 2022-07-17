@@ -11,15 +11,15 @@ namespace Nebukam.JobAssist
     {
 
         [ReadOnly]
-        public NativeMultiHashMap<TKey, TValue> inputHashMap;
-        public NativeMultiHashMap<TKey, TValue> outputHashMap;
+        public NativeParallelMultiHashMap<TKey, TValue> inputHashMap;
+        public NativeParallelMultiHashMap<TKey, TValue> outputHashMap;
 
         public void Execute()
         {
             outputHashMap.Clear();
             outputHashMap.Capacity = inputHashMap.Capacity;
 
-            NativeMultiHashMapIterator<TKey> it;
+            NativeParallelMultiHashMapIterator<TKey> it;
             NativeArray<TKey> keys = inputHashMap.GetKeyArray(Allocator.Temp);
             TKey key;
             TValue value;

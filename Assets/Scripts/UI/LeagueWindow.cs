@@ -342,7 +342,7 @@ public class LeagueWindow : BaseWindow {
 	/// </summary>
 	public void OnCombatClick ()
 	{
-		NetSystem.Instance.helper.StartMatchReq (NetMessage.MatchType.MT_League, leagueInfo.id, false);
+		NetSystem.Instance.helper.StartMatchReq (NetMessage.BattleMatchType.MT_League, leagueInfo.id, false);
 		// NetSystem.Instance.helper.MatchLeague (leagueInfo.Id);
 	}
 

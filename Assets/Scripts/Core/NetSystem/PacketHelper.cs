@@ -189,11 +189,11 @@ public class PacketHelper
 	{
 
         BattleSystem.Instance.SetPlayMode (true, false);
-		if (proto.match_type == MatchType.MT_League) {
+		if (proto.match_type == BattleMatchType.MT_League) {
 			BattleSystem.Instance.battleData.gameType = GameType.League;
-		} else if (proto.match_type == MatchType.MT_Ladder) {
+		} else if (proto.match_type == BattleMatchType.MT_Ladder) {
 			BattleSystem.Instance.battleData.gameType = GameType.PVP;
-		} else if (proto.match_type == MatchType.MT_Room) {
+		} else if (proto.match_type == BattleMatchType.MT_Room) {
 			BattleSystem.Instance.battleData.gameType = GameType.PVP;
 		} else {
 			BattleSystem.Instance.battleData.gameType = GameType.PVP;
@@ -1170,13 +1170,13 @@ public class PacketHelper
 		if (proto.match != null )
         {
 			// 匹配状态
-			if (proto.match.typ == MatchType.MT_Ladder || proto.match.typ == MatchType.MT_League)
+			if (proto.match.typ == BattleMatchType.MT_Ladder || proto.match.typ == BattleMatchType.MT_League)
 			{
 				UISystem.Instance.HideAllWindow ();
 				UISystem.Get ().ShowWindow ("PVPWaitWindow");
 				OnMatchInit ( proto.match );
 			}
-			else if (proto.match.typ == MatchType.MT_Room)
+			else if (proto.match.typ == BattleMatchType.MT_Room)
 			{
 				UISystem.Instance.HideAllWindow ();
 				UISystem.Instance.ShowWindow ("RoomWaitWindow");
@@ -1292,14 +1292,14 @@ public class PacketHelper
 	/// 开始匹配
 	/// 参数1，游戏类型；参数2，游戏类型的额外参数（房间id、联赛id等）
 	/// </summary>
-	public void StartMatchReq (NetMessage.MatchType type, string misc_id, bool hasRace)
+	public void StartMatchReq (NetMessage.BattleMatchType type, string misc_id, bool hasRace)
 	{
-		if (type == MatchType.MT_Ladder) {
+		if (type == BattleMatchType.MT_Ladder) {
 			BattleSystem.Instance.SetPlayMode (true, false);
 			BattleSystem.Instance.battleData.gameType = GameType.PVP;
-		} else if (type == MatchType.MT_League) {
+		} else if (type == BattleMatchType.MT_League) {
 		
-		} else if (type == MatchType.MT_Room) {
+		} else if (type == BattleMatchType.MT_Room) {
 			
 		}
 
@@ -1319,7 +1319,7 @@ public class PacketHelper
 	{
         MemoryStream ms                     = msg.Data as MemoryStream;
         NetMessage.SCStartMatchReq proto    = ProtoBuf.Serializer.Deserialize<NetMessage.SCStartMatchReq>(ms);
-		if (proto.typ == MatchType.MT_Ladder) {
+		if (proto.typ == BattleMatchType.MT_Ladder) {
 			#if !SERVER
 			if (proto.code != ErrCode.EC_Ok) {
 				Tips.Make (Tips.TipsType.FlowUp, string.Format ("匹配失败 code={0}", proto.code), 1);
@@ -1331,7 +1331,7 @@ public class PacketHelper
 			UISystem.Get ().HideWindow ("StartWindow");
 			UISystem.Get ().ShowWindow ("PVPWaitWindow");
 			#endif
-		} else if (proto.typ == MatchType.MT_League) {
+		} else if (proto.typ == BattleMatchType.MT_League) {
 			#if !SERVER
 			if (proto.code == ErrCode.EC_Ok) {
                 UISystem.Get().HideWindow("CustomSelectWindowNew");
@@ -1341,7 +1341,7 @@ public class PacketHelper
 			EventSystem.Instance.FireEvent (EventId.OnLeagueMatchResult, proto.code);
 
 			#endif
-		} else if (proto.typ == MatchType.MT_Room) {
+		} else if (proto.typ == BattleMatchType.MT_Room) {
 
 			EventSystem.Instance.FireEvent (EventId.OnStartMatchResult, proto.code);
 		}
@@ -1355,13 +1355,13 @@ public class PacketHelper
         MemoryStream ms              = msg.Data as MemoryStream;
         NetMessage.SCMatchInit proto = ProtoBuf.Serializer.Deserialize<NetMessage.SCMatchInit>(ms);
 		string matchId               = proto.matchid;
-		NetMessage.MatchType matchType = proto.typ;
+		NetMessage.BattleMatchType matchType = proto.typ;
 
-		if (matchType == MatchType.MT_Ladder) {
+		if (matchType == BattleMatchType.MT_Ladder) {
 			EventSystem.Instance.FireEvent (EventId.OnMatchInit, matchId, proto.miscid, proto.user, proto.useridx, proto.countdown);
-		} else if (matchType == MatchType.MT_League) {
+		} else if (matchType == BattleMatchType.MT_League) {
 			EventSystem.Instance.FireEvent (EventId.OnMatchInit, matchId, proto.miscid, proto.user, proto.useridx, proto.countdown);
-		} else if (matchType == MatchType.MT_Room) {
+		} else if (matchType == BattleMatchType.MT_Room) {
 			EventSystem.Instance.FireEvent (EventId.OnMatchInit, matchId, proto.miscid, proto.user, proto.useridx, proto.masterid);
 		}
 	}
@@ -1369,17 +1369,17 @@ public class PacketHelper
     private void OnMatchInit(NetMessage.SCMatchInit proto)
     {
         string matchId = proto.matchid;
-        NetMessage.MatchType matchType = proto.typ;
+        NetMessage.BattleMatchType matchType = proto.typ;
 
-        if (matchType == MatchType.MT_Ladder)
+        if (matchType == BattleMatchType.MT_Ladder)
         {
             EventSystem.Instance.FireEvent(EventId.OnMatchInit, matchId, proto.miscid, proto.user, proto.useridx, proto.countdown, 0);
         }
-        else if (matchType == MatchType.MT_League)
+        else if (matchType == BattleMatchType.MT_League)
         {
             EventSystem.Instance.FireEvent(EventId.OnMatchInit, matchId, proto.miscid, proto.user, proto.useridx, proto.countdown, 0);
         }
-        else if (matchType == MatchType.MT_Room)
+        else if (matchType == BattleMatchType.MT_Room)
         {
             EventSystem.Instance.FireEvent(EventId.OnMatchInit, matchId, proto.miscid, proto.user, proto.useridx, proto.countdown, 0);
         }
@@ -1393,14 +1393,14 @@ public class PacketHelper
         MemoryStream ms                 = msg.Data as MemoryStream;
         NetMessage.SCMatchUpdate proto  = ProtoBuf.Serializer.Deserialize<NetMessage.SCMatchUpdate>(ms);
 
-		NetMessage.MatchType matchType = proto.typ;
-		if (proto.typ == MatchType.MT_Ladder) {
+		NetMessage.BattleMatchType matchType = proto.typ;
+		if (proto.typ == BattleMatchType.MT_Ladder) {
 			EventSystem.Instance.FireEvent (EventId.OnMatchUpdate, proto.user_added, proto.index_added, proto.index_deled);
 		}
-        else if (proto.typ == MatchType.MT_League) {
+        else if (proto.typ == BattleMatchType.MT_League) {
 			EventSystem.Instance.FireEvent (EventId.OnMatchUpdate, proto.user_added, proto.index_added, proto.index_deled);
 		}
-        else if (proto.typ == MatchType.MT_Room) {
+        else if (proto.typ == BattleMatchType.MT_Room) {
 			if (proto.masterid > 0 )
             {
 				// 房主更新

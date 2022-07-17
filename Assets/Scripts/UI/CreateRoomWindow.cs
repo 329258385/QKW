@@ -59,7 +59,7 @@ public class CreateRoomWindow : BaseWindow
 
 	public void OnFourClick ()
 	{
-		NetSystem.Instance.helper.StartMatchReq (NetMessage.MatchType.MT_Room, string.Empty, false);
+		NetSystem.Instance.helper.StartMatchReq (NetMessage.BattleMatchType.MT_Room, string.Empty, false);
 	}
 
 	public void OnOneClick ()
@@ -122,7 +122,7 @@ public class CreateRoomWindow : BaseWindow
 			}
 			lastEnterRoomId = roomId;
 
-			NetSystem.Instance.helper.StartMatchReq (NetMessage.MatchType.MT_Room, roomId, false);
+			NetSystem.Instance.helper.StartMatchReq (NetMessage.BattleMatchType.MT_Room, roomId, false);
 		}
 	}
 

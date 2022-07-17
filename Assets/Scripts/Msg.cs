@@ -558,10 +558,10 @@ namespace NetMessage
       set { _misc_id = value; }
     }
 
-    private NetMessage.MatchType _match_type = NetMessage.MatchType.MT_Null;
+    private NetMessage.BattleMatchType _match_type = NetMessage.BattleMatchType.MT_Null;
     [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"match_type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(NetMessage.MatchType.MT_Null)]
-    public NetMessage.MatchType match_type
+    [global::System.ComponentModel.DefaultValue(NetMessage.BattleMatchType.MT_Null)]
+    public NetMessage.BattleMatchType match_type
     {
       get { return _match_type; }
       set { _match_type = value; }
@@ -5659,9 +5659,9 @@ namespace NetMessage
   {
     public CSStartMatchReq() {}
     
-    private NetMessage.MatchType _typ;
+    private NetMessage.BattleMatchType _typ;
     [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"typ", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public NetMessage.MatchType typ
+    public NetMessage.BattleMatchType typ
     {
       get { return _typ; }
       set { _typ = value; }
@@ -5694,9 +5694,9 @@ namespace NetMessage
   {
     public SCStartMatchReq() {}
     
-    private NetMessage.MatchType _typ;
+    private NetMessage.BattleMatchType _typ;
     [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"typ", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public NetMessage.MatchType typ
+    public NetMessage.BattleMatchType typ
     {
       get { return _typ; }
       set { _typ = value; }
@@ -5718,9 +5718,9 @@ namespace NetMessage
   {
     public SCMatchInit() {}
     
-    private NetMessage.MatchType _typ;
+    private NetMessage.BattleMatchType _typ;
     [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"typ", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public NetMessage.MatchType typ
+    public NetMessage.BattleMatchType typ
     {
       get { return _typ; }
       set { _typ = value; }
@@ -5783,9 +5783,9 @@ namespace NetMessage
   {
     public SCMatchUpdate() {}
     
-    private NetMessage.MatchType _typ;
+    private NetMessage.BattleMatchType _typ;
     [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"typ", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public NetMessage.MatchType typ
+    public NetMessage.BattleMatchType typ
     {
       get { return _typ; }
       set { _typ = value; }
@@ -5897,9 +5897,9 @@ namespace NetMessage
   {
     public SCQuitMatch() {}
     
-    private NetMessage.MatchType _typ;
+    private NetMessage.BattleMatchType _typ;
     [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"typ", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public NetMessage.MatchType typ
+    public NetMessage.BattleMatchType typ
     {
       get { return _typ; }
       set { _typ = value; }
@@ -7233,8 +7233,8 @@ namespace NetMessage
       NT_Error = 3
     }
   
-    [global::ProtoBuf.ProtoContract(Name=@"MatchType")]
-    public enum MatchType
+    [global::ProtoBuf.ProtoContract(Name= @"BattleMatchType")]
+    public enum BattleMatchType
     {
             
       [global::ProtoBuf.ProtoEnum(Name=@"MT_Null", Value=0)]
