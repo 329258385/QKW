@@ -126,13 +126,14 @@ public class AIManager : Lifecycle2
     /// </summary>
 	public static string GetAIIcon(int userId)
 	{
-        #if SERVER
-		return string.Empty;
-        #else
-		System.Random rand  = new System.Random (userId);
-		int r               = rand.Next (0, 10);
-		return SelectIconWindow.GetIcon (r);
-        #endif
+		//      #if SERVER
+		//return string.Empty;
+		//      #else
+		//System.Random rand  = new System.Random (userId);
+		//int r               = rand.Next (0, 10);
+		//return SelectIconWindow.GetIcon (r);
+		//      #endif
+		return "";
 	}
 }
 

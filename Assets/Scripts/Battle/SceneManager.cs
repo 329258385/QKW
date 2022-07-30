@@ -337,30 +337,6 @@ public class SceneManager : Lifecycle2
 
 
 	/// <summary>
-	/// 添加星球，编辑器用
-	/// </summary>
-	public Node AddNode(string tag, int kind, float dx, float dy, string perfab )
-	{
-		if (battleData.mapEdit) {
-
-			if (battleData.currentTable.builds == null)
-				battleData.currentTable.builds = new List<MapBuildingConfig> ();
-
-			MapBuildingConfig item = new MapBuildingConfig ();
-			battleData.currentTable.builds.Add (item);
-
-			item.tag    = tag;
-			item.x      = dx;
-			item.y      = dy;
-			item.type   = GetType(kind);
-			item.size   = 1;
-		}
-
-		return nodeManager.AddNode (tag, kind, dx, dy, NodeAttribute.GetScale(kind, 1), battleData.mapEdit, perfab );
-	}
-
-
-	/// <summary>
 	/// 获取星球
 	/// </summary>
 	public Node GetNode(string tag)

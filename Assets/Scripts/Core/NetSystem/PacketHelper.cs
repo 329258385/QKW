@@ -128,10 +128,10 @@ public class PacketHelper
 		} 
         else 
         {
-			#if !SERVER
-			Debug.LogError ("连接服务器失败");
-			Tips.Make (Tips.TipsType.FlowUp, "连接服务器失败", 1.0f);
-			#endif
+			//#if !SERVER
+			//Debug.LogError ("连接服务器失败");
+			//Tips.Make (Tips.TipsType.FlowUp, "连接服务器失败", 1.0f);
+			//#endif
 
 			NetSystem.Instance.Close ();
 			NetSystem.Instance.ping.Pong (-1);
@@ -1036,13 +1036,13 @@ public class PacketHelper
 
 	private void OnSingleMatch (int msgid, PacketEvent msg)
 	{
-        MemoryStream ms                 = msg.Data as MemoryStream;
-        NetMessage.SCSingleMatch proto = ProtoBuf.Serializer.Deserialize<NetMessage.SCSingleMatch>(ms);
-		if (proto.code != ErrCode.EC_Ok)
-        {
-			Tips.Make ("开始单机游戏错误：" + proto.code.ToString ());
-			return;
-		}
+  //      MemoryStream ms                 = msg.Data as MemoryStream;
+  //      NetMessage.SCSingleMatch proto = ProtoBuf.Serializer.Deserialize<NetMessage.SCSingleMatch>(ms);
+		//if (proto.code != ErrCode.EC_Ok)
+  //      {
+		//	Tips.Make ("开始单机游戏错误：" + proto.code.ToString ());
+		//	return;
+		//}
 	}
 
 
@@ -1269,23 +1269,23 @@ public class PacketHelper
 	/// </summary>
 	private void OnServerNotify (int msgId, PacketEvent msg)
 	{
-        #if !SERVER
-        MemoryStream ms             = msg.Data as MemoryStream;
-		NetMessage.SCNotify proto   = ProtoBuf.Serializer.Deserialize<NetMessage.SCNotify>(ms);
-		if (proto.typ == NotifyType.NT_Popup) {
-			// 弹窗
-			UISystem.Instance.ShowWindow ("CommonDialogWindow");
-			EventSystem.Instance.FireEvent (EventId.OnCommonDialog, 1, proto.text);
-		} else if (proto.typ == NotifyType.NT_Scroll) {
-			// 滚动条
-			Tips.Make (Tips.TipsType.FlowLeft, proto.text, 2.0f);
-			Tips.Make (Tips.TipsType.FlowLeft, proto.text, 2.0f);
-		} else if (proto.typ == NotifyType.NT_Error) {
-			// 通用错误
-			Tips.Make (Tips.TipsType.FlowUp, proto.text, 1.0f);
-		}
+  //      #if !SERVER
+  //      MemoryStream ms             = msg.Data as MemoryStream;
+		//NetMessage.SCNotify proto   = ProtoBuf.Serializer.Deserialize<NetMessage.SCNotify>(ms);
+		//if (proto.typ == NotifyType.NT_Popup) {
+		//	// 弹窗
+		//	UISystem.Instance.ShowWindow ("CommonDialogWindow");
+		//	EventSystem.Instance.FireEvent (EventId.OnCommonDialog, 1, proto.text);
+		//} else if (proto.typ == NotifyType.NT_Scroll) {
+		//	// 滚动条
+		//	Tips.Make (Tips.TipsType.FlowLeft, proto.text, 2.0f);
+		//	Tips.Make (Tips.TipsType.FlowLeft, proto.text, 2.0f);
+		//} else if (proto.typ == NotifyType.NT_Error) {
+		//	// 通用错误
+		//	Tips.Make (Tips.TipsType.FlowUp, proto.text, 1.0f);
+		//}
 
-		#endif
+		//#endif
 	}
 
 	/// <summary>
@@ -1317,34 +1317,34 @@ public class PacketHelper
 	/// </summary>
 	private void OnStartMatchRequest (int msgId, PacketEvent msg)
 	{
-        MemoryStream ms                     = msg.Data as MemoryStream;
-        NetMessage.SCStartMatchReq proto    = ProtoBuf.Serializer.Deserialize<NetMessage.SCStartMatchReq>(ms);
-		if (proto.typ == BattleMatchType.MT_Ladder) {
-			#if !SERVER
-			if (proto.code != ErrCode.EC_Ok) {
-				Tips.Make (Tips.TipsType.FlowUp, string.Format ("匹配失败 code={0}", proto.code), 1);
-				return;
-			}
+  //      MemoryStream ms                     = msg.Data as MemoryStream;
+  //      NetMessage.SCStartMatchReq proto    = ProtoBuf.Serializer.Deserialize<NetMessage.SCStartMatchReq>(ms);
+		//if (proto.typ == BattleMatchType.MT_Ladder) {
+		//	#if !SERVER
+		//	if (proto.code != ErrCode.EC_Ok) {
+		//		Tips.Make (Tips.TipsType.FlowUp, string.Format ("匹配失败 code={0}", proto.code), 1);
+		//		return;
+		//	}
 
-			// 开始模拟pvp进入的游戏局
-            UISystem.Get().HideWindow("CustomSelectWindowNew");
-			UISystem.Get ().HideWindow ("StartWindow");
-			UISystem.Get ().ShowWindow ("PVPWaitWindow");
-			#endif
-		} else if (proto.typ == BattleMatchType.MT_League) {
-			#if !SERVER
-			if (proto.code == ErrCode.EC_Ok) {
-                UISystem.Get().HideWindow("CustomSelectWindowNew");
-				UISystem.Get ().HideWindow ("LeagueWindow");
-				UISystem.Get ().ShowWindow ("PVPWaitWindow");
-			}
-			EventSystem.Instance.FireEvent (EventId.OnLeagueMatchResult, proto.code);
+		//	// 开始模拟pvp进入的游戏局
+  //          UISystem.Get().HideWindow("CustomSelectWindowNew");
+		//	UISystem.Get ().HideWindow ("StartWindow");
+		//	UISystem.Get ().ShowWindow ("PVPWaitWindow");
+		//	#endif
+		//} else if (proto.typ == BattleMatchType.MT_League) {
+		//	#if !SERVER
+		//	if (proto.code == ErrCode.EC_Ok) {
+  //              UISystem.Get().HideWindow("CustomSelectWindowNew");
+		//		UISystem.Get ().HideWindow ("LeagueWindow");
+		//		UISystem.Get ().ShowWindow ("PVPWaitWindow");
+		//	}
+		//	EventSystem.Instance.FireEvent (EventId.OnLeagueMatchResult, proto.code);
 
-			#endif
-		} else if (proto.typ == BattleMatchType.MT_Room) {
+		//	#endif
+		//} else if (proto.typ == BattleMatchType.MT_Room) {
 
-			EventSystem.Instance.FireEvent (EventId.OnStartMatchResult, proto.code);
-		}
+		//	EventSystem.Instance.FireEvent (EventId.OnStartMatchResult, proto.code);
+		//}
 	}
 
 	/// <summary>
@@ -1422,17 +1422,17 @@ public class PacketHelper
 
 	private void OnMatchComplete (int msgId, PacketEvent msg)
 	{
-        MemoryStream ms                  = msg.Data as MemoryStream;
-		NetMessage.SCMatchComplete proto = ProtoBuf.Serializer.Deserialize<NetMessage.SCMatchComplete>(ms);
-		if (proto.code == ErrCode.EC_Ok) {
+  //      MemoryStream ms                  = msg.Data as MemoryStream;
+		//NetMessage.SCMatchComplete proto = ProtoBuf.Serializer.Deserialize<NetMessage.SCMatchComplete>(ms);
+		//if (proto.code == ErrCode.EC_Ok) {
 
-			UISystem.Get ().HideWindow ("RoomWaitWindow");
-			UISystem.Get ().ShowWindow ("PVPWaitWindow");
-		} else {
-			#if !SERVER
-			Tips.Make (Tips.TipsType.FlowUp, DictionaryDataProvider.Format (901, proto.code), 1.0f);
-			#endif
-		}
+		//	UISystem.Get ().HideWindow ("RoomWaitWindow");
+		//	UISystem.Get ().ShowWindow ("PVPWaitWindow");
+		//} else {
+		//	#if !SERVER
+		//	Tips.Make (Tips.TipsType.FlowUp, DictionaryDataProvider.Format (901, proto.code), 1.0f);
+		//	#endif
+		//}
 	}
 
 	/// <summary>
@@ -1448,17 +1448,17 @@ public class PacketHelper
 
 	private void OnMatchPos (int msgId, PacketEvent msg)
 	{
-        #if !SERVER
-        MemoryStream ms             = msg.Data as MemoryStream;
-		NetMessage.SCMatchPos proto = ProtoBuf.Serializer.Deserialize<NetMessage.SCMatchPos>(ms);
-		if (proto.code == ErrCode.EC_Ok) {
+  //      #if !SERVER
+  //      MemoryStream ms             = msg.Data as MemoryStream;
+		//NetMessage.SCMatchPos proto = ProtoBuf.Serializer.Deserialize<NetMessage.SCMatchPos>(ms);
+		//if (proto.code == ErrCode.EC_Ok) {
 		
-		}
-        else
-        {
-			Tips.Make (DictionaryDataProvider.GetValue (911));
-		}
-		#endif
+		//}
+  //      else
+  //      {
+		//	Tips.Make (DictionaryDataProvider.GetValue (911));
+		//}
+		//#endif
 	}
 
 	/// <summary>

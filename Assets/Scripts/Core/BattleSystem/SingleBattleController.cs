@@ -247,30 +247,30 @@ public class SingleBattleController : IBattleController
 
 			BattleSystem.Instance.BeginFadeOut();
 
-			UISystem.Get ().FadeBattle(false, new EventDelegate(()=>{
-                if (BattleSystem.Instance.battleData.gameType == GameType.Single)
-                {
-                    BattleSystem.Instance.Reset();
-                    UISystem.Get().ShowWindow("CustomSelectWindow");
-                }
-                if (BattleSystem.Instance.battleData.gameType == GameType.Guide)
-                {
-                    BattleSystem.Instance.Reset();
-                    UISystem.Get().ShowWindow("CustomSelectWindowNew");
-                }
+			//UISystem.Get ().FadeBattle(false, new EventDelegate(()=>{
+   //             if (BattleSystem.Instance.battleData.gameType == GameType.Single)
+   //             {
+   //                 BattleSystem.Instance.Reset();
+   //                 UISystem.Get().ShowWindow("CustomSelectWindow");
+   //             }
+   //             if (BattleSystem.Instance.battleData.gameType == GameType.Guide)
+   //             {
+   //                 BattleSystem.Instance.Reset();
+   //                 UISystem.Get().ShowWindow("CustomSelectWindowNew");
+   //             }
 
-                if (BattleSystem.Instance.battleData.gameType == GameType.TestLevel)
-                {
-                    BattleSystem.Instance.Reset();
-                    UISystem.Get().ShowWindow("CustomTestLevelWindow");
-                }
+   //             if (BattleSystem.Instance.battleData.gameType == GameType.TestLevel)
+   //             {
+   //                 BattleSystem.Instance.Reset();
+   //                 UISystem.Get().ShowWindow("CustomTestLevelWindow");
+   //             }
 
-				if (BattleSystem.Instance.battleData.gameType == GameType.SingleLevel)
-				{
-					BattleSystem.Instance.Reset();
-					UISystem.Get().ShowWindow("CustomSelectLevelWindow");
-				}
-			}));
+			//	if (BattleSystem.Instance.battleData.gameType == GameType.SingleLevel)
+			//	{
+			//		BattleSystem.Instance.Reset();
+			//		UISystem.Get().ShowWindow("CustomSelectLevelWindow");
+			//	}
+			//}));
 
 			//sdk
 			//ThirdPartySystem.Instance.OnFailPve (battleData.matchId);
