@@ -8,6 +8,7 @@ using Solarmax;
 
 public class CameraControl : MonoBehaviour
 {
+    public float                    mYawAngle = 45f;
     [HideInInspector]
     public float                    mZoomAngle = 1f;
 
@@ -107,7 +108,7 @@ public class CameraControl : MonoBehaviour
         mainCamera.fieldOfView = fov;
 
         var angle       = Mathf.Lerp(stickMaxZoom, stickMinZoom, mZoomAngle );
-        mainCamera.transform.localEulerAngles = new Vector3(angle, 0, 0);
+        mainCamera.transform.localEulerAngles = new Vector3(angle, mYawAngle, 0);
     }
 
 

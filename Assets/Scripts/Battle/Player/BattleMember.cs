@@ -1,8 +1,6 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using Solarmax;
-using TimeLines;
 
 
 
@@ -116,11 +114,6 @@ public partial class BattleMember : Lifecycle2
     public BattleMemberAIPublicy    aiPublicy;
 
     /// <summary>
-    /// 延迟逻辑处理单元
-    /// </summary>
-    public DelayActionFrame         ActonTicks;
-
-    /// <summary>
     /// 初始化
     /// </summary>
     public BattleMember()
@@ -194,7 +187,6 @@ public partial class BattleMember : Lifecycle2
         isALive         = false;
         currentNode     = null;
 
-        ActonTicks      = new DelayActionFrame();
         aiPublicy       = new BattleMemberAIPublicy(this);
         attribute[(int)ShipAttr.AttackRange]    = config.attackrange;
         attribute[(int)ShipAttr.AttackSpeed]    = config.attackspeed;
@@ -228,9 +220,6 @@ public partial class BattleMember : Lifecycle2
         {
             return;
         }
-
-        /// 延迟逻辑
-        ActonTicks.Tick( interval );
 
         if (!isNeedUpdate)
         {
@@ -572,23 +561,6 @@ public partial class BattleMember : Lifecycle2
             _isUseTechnique         = true;
             currentSkill            = pTechnique;
             currentSkill.ApplyTechnique();
-
-            /// 通知使用技能事件
-            if( pTechnique.proto.scope > 0 )
-            {
-                ActionArgs args = new ActionArgs()
-                {
-                    SkillID         = -1,
-                    Source          = this,
-                    Target          = target,
-                    TargetPos       = Vector3.zero,
-                    TimeScale       = 1.0f,
-                    OnActionFinishd = currentSkill.OnActionFinish,
-                    OnLaunchFinishd = currentSkill.OnLaunchFinish,
-                };
-
-                EventGroup.fireEvent((int)MemberEvents.DisplayAction, this, new EventArgs_DouVal<string, ActionArgs>("", args));
-            }
             EventGroup.fireEvent((int)MemberEvents.ReleaseSkill, this, null);
         }
     }

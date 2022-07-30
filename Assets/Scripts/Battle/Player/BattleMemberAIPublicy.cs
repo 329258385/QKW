@@ -266,7 +266,7 @@ public class BattleMemberAIPublicy
         int maxHP           = this.mOwer.GetAtt(ShipAttr.MaxHp);
         if( curHP < (int)(maxHP * 0.5f) && !Iswandering )
         {
-            Vector3 target  = HexMap.Instance.Find3x3MinCost( mOwer.GetPosition() );
+            Vector3 target  = Vector3.zero;
             Iswandering     = true;
             wandertimer     = 0f;
             mOwer.SetTargetPosition(target);
