@@ -221,17 +221,23 @@ public class LobbyStartWindow : BaseWindow
 	/// </summary>
 	public void StartSingleBattle()
 	{
-		// 进入战斗
-		//UISystem.Get().HideAllWindow();
-		//UISystem.Get().FadeBattle(true, new EventDelegate(() =>
-		//{
-		//	BattleSystem.Instance.StartLockStep();
-		//	WorldCameraControl.Instance.Init();
+        // 进入战斗
+        UISystem.Get().HideAllWindow();
+        //UISystem.Get().FadeBattle(true, new EventDelegate(() =>
+        //{
+        //    BattleSystem.Instance.StartLockStep();
+        //    WorldCameraControl.Instance.Init();
 
-		//	// 单机战斗界面
-		//	UISystem.Get().HideAllWindow();
-		//	UISystem.Get().ShowWindow("BattlePublicyWindow");
-		//}));
+        //    // 单机战斗界面
+        //    UISystem.Get().HideAllWindow();
+        //    UISystem.Get().ShowWindow("BattlePublicyWindow");
+        //}));
+
+		BattleSystem.Instance.StartLockStep();
+
+		// 单机战斗界面
+		UISystem.Get().HideAllWindow();
+		UISystem.Get().ShowWindow("BattlePublicyWindow");
 	}
 }
 

@@ -78,6 +78,12 @@ public class CameraControl : MonoBehaviour
     }
 
 
+    public void SetPositionAndirction( Vector3 pos, Vector3 dir )
+    {
+        mainCamera.transform.position           = pos;
+        mainCamera.transform.localEulerAngles   = new Vector3(45f, 50f, 0);
+    }
+
     /// <summary>
     /// 更新滑动
     /// </summary>

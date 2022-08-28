@@ -324,26 +324,24 @@ public class LogoWindow : BaseWindow
 
     public void CreateLocalPlayer()
     {
-        //string account = LocalPlayer.Get().GetLocalAccount();
-        //if (string.IsNullOrEmpty(account))
-        //{
-        //    account = LocalPlayer.Get().GenerateLocalAccount();
-        //}
+        string account = LocalPlayer.Get().GetLocalAccount();
+        if (string.IsNullOrEmpty(account))
+        {
+            account = LocalPlayer.Get().GenerateLocalAccount();
+        }
 
-        //// 创建默认玩家
-        //int index       = Random.Range(0, 10);
-        //string icon     = SelectIconWindow.GetIcon(index);
-        //NetSystem.Instance.helper.CreateUser("", icon);
-       
-        //// 这样子就把数据赋值到内存中吧，放在BattleManager中存着先
-        //LocalPlayer.Get().playerData.Init(icon);
-        //LocalPlayer.Get().InitLocalPlayer();
-        //LocalPlayer.Get().isAccountTokenOver = false;
+        // 创建默认玩家
+        int index = Random.Range(0, 10);
+        NetSystem.Instance.helper.CreateUser("", "");
+
+        // 这样子就把数据赋值到内存中吧，放在BattleManager中存着先
+        LocalPlayer.Get().playerData.Init("");
+        LocalPlayer.Get().InitLocalPlayer();
+        LocalPlayer.Get().isAccountTokenOver = false;
 
 
-        //// 进入单机关卡
-        //UISystem.Get().ShowWindow("LobbyWindow");
-        //UISystem.Get().FadeOutWindow("LogoWindow");
+        // 进入单机关卡
+        UISystem.Get().ShowWindow("LobbyWindow");
     }
 }
 

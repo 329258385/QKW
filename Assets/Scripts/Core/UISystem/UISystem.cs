@@ -341,6 +341,7 @@ public partial class UISystem : Solarmax.Singleton<UISystem>, Lifecycle
 
 	}
 
+
 	/// <summary>
 	/// 窗口系统中注册事件时的统一回调方法
 	/// </summary>

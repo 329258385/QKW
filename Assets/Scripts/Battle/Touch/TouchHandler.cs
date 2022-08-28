@@ -2,11 +2,7 @@
 using UnityEngine.EventSystems;
 using System.Collections;
 using Solarmax;
-
-
-
-
-
+using TouchInput;
 
 public class TouchHandler : MonoBehaviour
 {
@@ -101,7 +97,7 @@ public class TouchHandler : MonoBehaviour
 
 		if (isDown) {
 
-            CameraControl.Instance.IsSelectedNode           = true;
+            TouchInputController.Instance.IsSelectedNode           = true;
             IsPressGuid = true;
 			if (mNode == null)
 				return;
@@ -125,7 +121,7 @@ public class TouchHandler : MonoBehaviour
         else 
         {
 
-            CameraControl.Instance.IsSelectedNode = false;
+            TouchInputController.Instance.IsSelectedNode = false;
             if (mNode == null)
 				return;
 

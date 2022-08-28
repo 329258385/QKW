@@ -61,8 +61,23 @@ public class LocalPlayer : Singleton<LocalPlayer>
         config                  = HeroConfigProvider.Get().GetData(hero2.heroID);
         hero2.InitAttr(config);
         battleTeam.Add(hero2);
+
+        InitCamera();
     }
 
+
+    public void InitCamera()
+    {
+        Node master = BattleSystem.Instance.sceneManager.nodeManager.GetNodeByType( NodeType.MasterA );
+        if( master != null )
+        {
+            GameObject go = master.entity.go;
+            if( go != null )
+            {
+                CameraControl.Instance.SetPositionAndirction(go.transform.position, go.transform.forward);
+            }
+        }
+    }
 
     private void InitPlayerTechnique( NetPlayer player )
     {

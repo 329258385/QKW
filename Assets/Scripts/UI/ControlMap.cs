@@ -1,11 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
-
-
-
-
+using TouchInput;
 
 public class ControlMap : MonoBehaviour
 {
@@ -44,7 +40,7 @@ public class ControlMap : MonoBehaviour
     /// ----------------------------------------------------------------------------------------------------
     private void OnTriggerDrag( GameObject go, Vector2 delta )
     {
-        if (CameraControl.Instance.IsSelectedNode)
+        if (TouchInputController.Instance.IsSelectedNode)
             return;
 
         var mousePos                = new Vector2(Input.mousePosition.x, Input.mousePosition.y);

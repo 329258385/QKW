@@ -1,10 +1,7 @@
 fileFormatVersion: 2
-guid: a9fece1655e0300499da48b2815a62e2
-labels:
-- ExcelsiorAssets
-timeCreated: 1463258360
-licenseType: Store
+guid: 683ad3f3fc770804a9e3fe5de2479af6
 MonoImporter:
+  externalObjects: {}
   serializedVersion: 2
   defaultReferences: []
   executionOrder: 0
