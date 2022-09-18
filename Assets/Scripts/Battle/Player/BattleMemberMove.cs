@@ -20,7 +20,7 @@ public partial class BattleMember
     /// <summary>
     /// 目标位置
     /// </summary>
-    public float3               targetPos;
+    public Vector3              targetPos;
     
 
     /// <summary>
@@ -64,7 +64,7 @@ public partial class BattleMember
         targetNode                  = node;
         //是否瞬移
         warping                     = warp;
-        float orbitDist             = 20f;
+        float orbitDist             = 15f;
         Vector3 nodePos             = targetNode.GetPosition();
         float speed                 = GetAtt(ShipAttr.Speed);
         if (node.revoType != RevolutionType.RT_None && !warping)
@@ -90,10 +90,10 @@ public partial class BattleMember
         //mAgent.prefVelocity         = math.normalize(targetPos - mAgent.pos) * speed;
         //mAgent.navigationEnabled    = true;
         //mAgent.collisionEnabled     = true;
+        //mAgent.maxSpeed = speed;
 
         //进入跳跃状态
         shipState                   = MemberState.PREJUMP1;
-        mAgent.maxSpeed             = speed;
         this.EventGroup.fireEvent((int)BattleEvent.MoveToTarget, this, null);
     }
 
@@ -105,12 +105,12 @@ public partial class BattleMember
     /// ---------------------------------------------------------------------------------------------------------
     void UpdateOrbit(int frame, float dt)
     {
-        if( mAgent != null )
-        {
-            mAgent.maxSpeed         = 0.0f;
-            mAgent.prefVelocity     = Unity.Mathematics.float3.zero;
-            mAgent.collisionEnabled = false;
-        }
+        //if( mAgent != null )
+        //{
+        //    mAgent.maxSpeed         = 0.0f;
+        //    mAgent.prefVelocity     = Unity.Mathematics.float3.zero;
+        //    mAgent.collisionEnabled = false;
+        //}
     }
 
     /// ---------------------------------------------------------------------------------------------------------
@@ -147,8 +147,8 @@ public partial class BattleMember
                 targetPos.z         = (float)Math.Round(nodePos.z, 2);
             }
 
-            //mAgent.prefVelocity     = math.normalize(targetPos - mAgent.pos) * movespeed;
-            SetPosition(mAgent.pos);
+            //mAgent.prefVelocity   = math.normalize(targetPos - mAgent.pos) * movespeed;
+            SetPosition(Vector3.MoveTowards(curPos, targetPos, moveDist));
         }
         else
         {
@@ -157,7 +157,7 @@ public partial class BattleMember
             //进入星球
             EnterNode(targetNode);
             //进入环绕状态
-            shipState = MemberState.ORBIT;
+            shipState               = MemberState.ORBIT;
         }
     }
 
@@ -191,47 +191,25 @@ public partial class BattleMember
     /// </summary>
     public bool UpdateMove(int frame, float dt)
     {
-        if (!IsNeedMove())
-            return false;
-
         float movespeed     = GetAtt(ShipAttr.Speed);
         float moveDist      = (float)Math.Round(movespeed * dt, 2);
         Vector3 curPos      = GetPosition();
 
         //间距多少
-        float dist = (float)Math.Round(Vector3.Distance(curPos, targetPos), 2);
+        float dist          = (float)Math.Round(Vector3.Distance(curPos, targetPos), 2);
         if (dist > moveDist)
         {
-            SetPosition(mAgent.pos);
+            SetPosition(Vector3.MoveTowards(curPos, targetPos, moveDist));
             return true;
         }
         else
         {
             SetPosition(targetPos);
-            shipState = MemberState.ORBIT;
+            shipState       = MemberState.ORBIT;
             return false;
         }
     }
 
-    public void UpdateMoveTo(int frame, float dt)
-    {
-        float movespeed         = GetAtt(ShipAttr.Speed);
-        float moveDist          = (float)Math.Round(movespeed * dt, 2);
-        Vector3 curPos          = GetPosition();
-       
-        //间距多少
-        float dist              = (float)Math.Round(Vector3.Distance(curPos, targetPos), 2);
-        if (dist > moveDist)
-        {
-            //SetPosition(Vector3.MoveTowards(curPos, targetPos, moveDist));
-            mAgent.prefVelocity = math.normalize(targetPos - mAgent.pos) * movespeed;
-        }
-        else
-        {
-            SetPosition(targetPos);
-            shipState = MemberState.ORBIT;
-        }
-    }
 
     public bool IsNeedMove()
     {

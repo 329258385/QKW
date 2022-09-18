@@ -17,15 +17,6 @@ public enum BattleTeamState
     Max,
 }
 
-public enum Formation
-{
-    FormationNull,
-    FormationMove,          // 移动队形
-    FormationAttack,        // 攻击队形
-    FormationDefensive,     // 防御队形
-    FormationSurround,      // 包围队形
-}
-
 /// <summary>
 /// 战斗单元对象
 /// </summary>
@@ -57,59 +48,9 @@ public class BattleTeam
     public BattleTeamState      btState = BattleTeamState.Idle;
 
     /// <summary>
-    /// 战队队形
-    /// </summary>
-    public Formation            btFormation = Formation.FormationNull;
-
-    /// <summary>
     /// 函数集
     /// </summary>
     RunLockStepLogic[]          handler { get; set; }
-
-    RunLockStepLogic[]          formationHandler { get; set; }
-
-    public BattleTeam( )
-    {
-        ID                                                  = GenIDPool++;
-        handler                                             = new RunLockStepLogic[(int)BattleTeamState.Max];
-        formationHandler                                    = new RunLockStepLogic[5];
-        handler[(int)BattleTeamState.Idle]                  = UpdateOrbit;
-        handler[(int)BattleTeamState.Move]                  = UpdateMove;
-        handler[(int)BattleTeamState.Battle]                = UpdateOrbit;
-        handler[(int)BattleTeamState.Defensive]             = UpdateMove;
-        handler[(int)BattleTeamState.Encirclecity]          = UpdateMove;
-        handler[(int)BattleTeamState.EnterCity]             = UpdateEnterCity;
-
-
-        formationHandler[(int)Formation.FormationNull ]     = UpdateOrbit;
-        formationHandler[(int)Formation.FormationMove]      = UpdateMoveFormation;
-        formationHandler[(int)Formation.FormationAttack]    = UpdateAttackFormation;
-        formationHandler[(int)Formation.FormationDefensive] = UpdateDefensiveFormation;
-        formationHandler[(int)Formation.FormationSurround]  = UpdateSurroundFormation;
-    }
-
-
-    /// ---------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// 空闲
-    /// </summary>
-    /// ---------------------------------------------------------------------------------------------------------
-    void UpdateOrbit(int frame, float dt)
-    {
-
-    }
-
-
-    /// --------------------------------------------------------------------------------------
-    /// <summary>
-    /// 移动
-    /// </summary>
-    /// --------------------------------------------------------------------------------------
-    private void UpdateMove(int frame, float interval)
-    {
-        formationHandler[(int)btFormation](frame, interval);
-    }
-
 
     /// <summary>
     /// 当前飞船数量
@@ -121,9 +62,66 @@ public class BattleTeam
             int nSum = 0;
             for (int i = 0; i < members.Count; i++)
             {
-                nSum += members[i].GetAtt( ShipAttr.Population );
+                nSum += members[i].GetAtt(ShipAttr.Population);
             }
             return nSum;
+        }
+    }
+
+    public BattleTeam( )
+    {
+        ID                                                  = GenIDPool++;
+        handler                                             = new RunLockStepLogic[(int)BattleTeamState.Max];
+        handler[(int)BattleTeamState.Move]                  = UpdateMove;
+        handler[(int)BattleTeamState.Battle]                = UpdateBattle;
+        handler[(int)BattleTeamState.Defensive]             = UpdateMove;
+        handler[(int)BattleTeamState.Encirclecity]          = UpdateMove;
+        handler[(int)BattleTeamState.EnterCity]             = UpdateEnterCity;
+    }
+
+
+    public void Tick(int frame, float interval)
+    {
+        handler[(int)btState](frame, interval);
+    }
+
+    /// ---------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 空闲
+    /// </summary>
+    /// ---------------------------------------------------------------------------------------------------------
+    void UpdateBattle(int frame, float dt)
+    {
+        for (int i = 0; i < members.Count; i++)
+        {
+            bool IsNeedMove = members[i].IsNeedMove();
+            if (IsNeedMove)
+                members[i].UpdateMove(frame, dt);
+            else
+                members[i].UpdateBattle();
+        }
+    }
+
+
+    /// ---------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 移动
+    /// </summary>
+    /// ---------------------------------------------------------------------------------------------
+    private void UpdateMove(int frame, float interval)
+    {
+        Transform tf = Leader.entity.go.transform;
+        for (int i = 0; i < members.Count; i++)
+        {
+            Vector3 newPos = tf.TransformPoint(MyBattleOrder.MarchFormation[i] * MyBattleOrder.MAX_FORMATION_SPACE);
+            members[i].SetTargetPos(newPos);
+        }
+
+        for (int i = 0; i < members.Count; i++)
+        {
+            bool IsNeedMove = members[i].IsNeedMove();
+            if (IsNeedMove)
+                members[i].UpdateMove(frame, interval);
         }
     }
 
@@ -173,9 +171,11 @@ public class BattleTeam
     }
 
 
+    /// ---------------------------------------------------------------------------------------------
     /// <summary>
     /// 创捷飞行编队
     /// </summary>
+    /// ---------------------------------------------------------------------------------------------
     public void CreateFormation( Simpleheroconfig hero, int order, SceneManager sceneManager, Node master )
     {
         btState     = BattleTeamState.Idle;
@@ -204,147 +204,11 @@ public class BattleTeam
         }
     }
 
-
-    public void Tick (int frame, float interval)
-    {
-        handler[(int)btState](frame, interval);
-    }
-
-
-    /// --------------------------------------------------------------------------------------
+    /// ---------------------------------------------------------------------------------------------
     /// <summary>
-    /// 编队移动
+    /// 战斗移动
     /// </summary>
-    /// --------------------------------------------------------------------------------------
-    private void UpdateMoveFormation( int frame, float interval )
-    {
-        Transform tf = Leader.entity.go.transform;
-        for (int i = 0; i < members.Count; i++)
-        {
-            Vector3 newPos = tf.TransformPoint(MyBattleOrder.MarchFormation[i] * MyBattleOrder.MAX_FORMATION_SPACE);
-            members[i].SetTargetPosition(newPos);
-        }
-    }
-
-    /// --------------------------------------------------------------------------------------
-    /// <summary>
-    /// 编队保持攻击队形
-    /// </summary>
-    /// --------------------------------------------------------------------------------------
-    private void UpdateAttackFormation(int frame, float interval)
-    {
-        Vector3[] formation = MyBattleOrder.BattleFormation;
-        Transform tf        = Leader.entity.go.transform;
-        int index           = 0;
-        int count           = members.Count;
-        int n               = 0;
-        for ( int x = 0; x < MyBattleOrder.MAX_FORMATION_ROW; x++ )
-        {
-            for (int y = 0; y < MyBattleOrder.MAX_FORMATION_COL; y++)
-            {
-                if (!formation[index].Equals(Vector3.zero))
-                {
-                    if (formation[index].y < 4f && n < count)
-                    {
-                        Vector3 targetpos   = formation[index] * MyBattleOrder.MAX_FORMATION_SPACE;
-                        targetpos           = tf.TransformPoint(targetpos);
-                        targetpos.y         = tf.position.y;
-                        members[n].SetTargetPosition(targetpos);
-                        n++;
-                    }
-                }
-                index++;
-            }
-        }
-    }
-
-    // --------------------------------------------------------------------------------------
-    /// <summary>
-    /// 编队保持防御队形
-    /// </summary>
-    /// --------------------------------------------------------------------------------------
-    private void UpdateDefensiveFormation(int frame, float interval)
-    {
-        Vector3[] formation = MyBattleOrder.DefensiveFormation;
-        Transform tf        = Leader.entity.go.transform;
-        int index           = 0;
-        int n               = 0;
-        for (int x = 0; x < MyBattleOrder.MAX_FORMATION_ROW; x++)
-        {
-            for (int y = 0; y < MyBattleOrder.MAX_FORMATION_COL; y++)
-            {
-                if (!formation[index].Equals(Vector3.zero))
-                {
-                    
-                    if (formation[index].y < 4f && n < members.Count)
-                    {
-                        Vector3 targetpos   = formation[index] * MyBattleOrder.MAX_FORMATION_SPACE;
-                        targetpos           = tf.TransformPoint(targetpos);
-                        targetpos.y         = tf.position.y;
-                        members[n].SetTargetPosition(targetpos);
-                        n++;
-                    }
-                }
-                index++;
-            }
-        }
-
-        if (!IsReadyTarget())
-        {
-            btState         = BattleTeamState.Battle;
-            btFormation     = Formation.FormationNull;
-
-            //Leader.entity.StartAttackAction();
-            //for (int i = 0; i < members.Count; i++)
-            //{
-            //    members[i].entity.StartAttackAction();
-            //}
-        }
-    }
-
-    // --------------------------------------------------------------------------------------
-    /// <summary>
-    /// 编队保持包围队形
-    /// </summary>
-    /// --------------------------------------------------------------------------------------
-    private void UpdateSurroundFormation(int frame, float interval)
-    {
-        Vector3[] formation = MyBattleOrder.SurroundFormation;
-        Transform tf        = Leader.entity.go.transform;
-        int index           = 0;
-        int n               = 0;
-        for (int x = 0; x < MyBattleOrder.MAX_FORMATION_ROW; x++)
-        {
-            for (int y = 0; y < MyBattleOrder.MAX_FORMATION_COL; y++)
-            {
-                if (!formation[index].Equals(Vector3.zero) )
-                {
-                    if (formation[index].y < 4f && n < members.Count )
-                    {
-                        Vector3 targetpos   = formation[index] * MyBattleOrder.MAX_FORMATION_SPACE;
-                        targetpos           = tf.TransformPoint(targetpos);
-                        targetpos.y         = tf.position.y;
-                        members[n].SetTargetPosition(targetpos);
-                        n++;
-                    }
-                }
-                index++;
-            }
-        }
-
-        if( !IsReadyTarget() )
-        {
-            btState         = BattleTeamState.Battle;
-            btFormation     = Formation.FormationNull;
-
-            //Leader.entity.StartAttackAction();
-            //for (int i = 0; i < members.Count; i++)
-            //{
-            //    members[i].entity.StartAttackAction();
-            //}
-        }
-    }
-
+    /// ---------------------------------------------------------------------------------------------
     public void OnBattleMove( Node from, Node to, bool bWarp )
     {
         if( bWarp )
@@ -358,12 +222,39 @@ public class BattleTeam
         for (int i = 0; i < members.Count; i++)
         {
             members[i].MoveToFly(to);
+            members[i].EventGroup.fireEvent((int)BattleEvent.MoveToTarget, this, null);
         }
 
         btState         = BattleTeamState.Move;
-        btFormation     = Formation.FormationMove;
     }
 
+    /// -------------------------------------------------------------------------------------
+    /// <summary>
+    /// 战队进入战斗状态
+    /// </summary>
+    /// -------------------------------------------------------------------------------------
+    public void EnterBattleStats(Node node = null, TEAM atkTeam = TEAM.Neutral)
+    {
+        if (btState == BattleTeamState.Encirclecity || btState == BattleTeamState.Defensive)
+        {
+            return;
+        }
+
+        if (node != null)
+        {
+            Vector3 enemyPostion = Vector3.zero;
+            List<BattleTeam> battleArray = node.battArray;
+            foreach (var bt in battleArray)
+            {
+                if (bt.team.team != atkTeam)
+                {
+                    bt.LeaveCity(enemyPostion);
+                    bt.btState      = BattleTeamState.Defensive;
+                    bt.FadeInMembers();
+                }
+            }
+        }
+    }
 
     private void FadeInMembers()
     {
@@ -376,6 +267,9 @@ public class BattleTeam
         }
     }
 
+    /// ----------------------------------------------------------------------------------------
+    /// 进入城
+    /// ----------------------------------------------------------------------------------------
     private void UpdateEnterCity( int frame, float interval )
     {
         bool bEnterCity = Leader.UpdateMove(frame, interval);
@@ -389,7 +283,6 @@ public class BattleTeam
         if(!bEnterCity )
         {
             btState         = BattleTeamState.Idle;
-            btFormation     = Formation.FormationNull;
             Leader.isNeedUpdate = false;
             Leader.entity.go.SetActive( false );
             for (int i = 0; i < members.Count; i++)
@@ -400,20 +293,11 @@ public class BattleTeam
         }
     }
 
-    private bool IsReadyTarget()
-    {
-        bool bEnterCity             = Leader.IsNeedMove();
-        for (int i = 0; i < members.Count; i++)
-        {
-            bEnterCity = members[i].IsNeedMove();
-        }
-        return bEnterCity;
-    }
-
-
+    /// ----------------------------------------------------------------------------------------
     /// <summary>
     /// 计算相机的观测目标
     /// </summary>
+    /// ----------------------------------------------------------------------------------------
     public void ChangeShipsStats(MemberState state )
     {
         this.Leader.shipState = state;
@@ -423,10 +307,11 @@ public class BattleTeam
         }
     }
 
-
+    /// ----------------------------------------------------------------------------------------
     /// <summary>
     /// 处理围城指令
     /// </summary>
+    /// ----------------------------------------------------------------------------------------
     public void EntersEncircleCity()
     {
         Leader.ClearTarget();
@@ -435,58 +320,8 @@ public class BattleTeam
             members[i].ClearTarget();
 
         btState      = BattleTeamState.Encirclecity;
-        btFormation  = Formation.FormationSurround;
     }
 
-    /// <summary>
-    /// 战队进入战斗状态
-    /// </summary>
-    public void EnterBattleStats( Node node = null, TEAM atkTeam = TEAM.Neutral )
-    {
-        if ( btState == BattleTeamState.Encirclecity || btState == BattleTeamState.Defensive )
-        {
-            return;
-        }
-
-        if( node != null )
-        {
-            Vector3 enemyPostion            = Vector3.zero;
-            List<BattleTeam> battleArray    = node.battArray;
-            foreach( var bt in battleArray )
-            {
-                if (bt.team.team == atkTeam)
-                {
-                    enemyPostion            = bt.Leader.GetPosition();
-                    bt.btState              = BattleTeamState.Encirclecity;
-                    bt.btFormation          = Formation.FormationSurround;
-                }
-            }
-
-            foreach( var bt in battleArray )
-            {
-                if( bt.team.team != atkTeam )
-                {
-                    bt.LeaveCity(enemyPostion);
-                    bt.btState              = BattleTeamState.Defensive;
-                    bt.btFormation          = Formation.FormationDefensive;
-                    bt.FadeInMembers();
-                }
-            }
-        }
-    }
-
-    /// <summary>
-    /// 改变战队队形
-    /// </summary>
-    public void UpdateBattleTeamFormation( Formation  eformation )
-    {
-        if (btFormation != eformation)
-        {
-            btFormation = eformation;
-        }
-    }
-
-   
     /// -----------------------------------------------------------------------------------------
     /// <summary>
     /// 战队进入某个星球
@@ -498,10 +333,12 @@ public class BattleTeam
         {
             if (bEnter)
             {
-               node.AddMember(Leader);
+                node.AddMember(Leader);
+                Leader.EventGroup.fireEvent((int)BattleEvent.Stop, this, null);
                 for (int i = 0; i < members.Count; i++)
                 {
                     node.AddMember(members[i]);
+                    members[i].EventGroup.fireEvent((int)BattleEvent.Stop, this, null);
                 }
             }
             node.battArray.Add(this);
@@ -535,20 +372,18 @@ public class BattleTeam
     public void EnterCity( Node city )
     {
         btState             = BattleTeamState.EnterCity;
-        //Leader.entity.StopAttack();
-        Leader.SetTargetPosition(city.GetPosition());
+        Leader.SetTargetPos(city.GetPosition());
         for (int i = 0; i < members.Count; i++)
         {
-           // members[i].entity.StopAttack();
-            members[i].SetTargetPosition(city.GetPosition());
+            members[i].SetTargetPos(city.GetPosition());
         }
     }
 
+    /// ----------------------------------------------------------------------------------------
     /// <summary>
     /// 防御队伍出城
     /// </summary>
-    /// <param name="city"></param>
-    /// <param name="targetPostion"></param>
+    /// ----------------------------------------------------------------------------------------
     private void LeaveCity( Vector3 targetPostion )
     {
         Node city               = Leader.currentNode;
@@ -556,20 +391,7 @@ public class BattleTeam
         Vector3 moveDir         = targetPostion - cityPosition;
         moveDir.Normalize();
         cityPosition            = cityPosition + (moveDir * 7.5f);
-        Leader.SetTargetPosition(cityPosition);
-    }
-
-    
-    /// -----------------------------------------------------------------------------------------
-    /// <summary>
-    /// 清空战队所有的目标
-    /// </summary>
-    /// -----------------------------------------------------------------------------------------
-    public void ClearTarget()
-    {
-        Leader.ClearTarget();
-        for (int i = 0; i < members.Count; i++)
-            members[i].ClearTarget();
+        Leader.SetTargetPos(cityPosition);
     }
 
 

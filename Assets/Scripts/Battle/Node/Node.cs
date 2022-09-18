@@ -314,7 +314,7 @@ public abstract partial class Node : Lifecycle3
         ship.SetColor(teamData.color);
 		ship.SetPosition(GetPosition());
 		ship.InitAgent(GetPosition());
-		ship.SetTargetPosition(GetPosition());
+		ship.SetTargetPos(GetPosition());
 		return ship;
     }
 
@@ -334,7 +334,7 @@ public abstract partial class Node : Lifecycle3
 			hero.SetColor(teamData.color);
 			hero.SetPosition(GetPosition());
 			hero.InitAgent(GetPosition());
-			hero.SetTargetPosition(GetPosition());
+			hero.SetTargetPos(GetPosition());
 		}
 		return hero;
     }

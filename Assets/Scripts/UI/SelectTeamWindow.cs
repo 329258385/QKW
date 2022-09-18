@@ -163,7 +163,7 @@ public class SelectTeamWindow : BaseWindow
                 //    Tips.Make(Tips.TipsType.FlowUp, "技能CD中", 1.0f);
                 //    return;
                 //}
-                curTeam.battleArray[selectIndex].UpdateBattleTeamFormation(Formation.FormationAttack);
+                //curTeam.battleArray[selectIndex].UpdateBattleTeamFormation(Formation.FormationAttack);
                 //technique[0].ApplyTechnique(BattleSystem.Instance.battleData.currentBattleTeam);
             }
             if (obj.name.Equals("A2"))
@@ -174,7 +174,7 @@ public class SelectTeamWindow : BaseWindow
                 //    return;
                 //}
                 //technique[1].ApplyTechnique(BattleSystem.Instance.battleData.currentBattleTeam);
-                curTeam.battleArray[selectIndex].UpdateBattleTeamFormation(Formation.FormationDefensive);
+                //curTeam.battleArray[selectIndex].UpdateBattleTeamFormation(Formation.FormationDefensive);
             }
             if (obj.name.Equals("A3"))
             {
@@ -184,7 +184,7 @@ public class SelectTeamWindow : BaseWindow
                 //    return;
                 //}
                 //technique[2].ApplyTechnique(BattleSystem.Instance.battleData.currentBattleTeam);
-                curTeam.battleArray[selectIndex].UpdateBattleTeamFormation(Formation.FormationSurround );
+                //curTeam.battleArray[selectIndex].UpdateBattleTeamFormation(Formation.FormationSurround );
             }
             /*if (obj.name.Equals("A4"))
             {

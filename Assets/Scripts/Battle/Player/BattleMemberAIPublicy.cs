@@ -205,7 +205,7 @@ public class BattleMemberAIPublicy
             {
                 _eStatus        = BattleMemberStatus.status_Move;
                 Vector3 tarPos  = mOwer.target.GetPosition();
-                mOwer.SetTargetPosition(tarPos);
+                mOwer.SetTargetPos(tarPos);
             }
         }
         else
@@ -218,7 +218,7 @@ public class BattleMemberAIPublicy
                 {
                     Vector3 tarPos  = mOwer.targetNode.GetPosition();
                     _eStatus        = BattleMemberStatus.status_Move;
-                    mOwer.SetTargetPosition(tarPos);
+                    mOwer.SetTargetPos(tarPos);
                 }
             }
         }

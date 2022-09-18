@@ -213,7 +213,7 @@ public class BattleSystem : Solarmax.Singleton<BattleSystem>, Solarmax.Lifecycle
         if (selectBT == null)
             return;
 
-        if (selectBT.btFormation !=  Formation.FormationMove )
+        if (selectBT.btState != BattleTeamState.Move )
         {
             battleController.OnPlayerMove(from, to, selectBT);
         }

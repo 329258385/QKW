@@ -72,9 +72,9 @@ public partial class Node
 				{
 					//进入占领流程，继承上次占领进度
 					EnterEncircleCityByTeam(NodeState.Occupied);
-					state = NodeState.Occupied;
-					occupiedTeam = temp;
-				}
+					state				= NodeState.Occupied;
+					occupiedTeam		= temp;
+				}	
                 else
                 {
                     //不是上次占领的队伍
@@ -118,9 +118,9 @@ public partial class Node
 					} 
                     else 
                     {
-						occupiedTeam = team;
+						occupiedTeam	= team;
 						EnterEncircleCityByTeam(NodeState.Occupied);
-						state = NodeState.Occupied;
+						state			= NodeState.Occupied;
 					}
 				} 
 				else 

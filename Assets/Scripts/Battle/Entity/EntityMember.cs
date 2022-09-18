@@ -20,12 +20,12 @@ public class EntityMember : DisplayEntity
 	/// </summary>
 	public  BattleMember				ship	{ get; set; }
 
-
-	private BonePointGroup				bpGroups;
 	/// <summary>
 	/// 修改皮肤属性
 	/// </summary>
 	private MaterialPropertyBlock		skinBlock = new MaterialPropertyBlock();
+
+
 	public static int DeathHashCode		= Animator.StringToHash("Death");
 	public static int IsDeathHashCode	= Animator.StringToHash("IsDeath");
 	public static int MoveHashCode		= Animator.StringToHash("Speed");
@@ -38,7 +38,7 @@ public class EntityMember : DisplayEntity
 	/// </summary>
 	public EntityMember(string name, bool silent) : base(name, silent)
 	{
-		bpGroups						= new BonePointGroup();
+		
 	}
 
     public override bool Init ( )
@@ -102,7 +102,6 @@ public class EntityMember : DisplayEntity
 		go.transform.localEulerAngles	= Vector3.zero;
 		go.transform.localScale			= Vector3.one;
 		go.gameObject.SetActive(false);
-		bpGroups.InitBone(go);
 		ModifySkin();
 	}
 
@@ -136,6 +135,8 @@ public class EntityMember : DisplayEntity
         {
 			Vector3 newPos		= ship.GetPosition();
 			tfcache.position	= newPos;
+			Vector3 targetdir	= Vector3.Normalize( ship.targetPos - GetPosition());
+			tfcache.rotation	= Quaternion.LookRotation(targetdir);
 		}
 	}
 
@@ -149,10 +150,8 @@ public class EntityMember : DisplayEntity
 		if( ship != null )
         {
 			float speed			= ship.GetAtt(ShipAttr.Speed);
-			Quaternion lookAt	= Quaternion.identity;
-			Vector3 targetPos   = new Vector3( ship.targetPos.x, ship.targetPos.y, ship.targetPos.z );
-			lookAt				= Quaternion.LookRotation(targetPos - GetPosition());
-			tfcache.rotation	= lookAt;
+			Vector3 targetdir   = Vector3.Normalize(ship.targetPos - GetPosition());
+			tfcache.rotation	= Quaternion.LookRotation(targetdir);
 			AniCtrl.SetFloat(MoveHashCode, speed);
 		}
 	}

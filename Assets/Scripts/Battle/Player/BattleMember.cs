@@ -28,7 +28,6 @@ public enum MemberState
     ORBIT,          // 环绕中
     PREJUMP1,       // 飞行预备中
     JUMPING,        // 飞行中
-    MoveTo,
     MAX,
 }
 
@@ -138,7 +137,7 @@ public partial class BattleMember : Lifecycle2
     /// <summary>
     /// 位置
     /// </summary>
-    public float3                  position = float3.zero;
+    public Vector3                  position = Vector3.zero;
 
     /// <summary>
     /// 初始化
@@ -175,18 +174,17 @@ public partial class BattleMember : Lifecycle2
         return position;
     }
 
-    public void SetPosition(float3 pos)
+    public void SetPosition(Vector3 pos)
     {
         this.position       = pos;
         this.EventGroup.fireEvent((int)BattleEvent.SetPos, this, null);
     }
 
-
     /// <summary>
     /// 设置目标位置
     /// </summary>
     /// <param name="pos"></param>
-    public void SetTargetPosition( Vector3 pos )
+    public void SetTargetPos( Vector3 pos )
     {
         targetPos           = new float3(pos.x, pos.y, pos.z );
     }
@@ -233,14 +231,13 @@ public partial class BattleMember : Lifecycle2
         handler[(int)MemberState.ORBIT]         = UpdateOrbit;
         handler[(int)MemberState.PREJUMP1]      = UpdatePreJump1;
         handler[(int)MemberState.JUMPING]       = UpdateJumping;
-        handler[(int)MemberState.MoveTo]        = UpdateMoveTo;
         shipState                               = MemberState.ORBIT;
         return true;
     }
 
     public void InitAgent( Vector3 pos )
     {
-        position                = new float3(pos.x, pos.y, pos.z);
+        position                = pos;
         //mAgent                  = ORCASimulator.Instance.AddAgent(position);
         //mAgent.m_prefVelocity   = Unity.Mathematics.float3.zero;
         //mAgent.velocity         = Unity.Mathematics.float3.zero;
