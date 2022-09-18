@@ -16,7 +16,7 @@ public class BattlePlayer : MonoBehaviour
     {
         if( entity != null )
         {
-            entity.IsEndAttack = true;
+            //entity.IsEndAttack = true;
         }
     }
 }

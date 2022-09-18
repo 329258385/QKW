@@ -1,72 +1,31 @@
 using UnityEngine;
 using System;
-using System.Collections;
-using Plugin;
-using System.Collections.Generic;
 using KevinIglesias;
 
-/// <summary>
-/// 飞船状态
-/// </summary>
-public enum MemberState
-{
-	ORBIT,			// 环绕中
-	PREJUMP1,		// 飞行预备中
-	JUMPING,		// 飞行中
-	MoveTo,
-    MAX,
-}
+
+
+
+
 
 public class EntityMember : DisplayEntity
 {
 	/// <summary>
-	/// 飞船状态
+	/// 缓存对象
 	/// </summary>
-	/// <value>The state of the ship.</value>
-	public MemberState          shipState { get; set; }
+	private Transform					tfcache;
 
-	/// <summary>
-	/// 目标
-	/// </summary>
-	public BattleMember			target;
-
-	/// <summary>
-	/// 飞行目标
-	/// </summary>
-	/// <value>The target node.</value>
-	public Node                 targetNode  { get; set; }
-    
-    /// <summary>
-    /// 函数集
-    /// </summary>
-    RunLockStepLogic[]          handler { get; set;}
 
 	/// <summary>
 	/// 所属
 	/// </summary>
-	/// <value>The ship.</value>
-	public  BattleMember			ship	{ get; set; }
-	public BattlePlayer				player	{ get; set; }
+	public  BattleMember				ship	{ get; set; }
 
-	Vector3							targetNodePos;
 
-	private BonePointGroup			bpGroups;
+	private BonePointGroup				bpGroups;
 	/// <summary>
 	/// 修改皮肤属性
 	/// </summary>
-	private MaterialPropertyBlock	skinBlock = new MaterialPropertyBlock();
-
-	public Vector3 TargetPos
-	{
-		set 
-		{ 
-			targetNodePos			= value;
-		}
-		get { return targetNodePos;  }
-	}
-    
-	bool                        warping;
-
+	private MaterialPropertyBlock		skinBlock = new MaterialPropertyBlock();
 	public static int DeathHashCode		= Animator.StringToHash("Death");
 	public static int IsDeathHashCode	= Animator.StringToHash("IsDeath");
 	public static int MoveHashCode		= Animator.StringToHash("Speed");
@@ -79,19 +38,22 @@ public class EntityMember : DisplayEntity
 	/// </summary>
 	public EntityMember(string name, bool silent) : base(name, silent)
 	{
-		bpGroups = new BonePointGroup();
+		bpGroups						= new BonePointGroup();
 	}
 
     public override bool Init ( )
 	{
 		base.Init ();
-        shipState								= MemberState.ORBIT;
-        handler									= new RunLockStepLogic[(int)MemberState.MAX];
-        handler[(int)MemberState.ORBIT]			= UpdateOrbit;
-        handler[(int)MemberState.PREJUMP1]		= UpdatePreJump1;
-        handler[(int)MemberState.JUMPING]		= UpdateJumping;
-		handler[(int)MemberState.MoveTo]		= UpdateMoveTo;
-
+		if ( ship != null )
+        {
+			ship.EventGroup.AddEvent(typeof(BattleEvent));
+			ship.EventGroup.addEventHandler((int)BattleEvent.SetPos,		OnSetPos);
+			ship.EventGroup.addEventHandler((int)BattleEvent.MoveToTarget,	OnStartMove);
+			ship.EventGroup.addEventHandler((int)BattleEvent.Stop,			OnStopMove);
+			ship.EventGroup.addEventHandler((int)BattleEvent.Attack,		OnAttack); 
+			ship.EventGroup.addEventHandler((int)BattleEvent.Die,			OnDie);
+			ship.EventGroup.addEventHandler((int)BattleEvent.ALine,			OnALive);
+		}
 		return true;
 	}
 
@@ -104,13 +66,16 @@ public class EntityMember : DisplayEntity
 	public override void Tick (int frame, float interval)
 	{
 		base.Tick (frame, interval);
-        handler[(int)shipState](frame, interval);
     }
 
 
-    public void OnRecycle()
+	/// -----------------------------------------------------------------------------------
+	/// <summary>
+	/// 回收
+	/// </summary>
+	/// -----------------------------------------------------------------------------------
+	public void OnRecycle()
 	{
-		shipState = MemberState.ORBIT;
 		#if !SERVER
 		if (go != null)
         {
@@ -119,25 +84,21 @@ public class EntityMember : DisplayEntity
 		#endif
 	}
 
-	public void ClearTarget()
-    {
-		target = null;
-	}
-
+	/// -----------------------------------------------------------------------------------
 	/// <summary>
-	/// 初始化对象
+	/// 初始化3D对象
 	/// </summary>
+	/// -----------------------------------------------------------------------------------
 	private ThrowProp		Throw;
 	private BowLoadScript   bowLoadScript;
 	protected override void InitGameObject ()
 	{
-		go				= CreateGameObject ();
+		go					= CreateGameObject ();
+		tfcache				= go.transform;
 		go.transform.SetParent(Game.game.sceneRoot.transform);
-		AniCtrl			= go.GetComponentInChildren<Animator>();
-		Throw			= go.GetComponentInChildren<ThrowProp>();
-		bowLoadScript	= go.GetComponentInChildren<BowLoadScript>();
-		player			= AniCtrl.GetComponent<BattlePlayer>();
-		player.entity	= this;
+		AniCtrl				= go.GetComponentInChildren<Animator>();
+		Throw				= go.GetComponentInChildren<ThrowProp>();
+		bowLoadScript		= go.GetComponentInChildren<BowLoadScript>();
 		go.transform.localEulerAngles	= Vector3.zero;
 		go.transform.localScale			= Vector3.one;
 		go.gameObject.SetActive(false);
@@ -145,6 +106,12 @@ public class EntityMember : DisplayEntity
 		ModifySkin();
 	}
 
+
+	/// -----------------------------------------------------------------------------------
+	/// <summary>
+	/// 修改角色蒙骗颜色
+	/// </summary>
+	/// -----------------------------------------------------------------------------------
 	protected void ModifySkin()
     {
 		SkinnedMeshRenderer[] skinrender = go.GetComponentsInChildren<SkinnedMeshRenderer>();
@@ -158,293 +125,72 @@ public class EntityMember : DisplayEntity
         }
     }
 
-    /// ---------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// 环绕
-    /// </summary>
-    /// ---------------------------------------------------------------------------------------------------------
-    void UpdateOrbit(int frame, float dt)
-	{
-		
-	}
-
-
-	/// ---------------------------------------------------------------------------------------------------------
+	/// -----------------------------------------------------------------------------------
 	/// <summary>
-	/// 飞行状态1
+	/// 更新位置
 	/// </summary>
-	/// ---------------------------------------------------------------------------------------------------------
-	private float mPreJump1Timer = 0f;
-	void UpdatePreJump1(int frame, float dt)
+	/// -----------------------------------------------------------------------------------
+	public void OnSetPos(object sender, EventArgs e)
 	{
-		if (ship.unitType == BattleMember.BattleUnitType.bmt_Soldier )
-			return;
-
-		//是否瞬移
-		if (warping)
-		{
-			mPreJump1Timer			+= dt;
-			if (mPreJump1Timer >= 1.0f)
-			{
-				mPreJump1Timer		= 0;
-				warping				= false;
-				ship.battleTeam.DeliverTeam(targetNodePos, targetNode);
-			}
-			return;
-		}
-		shipState		= MemberState.JUMPING;
-	}
-
-
-    /// ---------------------------------------------------------------------------------------------------------
-	/// <summary>
-	/// 飞行中
-	/// </summary>
-    /// ---------------------------------------------------------------------------------------------------------
-	void UpdateJumping(int frame, float dt)
-	{
-        //得到移动到的目标位置
-        Vector3 targetPos   = targetNodePos;
-        float movespeed     = ship.GetAtt(ShipAttr.Speed);
-        float moveDist      = (float)Math.Round(movespeed * dt, 2);
-		Vector3 curPos      = GetPosition();
-		AniCtrl.SetFloat(MoveHashCode, movespeed);
-
-		//间距多少
-		float dist			= (float)Math.Round(Vector3.Distance(curPos, targetPos), 2);
-		if (dist > moveDist)
-		{
-			if (targetNode.revoType != RevolutionType.RT_None)
-			{
-                float eta       = dist / ship.GetAtt(ShipAttr.Speed);
-				Vector3 nodePos = targetNode.GetNodeRunPosition(eta);
-				nodePos.x       = (float)Math.Round (nodePos.x, 2);
-				nodePos.y       = (float)Math.Round (nodePos.y, 2);
-				nodePos.z       = (float)Math.Round (nodePos.z, 2);
-				targetNodePos   = nodePos;
-				targetPos       = targetNodePos;
-			}
-
-			SetPosition(Vector3.MoveTowards(curPos, targetPos, moveDist));
-		}
-		else
-		{
-			//到达
-			SetPosition(targetPos);
-			//进入星球
-			ship.EnterNode(targetNode);
-			//进入环绕状态
-            shipState = MemberState.ORBIT;
-			StartAttackAction();
-		}
-	}
-
-
-	public void UpdateMoveTo(int frame, float dt)
-	{
-		float movespeed = ship.GetAtt(ShipAttr.Speed);
-		float moveDist = (float)Math.Round(movespeed * dt, 2);
-		Vector3 curPos = GetPosition();
-		AniCtrl.SetFloat(MoveHashCode, movespeed);
-
-
-		//间距多少
-		go.transform.rotation = Quaternion.LookRotation(TargetPos - curPos);
-		float dist = (float)Math.Round(Vector3.Distance(curPos, TargetPos), 2);
-		if (dist > moveDist)
-		{
-			SetPosition(Vector3.MoveTowards(curPos, TargetPos, moveDist));
-		}
-		else
-		{
-			SetPosition(TargetPos);
-			shipState = MemberState.ORBIT;
-		}
-	}
-
-	public bool UpdateMove(int frame, float dt )
-    {
-		if ( !IsNeedMove() )
-			return false;
-
-		float movespeed		= ship.GetAtt(ShipAttr.Speed);
-		float moveDist		= (float)Math.Round(movespeed * dt, 2);
-		Vector3 curPos		= GetPosition();
-		AniCtrl.SetFloat(MoveHashCode, movespeed);
-
-		//间距多少
-		go.transform.rotation	= Quaternion.LookRotation(TargetPos - curPos);
-		float dist				= (float)Math.Round(Vector3.Distance(curPos, TargetPos), 2);
-		if (dist > moveDist)
-		{
-			SetPosition(Vector3.MoveTowards(curPos, TargetPos, moveDist));
-			return true;
-		}
-		else
-		{
-			SetPosition(TargetPos);
-			shipState		= MemberState.ORBIT;
-			return false;
-		}
-	}
-
-	public bool IsNeedMove()
-    {
-		float delt = (TargetPos - position).magnitude;
-		if (Mathf.Abs(delt) < 0.001f)
-			return false;
-		return true;
-    }
-
-
-	/// <summary>
-	/// 暂时先定义小兵的战斗逻辑
-	/// </summary>
-	public void UpdateBattle( bool atkCity = false )
-    { 
-		AniCtrl.SetFloat(MoveHashCode, 0f);
-		Quaternion _lookAt = Quaternion.identity;
-		if (target != null && !atkCity )
+		if( ship != null )
         {
-			var animatorInfo = AniCtrl.GetCurrentAnimatorStateInfo(0);
-			if (animatorInfo.normalizedTime > 1.0f)
-			{
-				IsEndAttack				= false;
-				AniCtrl.SetTrigger(AckHashCode);
-			}
-
-			_lookAt		= Quaternion.LookRotation(target.GetPosition() - GetPosition());
-			if (Throw != null)
-			{
-				Throw.targetPos			= target.GetPosition();
-				Throw.targetPos.y		+= 1.0f;
-			}
-
-			if (bowLoadScript != null)
-			{
-				bowLoadScript.targetPos = target.GetPosition();
-				bowLoadScript.targetPos.y += 1.0f;
-			}
-
-			go.transform.rotation = _lookAt;
-			ship.SetAtt(ShipAttr.AttackSpeed, BattleSystem.Instance.battleData.rand.Range(30, 60));
+			Vector3 newPos		= ship.GetPosition();
+			tfcache.position	= newPos;
 		}
-		else
-        {
-			if( targetNode != null )
-            {
-				var animatorInfo = AniCtrl.GetCurrentAnimatorStateInfo(0);
-				if (animatorInfo.normalizedTime > 1.0f)
-				{
-					IsEndAttack = false;
-					AniCtrl.SetTrigger(AckHashCode);
-				}
-
-				_lookAt = Quaternion.LookRotation(targetNode.GetPosition() - GetPosition());
-				if (Throw != null)
-				{
-					Throw.targetPos		= targetNode.GetPosition();
-					Throw.targetPos.y += 1.0f;
-				}
-
-				if (bowLoadScript != null)
-				{
-					bowLoadScript.targetPos = targetNode.GetPosition();
-					bowLoadScript.targetPos.y += 1.0f;
-				}
-
-				go.transform.rotation = _lookAt;
-				ship.SetAtt(ShipAttr.AttackSpeed, BattleSystem.Instance.battleData.rand.Range(30, 60));
-			}
-        }
 	}
 
-	/// ---------------------------------------------------------------------------------------------------------
+	/// -----------------------------------------------------------------------------------
 	/// <summary>
-	/// 开始移动
+	/// 播放移动动画
 	/// </summary>
-	/// ---------------------------------------------------------------------------------------------------------
-	public void MoveTo(Node node, bool warp)
+	/// -----------------------------------------------------------------------------------
+	public void OnStartMove(object sender, EventArgs e)
 	{
-		targetNode			= node;
-		//是否瞬移
-		warping				= warp;
-
-		float orbitDist;
-		orbitDist			= 20f;
-		targetNodePos		= targetNode.GetPosition();
-		if (node.revoType != RevolutionType.RT_None && !warping)
-		{
-            //间距多少
-            Vector3 position = GetPosition();
-            float speed     = ship.GetAtt(ShipAttr.Speed);
-            float eta       = Vector3.Distance(position, targetNodePos) / speed;
-			Vector3 nodePos = targetNode.GetNodeRunPosition(eta);
-			nodePos.x       = (float)Math.Round (nodePos.x, 2);
-			nodePos.y       = (float)Math.Round (nodePos.y, 2);
-			nodePos.z       = (float)Math.Round (nodePos.z, 2);
-			targetNodePos   = nodePos;
+		if( ship != null )
+        {
+			float speed			= ship.GetAtt(ShipAttr.Speed);
+			Quaternion lookAt	= Quaternion.identity;
+			Vector3 targetPos   = new Vector3( ship.targetPos.x, ship.targetPos.y, ship.targetPos.z );
+			lookAt				= Quaternion.LookRotation(targetPos - GetPosition());
+			tfcache.rotation	= lookAt;
+			AniCtrl.SetFloat(MoveHashCode, speed);
 		}
-
-        Vector3 moveDir     = GetPosition() - targetNodePos;
-		moveDir.Normalize();
-		targetNodePos       += (moveDir * orbitDist);
-
-        targetNodePos.x     = (float)Math.Round(targetNodePos.x, 2);
-        targetNodePos.y     = (float)Math.Round(targetNodePos.y, 2);
-        targetNodePos.z     = (float)Math.Round(targetNodePos.z, 2);
-
-		Quaternion _lookAt  = Quaternion.LookRotation(targetNodePos - position);
-		go.transform.rotation = _lookAt;
-
-		//进入跳跃状态
-		shipState           = MemberState.PREJUMP1;
 	}
 
-
-	public void PriorityEncircleCity()
+	/// -----------------------------------------------------------------------------------
+	/// <summary>
+	/// 停止播放动画
+	/// </summary>
+	/// -----------------------------------------------------------------------------------
+	public void OnStopMove(object sender, EventArgs e)
 	{
-		if (targetNode == null) return;
-		float orbitDist;
-		orbitDist			= targetNode.GetWidth() * 30f;
-		targetNodePos		= targetNode.GetPosition();
-		
-		Vector3 moveDir		= GetPosition() - targetNodePos;
-		moveDir.Normalize();
-		targetNodePos		+= (moveDir * orbitDist);
-
-		targetNodePos.x		= (float)Math.Round(targetNodePos.x, 2);
-		targetNodePos.y		= (float)Math.Round(targetNodePos.y, 2);
-		targetNodePos.z		= (float)Math.Round(targetNodePos.z, 2);
+		if (ship != null)
+		{
+			AniCtrl.SetFloat(MoveHashCode, 0f);
+		}
 	}
 
-	public void StartAttackAction()
-    {
+	/// -----------------------------------------------------------------------------------
+	/// <summary>
+	/// 开始播放攻击动画
+	/// </summary>
+	/// -----------------------------------------------------------------------------------
+	public void OnAttack(object sender, EventArgs e)
+	{
 		AniCtrl.SetFloat(MoveHashCode, 0f);
-	}
-
-
-	public void StopAttack()
-    {
 		AniCtrl.SetTrigger(AckHashCode);
-    }
-
-	public void PlayAction( int nAction, float speed )
-    {
-		AniCtrl.SetTrigger(AckHashCode);
-		AniCtrl.speed = speed;
-		AniCtrl.SetInteger("Action", nAction);
-	}
-
-	public bool IsEndAttack = false;
-	public void SetAniSpeed( float speed )
-    {
-		AniCtrl.speed		= speed;
+		AniCtrl.speed		= 1.0f;
+		AniCtrl.SetInteger("Action", 1);
 	}
 
 
-	public void OnDeath()
-    {
+	/// -----------------------------------------------------------------------------------
+	/// <summary>
+	/// 播放死亡动画
+	/// </summary>
+	/// -----------------------------------------------------------------------------------
+	public void OnDie(object sender, EventArgs e)
+	{
 		AniCtrl.SetBool(IsDeathHashCode, true);
 		AniCtrl.SetInteger(IsDeathHashCode, 0);
 		if (go != null)
@@ -453,8 +199,12 @@ public class EntityMember : DisplayEntity
 		}
 	}
 
-
-	public void OnALive()
+	/// -----------------------------------------------------------------------------------
+	/// <summary>
+	/// 播放重生动画
+	/// </summary>
+	/// -----------------------------------------------------------------------------------
+	public void OnALive(object sender, EventArgs e)
 	{
 		AniCtrl.SetBool(IsDeathHashCode, false);
 		AniCtrl.SetInteger(IsDeathHashCode, 0);
@@ -462,14 +212,5 @@ public class EntityMember : DisplayEntity
 		{
 			go.SetActive(true);
 		}
-	}
-
-	public Transform GetBonePoint(string bpName)
-	{
-		Transform tf = bpGroups.GetBonePoint(bpName);
-		if (tf == null)
-			return go.transform;
-
-		return tf;
 	}
 }

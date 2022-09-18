@@ -47,7 +47,7 @@ public class ControlMap : MonoBehaviour
         var dis                     = Vector2.Distance(_vector2, mousePos);
         if (dis > 0.1f) 
         {
-            EventHandlerGroup.Get().fireEvent((int)EventTypeGroup.On1TouchMove, this, new EventArgs_SinVal<Vector2>((_vector2 - mousePos) / 50f));
+            //EventHandlerGroup.Get().fireEvent((int)EventTypeGroup.On1TouchMove, this, new EventArgs_SinVal<Vector2>((_vector2 - mousePos) / 50f));
             _vector2                = mousePos;
         }
     }
@@ -61,7 +61,7 @@ public class ControlMap : MonoBehaviour
     private void OnTriggerDragEnd( GameObject go )
     {
         _vector2                    = Vector2.zero;
-        EventHandlerGroup.Get().fireEvent((int)EventTypeGroup.On1TouchUp, this, null);
+        //EventHandlerGroup.Get().fireEvent((int)EventTypeGroup.On1TouchUp, this, null);
     }
 }
 

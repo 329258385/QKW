@@ -4,12 +4,6 @@
 
 namespace TouchInput
 {
-    public enum CameraPlaneAxes
-    {
-        XY_2D_SIDESCROLL,       // Sidescroll
-        XZ_TOP_DOWN             // Top-Down
-    }
-
     public enum PerspectiveZoomMode
     {
         FIELD_OF_VIEW,

@@ -46,28 +46,9 @@ public class BattleMemberAIPublicy
     private BattleMemberStatus      _eStatus = BattleMemberStatus.status_Unknown;
 
     /// <summary>
-    /// 是否游走CD中
-    /// </summary>
-    private bool                    Iswandering = false;
-
-    /// <summary>
-    /// 技能池子
-    /// </summary>
-    private List<TechniqueEntiy>    techniques = new List<TechniqueEntiy>();
-
-    public EventHandlerGroup        EventGroup { get; set; }
-
-    /// <summary>
     /// 攻击间隔
     /// </summary>
     private float                   attacktimer = 0.0f;
-
-    /// <summary>
-    /// 游走间隔
-    /// </summary>
-    private float                   wandertimer = 0.0f;
-
-
 
     public BattleMemberAIPublicy( BattleMember bm )
     {
@@ -81,18 +62,11 @@ public class BattleMemberAIPublicy
     /// --------------------------------------------------------------------------------------------------------
     public void AotuBattle( int frame, float dt )
     {
-        /// 更新技能CD
-        TechniqueEntiy technique = null;
-        foreach ( var instance in techniques )
-        {
-            instance.Tick( frame, dt );
-        }
-
         /// 索敌策略
         searchEntiyPublicy(frame, dt);
         if ( _eStatus == BattleMemberStatus.status_Move )
         {
-            if (!mOwer.entity.UpdateMove(frame, dt))
+            if (!mOwer.UpdateMove(frame, dt))
             {
                 _eStatus = BattleMemberStatus.status_Attack;
                 return;
@@ -103,11 +77,6 @@ public class BattleMemberAIPublicy
         {
 
             attackPublicy(frame, dt);
-        }
-
-        if(_eStatus == BattleMemberStatus.status_Wander )
-        {
-             wanderPublicy(frame, dt);
         }
 
         if (_eStatus == BattleMemberStatus.status_AtkCity )
@@ -138,11 +107,11 @@ public class BattleMemberAIPublicy
     /// --------------------------------------------------------------------------------------------------------
     private bool IsAlertRange()
     {
-        if (mOwer.entity.target != null && mOwer.entity.target.isALive)
+        if (mOwer.target != null && mOwer.target.isALive)
         {
             float fRange    = mOwer.GetAtt(ShipAttr.WarningRange);
             fRange          *= fRange;
-            float distance  = (mOwer.GetPosition() - mOwer.entity.target.GetPosition()).sqrMagnitude;
+            float distance  = (mOwer.GetPosition() - mOwer.target.GetPosition()).sqrMagnitude;
             if (distance <= fRange)
             {
                 return true;
@@ -159,11 +128,11 @@ public class BattleMemberAIPublicy
     /// --------------------------------------------------------------------------------------------------------
     private bool IsAtkRange( )
     {
-        if( mOwer.entity.target != null && mOwer.entity.target.isALive )
+        if( mOwer.target != null && mOwer.target.isALive )
         {
             float fRange        = mOwer.GetAtt( ShipAttr.AttackRange );
             fRange              *= fRange;
-            float distance      = (mOwer.GetPosition() - mOwer.entity.target.GetPosition()).sqrMagnitude;
+            float distance      = (mOwer.GetPosition() - mOwer.target.GetPosition()).sqrMagnitude;
             if (distance <= fRange )
             {
                 return true;
@@ -180,11 +149,11 @@ public class BattleMemberAIPublicy
     /// --------------------------------------------------------------------------------------------------------
     private bool IsAtkCity( )
     {
-        if( mOwer.entity.targetNode != null )
+        if( mOwer.targetNode != null )
         {
             float fRange        = mOwer.GetAtt( ShipAttr.AttackRange );
             fRange              *= fRange;
-            float distance      = (mOwer.GetPosition() - mOwer.entity.targetNode.GetPosition()).sqrMagnitude;
+            float distance      = (mOwer.GetPosition() - mOwer.targetNode.GetPosition()).sqrMagnitude;
             if (distance <= fRange )
             {
                 return true;
@@ -206,10 +175,10 @@ public class BattleMemberAIPublicy
             return;
 
         attacktimer          = 0.0f;
-        if ( mOwer.entity.target == null ) return;
+        if ( mOwer.target == null ) return;
         if( IsAtkRange() )
         {
-            mOwer.entity.UpdateBattle();
+            mOwer.UpdateBattle();
         }
     }
 
@@ -221,11 +190,11 @@ public class BattleMemberAIPublicy
     /// --------------------------------------------------------------------------------------------------------
     private void searchEntiyPublicy( int frame, float dt )
     {
-        mOwer.entity.target = FindNearestEnemy();
-        if( mOwer.entity.target != null )
+        mOwer.target     = FindNearestEnemy();
+        if( mOwer.target != null )
         {
             float fAtkRange     = mOwer.GetAtt(ShipAttr.AttackRange);
-            Vector3 moveDir     = mOwer.GetPosition() - mOwer.entity.target.GetPosition();
+            Vector3 moveDir     = mOwer.GetPosition() - mOwer.target.GetPosition();
             float distance      = moveDir.magnitude;
 
             if( distance < fAtkRange )
@@ -235,7 +204,7 @@ public class BattleMemberAIPublicy
             else if( distance > fAtkRange )
             {
                 _eStatus        = BattleMemberStatus.status_Move;
-                Vector3 tarPos  = mOwer.entity.target.GetPosition();
+                Vector3 tarPos  = mOwer.target.GetPosition();
                 mOwer.SetTargetPosition(tarPos);
             }
         }
@@ -247,32 +216,12 @@ public class BattleMemberAIPublicy
                     _eStatus        = BattleMemberStatus.status_AtkCity;
                 else
                 {
-                    Vector3 tarPos  = mOwer.entity.targetNode.GetPosition();
+                    Vector3 tarPos  = mOwer.targetNode.GetPosition();
                     _eStatus        = BattleMemberStatus.status_Move;
                     mOwer.SetTargetPosition(tarPos);
                 }
             }
         }
-    }
-
-    /// --------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// 游走策略
-    /// </summary>
-    /// --------------------------------------------------------------------------------------------------------
-    private void wanderPublicy( int frame, float dt )
-    {
-        int curHP           = this.mOwer.GetAtt(ShipAttr.Hp);
-        int maxHP           = this.mOwer.GetAtt(ShipAttr.MaxHp);
-        if( curHP < (int)(maxHP * 0.5f) && !Iswandering )
-        {
-            Vector3 target  = Vector3.zero;
-            Iswandering     = true;
-            wandertimer     = 0f;
-            mOwer.SetTargetPosition(target);
-        }
-
-        mOwer.entity.UpdateMove( frame, dt );
     }
 
 
@@ -300,9 +249,9 @@ public class BattleMemberAIPublicy
     /// --------------------------------------------------------------------------------------------------------
     private void atkCityPublicy( )
     {
-        if ( mOwer.entity.targetNode != null )
+        if ( mOwer.targetNode != null )
         {
-            mOwer.entity.UpdateBattle(true);
+            mOwer.UpdateBattle(true);
         }
     }
 
@@ -335,7 +284,7 @@ public class BattleMemberAIPublicy
     /// </summary>
     private void OnRepel( int frame, float dt )
     {
-        bool IsNeedMove   = mOwer.entity.UpdateMove(frame, dt);
+        bool IsNeedMove   = mOwer.UpdateMove(frame, dt);
         if (!IsNeedMove)
         {
             this._eStatus =  BattleMemberStatus.status_Attack;

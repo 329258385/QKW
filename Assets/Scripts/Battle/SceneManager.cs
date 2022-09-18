@@ -201,7 +201,7 @@ public class SceneManager : Lifecycle2
 		CreatreLocalBattleTeam();
 
 		// 根据地图配置
-		CreatePVEBattleTeams(table.players);
+		//CreatePVEBattleTeams(table.players);
 	}
 
 	public void CreateBattleScene(MapConfig table, List<BuildTypeBehaviour> mapList )
@@ -225,8 +225,11 @@ public class SceneManager : Lifecycle2
 		// 创建战队
 		CreatreLocalBattleTeam();
 
+		//
+		CreatePVPBattleTeams();
+
 		// 根据地图配置
-		//CreatePVEBattleTeams(table.players);
+		CreatePVEBattleTeams(mapList);
 	}
 
 	
@@ -269,34 +272,65 @@ public class SceneManager : Lifecycle2
         }
     }
 
+	private void CreatePVPBattleTeams()
+	{
+		Team tm = teamManager.GetTeam(TEAM.Team_2);
+		if (tm == null)
+			return;
+
+		for( int i = 0; i < 3; i++) { 
+
+			BattleSystem.Instance.sceneManager.aiManager.AddAI(tm, AIType.FriendSmart, 1, BattleSystem.Instance.battleData.aiLevel);
+			tm.aiEnable					= true;
+
+			BattleTeam bt1				= new BattleTeam();
+			if (bt1 != null)
+			{
+				bt1.team				= tm;
+				Simpleheroconfig hero	= new Simpleheroconfig();
+				int[] HeroPools			= new int[3] { 4001, 4002, 4003 };
+				{
+					hero.heroID			= HeroPools[UnityEngine.Random.Range(0, 3)];
+				}
+
+				bt1.CreateFormation(hero, 0, this, nodeManager.GetNodeByType(NodeType.MasterB));
+				tm.AddBattleTeam(bt1);
+			}
+		}
+	}
 
 	/// <summary>
 	/// 创建PVE战队
 	/// </summary>
 	/// <param name="players"></param>
-    private void CreatePVEBattleTeams(List<MapPlayerConfig> players)
+	private void CreatePVEBattleTeams(List<BuildTypeBehaviour> mapList)
     {
-		Team tm = teamManager.GetTeam(TEAM.Team_2);
+		Team tm				 = teamManager.GetTeam(TEAM.Neutral);
 		if (tm == null)
 			return;
 
-		BattleSystem.Instance.sceneManager.aiManager.AddAI(tm, AIType.FriendSmart, 1, BattleSystem.Instance.battleData.aiLevel);
-		tm.aiEnable = true;
-		foreach (var item in players)
-		{
-			TEAM camption			= (TEAM)item.camption;
+		foreach ( var node in mapList )
+        {
+			if (node.nodeType == NodeType.MasterA)
+				continue;
+
+			if (node.camption == -1)
+				continue;
+
+			BattleSystem.Instance.sceneManager.aiManager.AddAI(tm, AIType.FriendSmart, 1, BattleSystem.Instance.battleData.aiLevel);
+			tm.aiEnable				= true;
+
 			Simpleheroconfig hero	= new Simpleheroconfig();
-			int[] HeroPools			= new int[5] { 3001, 3002, 3003, 3004, 3005 };
+			int[] HeroPools			= new int[3] { 4001, 4002, 4003 };
 			{
-				hero.heroID			= HeroPools[UnityEngine.Random.Range(0, 5)];
+				hero.heroID			= HeroPools[UnityEngine.Random.Range(0, 3)];
 			}
-			HeroConfig config		= HeroConfigProvider.Get().GetData(hero.heroID);
 			BattleTeam bt1			= new BattleTeam();
 			if (bt1 != null)
 			{
 				bt1.team			= tm;
-				Node node			= nodeManager.GetNode( item.tag );
-				bt1.CreateFormation(hero, 0, this, node);
+				Node build			= nodeManager.GetNode(node.tag);
+				bt1.CreateFormation(hero, 0, this, build);
 				tm.AddBattleTeam(bt1);
 			}
 		}

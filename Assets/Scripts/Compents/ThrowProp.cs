@@ -1,15 +1,11 @@
-﻿///////////////////////////////////////////////////////////////////////////
-//  ThrowProp                                                            //
-//  Kevin Iglesias - https://www.keviniglesias.com/       			     //
-//  Contact Support: support@keviniglesias.com                           //
-///////////////////////////////////////////////////////////////////////////
-
-/* This Scripts needs 'ThrowingActionSMB' script as StateMachineBehaviour 
-in the character Animator Controller state that throws the prop */
-
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+
+
+
+
 
 namespace KevinIglesias {
 
@@ -34,11 +30,7 @@ namespace KevinIglesias {
 
         //Character root (for parenting when prop is thrown)
         private Transform       characterRoot;
-        
-        //Different movements for different prop types
-        private bool            spear;
-        private bool            tomahawk;
-        
+
         //Needed for calculate prop trajectory
         private Vector3         startPos; 
         private Vector3         zeroPosition;
@@ -47,30 +39,30 @@ namespace KevinIglesias {
         
         void Start() 
         {
-            characterRoot = this.transform;
-            
-            zeroPosition = propToThrow.localPosition;
-            zeroRotation = propToThrow.localRotation;
+            characterRoot           = this.transform;
+            zeroPosition            = propToThrow.localPosition;
+            zeroRotation            = propToThrow.localRotation;
         }
         
         //This will make the prop move when launched
         void Update() 
         {
             if (targetPos == null) return;
-            //Arc throw facing the target
+
+
             if(launched)
             {
-                //float x0            = startPos.x;
-                //float x1            = targetPos.x;
-                //float dist          = x1 - x0;
-                float nextX         = Mathf.MoveTowards(startPos.x, targetPos.x, speed * Time.deltaTime);
-                float nextY         = Mathf.MoveTowards(startPos.y, targetPos.y, speed * Time.deltaTime);
-                float nextZ         = Mathf.MoveTowards(startPos.z, targetPos.z, speed * Time.deltaTime);
+                float nextX          = Mathf.MoveTowards(startPos.x, targetPos.x, speed * Time.deltaTime);
+                float nextY          = Mathf.MoveTowards(startPos.y, targetPos.y, speed * Time.deltaTime);
+                float nextZ          = Mathf.MoveTowards(startPos.z, targetPos.z, speed * Time.deltaTime);
                
-                //float arc           = arcHeight * (nextX - x0) * (nextX - x1) / (-0.25f * dist * dist);
+                float x0             = startPos.x;
+                float x1             = targetPos.x;
+                float dist           = x1 - x0;
+                float arc            = arcHeight * (nextX - x0) * (nextX - x1) / (-0.25f * dist * dist);
                 Vector3 nextPos      = new Vector3(nextX, nextY, nextZ);
             
-                propToThrow.rotation = LookAt2D(nextPos - propToThrow.position);
+                propToThrow.rotation = LookAt2D(targetPos - propToThrow.position);
                 propToThrow.position = nextPos;
      
                 float currentDistance = Mathf.Abs(targetPos.x - propToThrow.position.x);
@@ -89,18 +81,6 @@ namespace KevinIglesias {
         //Function called by 'ThrowingActionSMB' script
         public void ThrowSpear()
         {
-            tomahawk        = false;
-            spear           = true;
-            startPos        = propToThrow.position;
-            propToThrow.SetParent(characterRoot);
-            launched        = true;
-        }
-        
-        //Function called by 'ThrowingActionSMB' script
-        public void ThrowTomahawk()
-        {
-            spear           = false;
-            tomahawk        = true;
             startPos        = propToThrow.position;
             propToThrow.SetParent(characterRoot);
             launched        = true;

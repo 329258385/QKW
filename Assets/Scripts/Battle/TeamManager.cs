@@ -115,6 +115,19 @@ public class TeamManager : Lifecycle2
 	}
 
 
+	public Team GetTeamByID(int camption )
+	{
+		for (int i = 0; i < teamArray.Length; i++)
+		{
+			if (teamArray[i].team == (TEAM)camption )
+				continue;
+			return teamArray[i];
+		}
+
+		return null;
+	}
+
+
 	public Team GetTeam(int userId)
 	{
 		for (int i = 0; i < teamArray.Length; i++) {

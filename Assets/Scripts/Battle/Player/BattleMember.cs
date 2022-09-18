@@ -1,6 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Solarmax;
+using Nebukam.ORCA;
+using Unity.Mathematics;
+using Plugin;
 
 
 
@@ -14,6 +17,19 @@ public enum MemberEvents
     ReleaseSkill,           // 释放技能
 
     DisplayAction,          // 播放动作
+}
+
+
+/// <summary>
+/// 飞船状态
+/// </summary>
+public enum MemberState
+{
+    ORBIT,          // 环绕中
+    PREJUMP1,       // 飞行预备中
+    JUMPING,        // 飞行中
+    MoveTo,
+    MAX,
 }
 
 public partial class BattleMember : Lifecycle2
@@ -114,11 +130,23 @@ public partial class BattleMember : Lifecycle2
     public BattleMemberAIPublicy    aiPublicy;
 
     /// <summary>
+    /// 集群寻路代理对象
+    /// </summary>
+    private Agent                   mAgent;
+
+
+    /// <summary>
+    /// 位置
+    /// </summary>
+    public float3                  position = float3.zero;
+
+    /// <summary>
     /// 初始化
     /// </summary>
     public BattleMember()
 	{
         unitType                    = BattleUnitType.bmt_Soldier;
+        EventGroup                  = new EventHandlerGroup(typeof(BattleEvent));
     }
 
 
@@ -144,18 +172,15 @@ public partial class BattleMember : Lifecycle2
     /// <returns>The position.</returns>
     public Vector3 GetPosition()
     {
-        if (entity == null)
-            return Vector3.zero;
-        return entity.GetPosition();
+        return position;
     }
 
-    public void SetPosition(Vector3 pos)
+    public void SetPosition(float3 pos)
     {
-        if (entity == null)
-            return;
-
-        entity.SetPosition(pos);
+        this.position       = pos;
+        this.EventGroup.fireEvent((int)BattleEvent.SetPos, this, null);
     }
+
 
     /// <summary>
     /// 设置目标位置
@@ -163,20 +188,18 @@ public partial class BattleMember : Lifecycle2
     /// <param name="pos"></param>
     public void SetTargetPosition( Vector3 pos )
     {
-        if (entity != null)
-        {
-            entity.TargetPos = pos;
-        }
+        targetPos           = new float3(pos.x, pos.y, pos.z );
     }
 
 
     public bool Init ()
 	{
 		if(sceneManager != null) 
-			currentTeam = sceneManager.teamManager.GetTeam (TEAM.Neutral);
-		isALive         = false;
-		currentNode     = null;
+			currentTeam     = sceneManager.teamManager.GetTeam (TEAM.Neutral);
+		isALive             = false;
+		currentNode         = null;
 
+        
         return true;
 	}
 
@@ -197,17 +220,47 @@ public partial class BattleMember : Lifecycle2
         attribute[(int)ShipAttr.Armor]          = config.Arms;
         if( this.unitType == BattleUnitType.bmt_Hero )
         {
-            attribute[(int)ShipAttr.Population] = 100;
+            attribute[(int)ShipAttr.Population] = 1;
             attribute[(int)ShipAttr.Hp]         = config.maxHp * 100;
         }
         else
         {
-            attribute[(int)ShipAttr.Population] = 10;
+            attribute[(int)ShipAttr.Population] = 1;
             attribute[(int)ShipAttr.Hp]         = config.maxHp * 10;
         }
+
+        handler = new RunLockStepLogic[(int)MemberState.MAX];
+        handler[(int)MemberState.ORBIT]         = UpdateOrbit;
+        handler[(int)MemberState.PREJUMP1]      = UpdatePreJump1;
+        handler[(int)MemberState.JUMPING]       = UpdateJumping;
+        handler[(int)MemberState.MoveTo]        = UpdateMoveTo;
+        shipState                               = MemberState.ORBIT;
         return true;
     }
 
+    public void InitAgent( Vector3 pos )
+    {
+        position                = new float3(pos.x, pos.y, pos.z);
+        //mAgent                  = ORCASimulator.Instance.AddAgent(position);
+        //mAgent.m_prefVelocity   = Unity.Mathematics.float3.zero;
+        //mAgent.velocity         = Unity.Mathematics.float3.zero;
+        //mAgent.radius           = 0.5f;
+        //mAgent.height           = 1.0f;
+        //mAgent.maxSpeed         = 0.0f;
+        //mAgent.navigationEnabled= false;
+        //mAgent.layerIgnore      = ORCALayer.L10;
+
+        //if (unitType == BattleUnitType.bmt_Hero)
+        //{
+        //    mAgent.layerOccupation  = ORCALayer.L10;
+        //    mAgent.layerIgnore      = ORCALayer.L20 | ORCALayer.L21 | ORCALayer.L30;
+        //}
+        //else
+        //{
+        //    mAgent.layerOccupation  = ORCALayer.L20;
+        //    mAgent.layerIgnore      = ORCALayer.L21;
+        //}
+    }
 
     /// --------------------------------------------------------------------------------------------------------
     /// <summary>
@@ -216,40 +269,7 @@ public partial class BattleMember : Lifecycle2
     /// --------------------------------------------------------------------------------------------------------
 	public void Tick(int frame, float interval)
     {
-        if (entity == null)
-        {
-            return;
-        }
-
-        if (!isNeedUpdate)
-        {
-            return;
-        }
-
-        if (unitType == BattleUnitType.bmt_Soldier && battleTeam.btState != BattleTeamState.Battle )
-        {
-            bool IsNeedMove = entity.UpdateMove(frame, interval);
-            if (!IsNeedMove)
-            {
-                entity.StartAttackAction();
-            }
-        }
-
-        if (unitType == BattleUnitType.bmt_Hero && battleTeam.btState == BattleTeamState.Defensive)
-        {
-            bool IsNeedMove = entity.UpdateMove(frame, interval);
-            if (!IsNeedMove)
-            {
-                entity.StartAttackAction();
-            }
-        }
-
-        entity.Tick(frame, interval);
-
-        if (battleTeam.btState == BattleTeamState.Battle )
-        {
-            aiPublicy.AotuBattle(frame, interval);
-        }
+        MoveUpdate(frame, interval);
     }
 
 	public void Destroy()
@@ -286,10 +306,7 @@ public partial class BattleMember : Lifecycle2
 
     public void OnALive( )
     {
-        if (entity != null)
-        {
-            entity.OnALive();
-        }
+        EventGroup.fireEvent((int)BattleEvent.ALine, this, null);
     }
 
     /// <summary>
@@ -333,28 +350,9 @@ public partial class BattleMember : Lifecycle2
 		pool.RemoveFlyShip (this);
         pool.Recycle(this);
         isALive = false;
-        entity.OnDeath();
-	}
-
-
-	/// <summary>
-	/// 移动到指定星球
-	/// </summary>
-	public void MoveTo(Node node, bool warp)
-	{
-		//添加到飞行列表, 瞬移暂时不加入飞行队列
-        if ( !warp )
-		    pool.AddFlyShip(this);
-
-        entity.MoveTo(node, warp);
-	}
-
-
-    public void MoveToFly( Node node )
-    {
-        entity.targetNode = node;
-        pool.AddFlyShip(this);
+        EventGroup.fireEvent((int)BattleEvent.Die, this, null);
     }
+
 
     /// --------------------------------------------------------------------------------------------------------------
     /// <summary>
@@ -463,19 +461,9 @@ public partial class BattleMember : Lifecycle2
         return null;
     }
 
-    // --------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// 优先攻击最近的英雄
-    /// </summary>
-    /// --------------------------------------------------------------------------------------------------------
-    public void PriorityEncircleCity( )
-    {
-        entity.PriorityEncircleCity();
-    }
 
-    private TechniqueEntiy currentSkill;
-    private bool    _isUseTechnique = false;
-    private Vector3 _vForwardDir = Vector3.zero;
+    private TechniqueEntiy  currentSkill;
+    private bool            _isUseTechnique = false;
     // --------------------------------------------------------------------------------------------------------
     /// <summary>
     /// 转向
@@ -492,7 +480,7 @@ public partial class BattleMember : Lifecycle2
     /// <summary>
     /// 事件系统
     /// </summary>
-    public EventHandlerGroup            EventGroup { get; set; }
+    public EventHandlerGroup            EventGroup;
 
     // --------------------------------------------------------------------------------------------------------
     /// <summary>

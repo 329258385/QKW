@@ -11,7 +11,7 @@ namespace Solarmax
 
         public bool Init()
         {
-            EventHandlerGroup.Get().AddEvent(typeof(EventTypeGroup));
+            //EventHandlerGroup.Get().AddEvent(typeof(EventTypeGroup));
             return true;
         }
 
@@ -26,7 +26,7 @@ namespace Solarmax
             if (axis != 0)
             {
                 _axis   = axis;
-                EventHandlerGroup.Get().fireEvent((int)EventTypeGroup.On2TouchMove, this, new EventArgs_SinVal<float>(_axis));
+                //EventHandlerGroup.Get().fireEvent((int)EventTypeGroup.On2TouchMove, this, new EventArgs_SinVal<float>(_axis));
             }
             else
             {

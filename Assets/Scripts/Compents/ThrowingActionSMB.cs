@@ -24,7 +24,7 @@ public class ThrowingActionSMB : StateMachineBehaviour
                     tPScript = animator.GetComponent<ThrowProp>();
                 }
 
-                actionDone = false;
+                actionDone  = false;
                 if( tPScript == null )
                 {
                     actionDone = true;
@@ -58,7 +58,6 @@ public class ThrowingActionSMB : StateMachineBehaviour
                         tPScript.RecoverProp();
                         break;
                 }
-
                 actionDone = true;
             }
         }

@@ -51,9 +51,9 @@ public class Packet
 
 public enum TEAM : byte
 {
-	Neutral,
-	Team_1,
-	Team_2,
+	Neutral,		// 中立
+	Team_1,			// 蓝方
+	Team_2,			// 红方
 
 	TeamMax,
 }

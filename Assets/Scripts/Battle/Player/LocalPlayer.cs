@@ -71,11 +71,11 @@ public class LocalPlayer : Singleton<LocalPlayer>
         Node master = BattleSystem.Instance.sceneManager.nodeManager.GetNodeByType( NodeType.MasterA );
         if( master != null )
         {
-            GameObject go = master.entity.go;
-            if( go != null )
-            {
-                CameraControl.Instance.SetPositionAndirction(go.transform.position, go.transform.forward);
-            }
+            //GameObject go = master.entity.go;
+            //if( go != null )
+            //{
+            //    CameraControl.Instance.SetPositionAndirction(go.transform.position, go.transform.forward);
+            //}
         }
     }
 

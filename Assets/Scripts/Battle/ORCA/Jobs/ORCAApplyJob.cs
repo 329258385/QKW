@@ -27,7 +27,7 @@ using UnityEngine;
 
 namespace Nebukam.ORCA
 {
-    [BurstCompile]
+    //[BurstCompile]
     public struct ORCAApplyJob : IJob
     {
 
@@ -46,14 +46,14 @@ namespace Nebukam.ORCA
         {  
             for (int index = 0;index < m_inputAgentResults.Length;index ++)
             {
-                AgentDataResult result = m_inputAgentResults[index];
-                AgentData agent = m_inputAgents[index];
-                float3 worldPosition = agent.worldPosition, worldVelocity = agent.worldVelocity;
+                AgentDataResult result  = m_inputAgentResults[index];
+                AgentData agent         = m_inputAgents[index];
+                float3 worldPosition    = agent.worldPosition, worldVelocity = agent.worldVelocity;
 
                 if (m_plane == AxisPair.XY)
                 {
-                    worldPosition = float3(result.position, worldPosition.z);
-                    worldVelocity = float3(result.velocity, worldVelocity.z);
+                    worldPosition = float3(result.position.x, 0, result.position.y);
+                    worldVelocity = float3(result.velocity.x, 0, result.velocity.y);
                 }
                 else
                 {
@@ -61,10 +61,10 @@ namespace Nebukam.ORCA
                     worldVelocity = float3(result.velocity.x, worldVelocity.y, result.velocity.y);
                 }
 
-                agent.position = result.position;
-                agent.worldPosition = worldPosition;
-                agent.worldVelocity = worldVelocity;
-                m_inputAgents[index] = agent;
+                agent.position          = result.position;
+                agent.worldPosition     = worldPosition;
+                agent.worldVelocity     = worldVelocity;
+                m_inputAgents[index]    = agent;
             }
             
 

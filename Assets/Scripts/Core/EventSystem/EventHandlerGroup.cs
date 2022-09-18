@@ -17,15 +17,17 @@ public enum EventTypeGroup
     On2TouchMove,
 }
 
-public class EventHandlerGroup : Singleton<EventHandlerGroup>
+public class EventHandlerGroup
 {
-    [System.NonSerialized]
-    Solarmax.EventHolder                    m_eventList = new Solarmax.EventHolder();
-
     Dictionary<int, EventHandler>           m_eventHandlers;
-    public EventHandlerGroup()
+    public EventHandlerGroup( Type enumType )
     {
         m_eventHandlers                     = new Dictionary<int, EventHandler>();
+    }
+    
+    ~EventHandlerGroup()
+    {
+
     }
 
     public void AddEvent(Type enumType)
@@ -70,16 +72,6 @@ public class EventHandlerGroup : Singleton<EventHandlerGroup>
         }
     }
 
-    public uint RegEvent( Solarmax.EventID eventID, uint key )
-    {
-        return m_eventList.RegEventHandler(eventID, key);
-    }
-
-    public void RemoveEvent( Solarmax.EventID eventID, uint key )
-    {
-        m_eventList.RemoveEventHandler(eventID, key);
-    }
-
 
     public void fireEvent(int eventID, object sender, EventArgs args)
     {
@@ -90,12 +82,6 @@ public class EventHandlerGroup : Singleton<EventHandlerGroup>
                 handlerGroup(sender, args);
         }
     }
-
-    public void FireEvent( Solarmax.KEvent evt )
-    {
-        m_eventList.OnEvent(evt);
-    }
-
 
     public void clearEvents()
     {

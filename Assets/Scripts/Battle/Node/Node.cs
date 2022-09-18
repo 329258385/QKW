@@ -131,16 +131,6 @@ public abstract partial class Node : Lifecycle3
         }
 	}
 
-
-	/// <summary>
-	/// 修改当前基础人口上限
-	/// </summary>
-	/// <param name="Population">Population.</param>
-	public void SetBasePopulation(int Pop)
-	{
-		
-	}
-
 	/// <summary>
 	/// team信息
 	/// </summary>
@@ -250,6 +240,8 @@ public abstract partial class Node : Lifecycle3
 		}
 		// 设置默认属性
         SetAttribute(NodeAttr.OccupiedSpeed, 1);
+		CreateHUD();
+		
 		return true;
 	}
 
@@ -306,21 +298,22 @@ public abstract partial class Node : Lifecycle3
     /// ----------------------------------------------------------------------------------------------------
     public BattleMember AddMember(int team, HeroConfig config )
     {
-		BattleMember ship		 = null;
-        Team teamData	 = nodeManager.sceneManager.teamManager.GetTeam((TEAM)team);
+		BattleMember ship		= null;
+        Team teamData			= nodeManager.sceneManager.teamManager.GetTeam((TEAM)team);
 
         //获取一个ship对象
-        ship             = nodeManager.sceneManager.shipManager.Alloc();
-		ship.unitType	 = BattleMember.BattleUnitType.bmt_Soldier;
-		ship.sceneManager = nodeManager.sceneManager;
-		ship.currentNode = this;
+        ship					= nodeManager.sceneManager.shipManager.Alloc();
+		ship.unitType			= BattleMember.BattleUnitType.bmt_Soldier;
+		ship.sceneManager		= nodeManager.sceneManager;
+		ship.currentNode		= this;
 		ship.InitMember(config, (TEAM)team);
-
+		
 		//设置飞船在哪个星球上
 		AddMember(ship);
 		ship.InitShip(nodeManager.sceneManager.shipManager, false);
         ship.SetColor(teamData.color);
 		ship.SetPosition(GetPosition());
+		ship.InitAgent(GetPosition());
 		ship.SetTargetPosition(GetPosition());
 		return ship;
     }
@@ -340,6 +333,7 @@ public abstract partial class Node : Lifecycle3
 			hero.InitShip(nodeManager.sceneManager.shipManager, false);
 			hero.SetColor(teamData.color);
 			hero.SetPosition(GetPosition());
+			hero.InitAgent(GetPosition());
 			hero.SetTargetPosition(GetPosition());
 		}
 		return hero;
@@ -597,15 +591,12 @@ public abstract partial class Node : Lifecycle3
 
 	private void CreateHUD()
     {
-		UnityEngine.Object res = AssetManager.Get().GetResources("UISlgCityOperater");
-		if (res != null)
+		GameObject nodego = GetGO();
+		if (nodego != null)
 		{
-			GameObject nodego	= GetGO();
-			GameObject go		= GameObject.Instantiate(res) as GameObject;
-			mCityHUD			= go.GetComponent<HUDCityOperater>();
-			mCityHUD.transform.parent = UISystem.Get().mUIParent;
-			mCityHUD.transform.localScale = Vector3.one;
-			go.SetActive(false);
+			mCityHUD						= nodego.GetComponentInChildren<HUDCityOperater>();
+			mCityHUD.gameObject.SetActive(false);
+			mCityHUD.SetNode(this);
 		}
 	}
 

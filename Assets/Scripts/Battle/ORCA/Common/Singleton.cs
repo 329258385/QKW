@@ -21,85 +21,13 @@
 
 namespace Nebukam
 {
-
-    internal interface ISingleton
-    {
-        void InternalInit();
-    }
-
-    public abstract class Singleton<T> : ISingleton
-        where T : class, new()
-    {
-
-        public static void StaticInitialize() { T i = Get; }
-
-        private static T m_instance = null;
-
-        public static T Get
-        {
-            get
-            {
-                if (m_instance == null)
-                {
-                    m_instance = new T();
-
-                    ISingleton i = m_instance as ISingleton;
-                    i.InternalInit();
-                }
-                return m_instance;
-            }
-        }
-
-        private bool m_disposing = false;
-        protected bool m_init = false;
-        void ISingleton.InternalInit()
-        {
-            if (m_init) { return; }
-            Init();
-
-            Static.onUpdate(Update);
-            Static.onLateUpdate(LateUpdate);
-            Static.onFixedUpdate(FixedUpdate);
-            Static.onQuit(OnApplicationQuit);
-
-            m_init = true;
-        }
-
-        protected abstract void Init();
-
-        protected virtual void Update() { }
-        protected virtual void LateUpdate() { }
-        protected virtual void FixedUpdate() { }
-        protected virtual void OnApplicationQuit()
-        {
-            Dispose();
-        }
-
-        #region System.IDisposable
-
-        protected virtual void Dispose(bool disposing)
-        {
-
-            if (!disposing) { return; }
-
-            Static.offUpdate(Update);
-            Static.offLateUpdate(LateUpdate);
-            Static.offFixedUpdate(FixedUpdate);
-            Static.offQuit(OnApplicationQuit);
-
-        }
-
-        public void Dispose()
-        {
-            if (m_disposing) { return; }
-            m_disposing = true;
-            // Dispose of unmanaged resources.
-            Dispose(true);
-            // Suppress finalization.
-            System.GC.SuppressFinalize(this);
-        }
-
-        #endregion
-
-    }
+	public abstract class Singleton<T> where T : class, new()
+	{
+		protected Singleton() { }
+		private static readonly T _instance = new T();
+		public static T Instance
+		{
+			get { return _instance; }
+		}
+	}
 }

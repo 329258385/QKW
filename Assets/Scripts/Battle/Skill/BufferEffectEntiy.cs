@@ -135,7 +135,7 @@ public class ApplyEffect
             hit.Target      = target;
             hit.technique   = null;
             hit.hurt        = (int)hurt;
-            target.aiPublicy.EventGroup.FireEvent(hit);
+            //target.aiPublicy.EventGroup.FireEvent(hit);
         }
 
         if( !target.isALive )
@@ -144,7 +144,7 @@ public class ApplyEffect
             Solarmax.KMonster ed = new Solarmax.KMonster();
             ed.killer       = _sender;
             ed.dead         = target;
-            _sender.aiPublicy.EventGroup.FireEvent(ed);
+            //_sender.aiPublicy.EventGroup.FireEvent(ed);
         }
         return true;
     }

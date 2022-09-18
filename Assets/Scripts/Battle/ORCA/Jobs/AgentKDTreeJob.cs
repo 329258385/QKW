@@ -28,7 +28,7 @@ using UnityEngine;
 namespace Nebukam.ORCA
 {
 
-    [BurstCompile]
+    //[BurstCompile]
     public struct AgentKDTreeJob : IJob
     {
 

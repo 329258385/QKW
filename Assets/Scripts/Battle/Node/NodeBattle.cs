@@ -124,11 +124,7 @@ public partial class Node
 		#if !SERVER
 		m_HPArray.Clear();
 		m_teamArray.Clear ();
-        if (mCityHUD == null)
-        {
-            CreateHUD();
-            mCityHUD.SetNode(this);
-        }
+
         for (int i = 1; i < (int)TEAM.TeamMax; ++i) 
 		{
 			int shipNum = numArray [i];

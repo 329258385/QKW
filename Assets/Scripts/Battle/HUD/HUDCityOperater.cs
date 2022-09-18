@@ -79,23 +79,30 @@ public class HUDCityOperater : MonoBehaviour
     public Vector2 Offset = Vector2.zero;
     public void Update( )
     {
-        //CalcPos();
-        if (Camera.main != null && Camera.main.gameObject != null)
-        {
-            if (transform.rotation != Camera.main.transform.rotation)
-            {
-                transform.rotation = Camera.main.transform.rotation;
-            }
+        if (hostNode == null)
+            return;
 
-            Vector3 pos = hostNode.entity.go.transform.position + new Vector3(0, 2, 0);
-            Vector3 screenPoint = Camera.main.WorldToViewportPoint(pos);
-            screenPoint.x -= 0.5f;
-            screenPoint.y -= 0.5f;
-            Vector3 in_screen = new Vector3(Camera.main.pixelWidth * screenPoint.x, Camera.main.pixelHeight * screenPoint.y, 0);
-            in_screen.x += Offset.x;
-            in_screen.y += Offset.y;
-            transform.localPosition = in_screen;
-        }
+        //if( mUIPanel == UIPanel.Flag )
+        //{
+        //    if( UICamera.mainCamera != null )
+        //    {
+        //        transform.rotation = UICamera.mainCamera.transform.rotation;
+        //    }
+        //}
+
+        ////CalcPos();
+        //if (Camera.main != null && Camera.main.gameObject != null)
+        //{
+        //    Vector3 pos             = hostNode.entity.go.transform.position + new Vector3(0, 2, 0);
+        //    Vector3 screenPoint     = Camera.main.WorldToViewportPoint(pos);
+        //    screenPoint.x           -= 0.5f;
+        //    screenPoint.y           -= 0.5f;
+
+        //    Vector3 in_screen       = new Vector3(Camera.main.pixelWidth * screenPoint.x, Camera.main.pixelHeight * screenPoint.y, 0F);
+        //    //in_screen.x += Offset.x;
+        //    //in_screen.y += Offset.y;
+        //    transform.localPosition = in_screen;
+        //}
     }
 
     public virtual void CalcPos()
@@ -104,14 +111,12 @@ public class HUDCityOperater : MonoBehaviour
         {
             Vector3 pos             = hostNode.entity.go.transform.position + new Vector3(0, 2, 0);
             var v1                  = Camera.main.WorldToViewportPoint(pos);
-            var v2                  = UICamera.mainCamera.ViewportToWorldPoint(v1) - new Vector3( 0.5f, 0.5f, 0 );
+            var v2                  = UICamera.mainCamera.ViewportToWorldPoint(v1);
             transform.position      = v2;
             var v3                  = transform.localPosition;
             transform.localPosition = new Vector3(v3.x, v3.y, 0);
         }
     }
-
-
 
     public void ShowPopulationProcess(List<Team> teamArray, List<float> HPArray, float hpMax = 100f)
     {

@@ -161,12 +161,7 @@ public partial class Node
 		if (state == NodeState.Battle)
 			return;
 		#if !SERVER
-		if(mCityHUD == null )
-        {
-			CreateHUD();
-			mCityHUD.SetNode(this);
-        }
-		
+
         {
 			if (!mCityHUD.gameObject.activeSelf)
 				mCityHUD.gameObject.SetActive(true);

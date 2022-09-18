@@ -65,16 +65,6 @@ public class AIManager : Lifecycle2
 			{
 				aiLogics [(int)t.aiData.aiType].Tick (t, frame, interval);
 			}
-
-			//根据战队
-			//if( t.aiEnable )
-			//{
-			//		foreach( var bt in t.battleArray )
-			//      {
-			//			if( bt != null )
-			//				aiLogics[(int)t.aiData.aiType].Tick(t, frame, interval);
-			//		}
-			//}
 		}
 	}
 

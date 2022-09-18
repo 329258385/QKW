@@ -93,20 +93,20 @@ namespace Nebukam.ORCA
             {
                 for (int i = 0; i < agentCount; i++)
                 {
-                    a           = m_lockedAgents[i];
-                    m_maxRadius = max(m_maxRadius , a.radius);
-                    pos         = a.pos;
-                    prefVel     = a.m_prefVelocity;
-                    vel         = a.m_velocity;
+                    a                       = m_lockedAgents[i];
+                    m_maxRadius             = max(m_maxRadius , a.radius);
+                    pos                     = a.pos;
+                    prefVel                 = a.m_prefVelocity;
+                    vel                     = a.m_velocity;
                     m_outputAgents[i] = new AgentData()
                     {
                         index               = i,
                         kdIndex             = i,
-                        position            = float2(pos.x, pos.y), //
+                        position            = float2(pos.x, pos.z), //
                         worldPosition       = pos,
-                        baseline            = pos.z,
-                        prefVelocity        = float2(prefVel.x, prefVel.y),
-                        velocity            = float2(vel.x, vel.y),
+                        baseline            = pos.x,
+                        prefVelocity        = float2(prefVel.x, prefVel.z),
+                        velocity            = float2(vel.x, vel.z),
                         worldVelocity       = vel,
                         height              = a.m_height,
                         radius              = a.m_radius,

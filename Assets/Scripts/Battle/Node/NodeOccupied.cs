@@ -122,11 +122,6 @@ public partial class Node
         //未占领完就离开
         m_HPArray.Clear();
 		m_teamArray.Clear ();
-        if (mCityHUD == null)
-        {
-            CreateHUD();
-            mCityHUD.SetNode(this);
-        }
 
         if (!mCityHUD.gameObject.activeSelf)
             mCityHUD.gameObject.SetActive(true);

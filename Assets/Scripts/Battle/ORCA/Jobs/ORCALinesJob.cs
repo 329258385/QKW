@@ -46,7 +46,7 @@ namespace Nebukam.ORCA
     }
 
 
-    [BurstCompile]
+    //[BurstCompile]
     public struct ORCALinesJob : IJob
     {
 
@@ -146,6 +146,10 @@ namespace Nebukam.ORCA
                     float2 relPos   = otherAgent.position - a_position;
                     float2 relVel   = a_velocity - otherAgent.velocity;
                     float distSq    = lengthsq(relPos);
+                    if( distSq < 0.0001f )
+                    {
+                        relVel      = new float2(0.1f, 0.1f);
+                    }
                     float cRad      = a_radius + otherAgent.radius;
                     float cRadSq    = lengthsq(cRad);
 
@@ -249,10 +253,14 @@ namespace Nebukam.ORCA
                 {
                     a = m_inputAgents[i];
 
-                    if (a.index == agent.index
-                        || a.collisionEnabled == 0
-                        || (a.layerOccupation & ~agent.layerIgnore) == 0
-                        || (top < a.baseline || bottom > a.baseline + a.height))
+                    //if (a.index == agent.index
+                    //    || a.collisionEnabled == 0
+                    //    || (a.layerOccupation & ~agent.layerIgnore) == 0
+                    //    || (top < a.baseline || bottom > a.baseline + a.height))
+                    //{
+                    //    continue;
+                    //}
+                    if (a.index == agent.index || a.collisionEnabled == 0 )
                     {
                         continue;
                     }
@@ -293,20 +301,20 @@ namespace Nebukam.ORCA
                 AgentTreeNode leftNode = m_inputAgentTree[treeNode.left], rightNode = m_inputAgentTree[treeNode.right];
 
                 float distSqLeft = lengthsq(max(0.0f, leftNode.minX - center.x))
-                    + lengthsq(max(0.0f, center.x - leftNode.maxX))
-                    + lengthsq(max(0.0f, leftNode.minY - center.y))
-                    + lengthsq(max(0.0f, center.y - leftNode.maxY));
+                                   + lengthsq(max(0.0f, center.x - leftNode.maxX))
+                                   + lengthsq(max(0.0f, leftNode.minY - center.y))
+                                   + lengthsq(max(0.0f, center.y - leftNode.maxY));
+
                 float distSqRight = lengthsq(max(0.0f, rightNode.minX - center.x))
-                    + lengthsq(max(0.0f, center.x - rightNode.maxX))
-                    + lengthsq(max(0.0f, rightNode.minY - center.y))
-                    + lengthsq(max(0.0f, center.y - rightNode.maxY));
+                                    + lengthsq(max(0.0f, center.x - rightNode.maxX))
+                                    + lengthsq(max(0.0f, rightNode.minY - center.y))
+                                    + lengthsq(max(0.0f, center.y - rightNode.maxY));
 
                 if (distSqLeft < distSqRight)
                 {
                     if (distSqLeft < rangeSq)
                     {
                         QueryAgentTreeRecursive(ref center, ref agent, ref rangeSq, treeNode.left, ref agentNeighbors);
-
                         if (distSqRight < rangeSq)
                         {
                             QueryAgentTreeRecursive(ref center, ref agent, ref rangeSq, treeNode.right, ref agentNeighbors);

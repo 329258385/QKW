@@ -101,11 +101,6 @@ public partial class Node
 
         m_HPArray.Clear();
         m_teamArray.Clear();
-        if (mCityHUD == null)
-        {
-            CreateHUD();
-            mCityHUD.SetNode(this);
-        }
 
 
         Team team = nodeManager.sceneManager.teamManager.GetTeam(capturingTeam);

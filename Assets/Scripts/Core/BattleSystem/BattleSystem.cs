@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Plugin;
 using Solarmax;
-
-
-
+using Nebukam.ORCA;
 
 /// <summary>
 /// 战斗系统
@@ -53,6 +51,7 @@ public class BattleSystem : Solarmax.Singleton<BattleSystem>, Solarmax.Lifecycle
 	/// </summary>
 	private bool                    pause;
 
+
 	public BattleSystem ()
 	{
 		battleData              = new BattleData ();
@@ -71,18 +70,10 @@ public class BattleSystem : Solarmax.Singleton<BattleSystem>, Solarmax.Lifecycle
 		lockStep.frameThreshold = 3;
 		lockStep.AddListennerLogic(FrameTick);
 		lockStep.AddListennerPacket(FramePacketRun);
-
-		//string produceValue = GameVariableConfigProvider.Instance.GetData (3);
-		//string[] pros = produceValue.Split (';');
-		//for (int i= 0; i < pros.Length; ++i)
-		//{
-		//	List<float> args = Converter.ConvertNumberList<float> (pros [i]);
-		//}
-
 		battleData.Init();
 		sceneManager.Init();
 		replayManager.Init();
-
+		//ORCASimulator.Instance.InitORCA();
 		AssetManager.Get().Init();
 		EffectManager.Get().Init();
 		GameTimeManager.Get().Init();
@@ -96,6 +87,7 @@ public class BattleSystem : Solarmax.Singleton<BattleSystem>, Solarmax.Lifecycle
 		if (battleController != null)
 			battleController.Tick (frame, interval);
 
+		//ORCASimulator.Instance.Tick(interval);
 		battleData.Tick (frame, interval);
 		sceneManager.Tick (frame, interval);
 		replayManager.Tick (frame, interval);
@@ -114,9 +106,8 @@ public class BattleSystem : Solarmax.Singleton<BattleSystem>, Solarmax.Lifecycle
 			return;
 
 		lockStep.Tick (interval);
-
 		#if !SERVER
-        float fScaleSpeed = sceneManager.GetbattleScaleSpeed();
+		float fScaleSpeed = sceneManager.GetbattleScaleSpeed();
         float fesp        = interval * fScaleSpeed;
         EffectManager.Get().fPlayAniSpeed = fScaleSpeed;
         EffectManager.Get().Tick(Time.frameCount, fesp);
@@ -133,7 +124,7 @@ public class BattleSystem : Solarmax.Singleton<BattleSystem>, Solarmax.Lifecycle
 			battleController.Destroy ();
 
 		EffectManager.Instance.Destroy();
-
+		//ORCASimulator.Instance.Destroy();
 		lockStep.StopLockStep (true);
 		AssetManager.Get().UnLoadBattleResources ();
 		LoggerSystem.Instance.Debug("BattleSystem    destroy  end");
@@ -142,8 +133,8 @@ public class BattleSystem : Solarmax.Singleton<BattleSystem>, Solarmax.Lifecycle
 	public void Reset ()
 	{
 		pause = false;
-        if(CameraFollow.Instance != null )
-            CameraFollow.Instance.SetTarget(null);
+        //if(CameraFollow.Instance != null )
+        //    CameraFollow.Instance.SetTarget(null);
         
 		battleData.Init ();
 		

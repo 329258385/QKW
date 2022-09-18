@@ -78,9 +78,9 @@ public class MaincityManager : MonoBehaviour
         if( b == true )
         {
             baseRoot.transform.localPosition                 = Vector3.zero;
-            CameraFollow.Instance.target                     = null;
-            CameraFollow.Instance.transform.localEulerAngles = new Vector3( 25f, 0, 0 );
-            CameraFollow.Instance.transform.localPosition    = new Vector3(0, 25, -60f);
+            //CameraFollow.Instance.target                     = null;
+            //CameraFollow.Instance.transform.localEulerAngles = new Vector3( 25f, 0, 0 );
+            //CameraFollow.Instance.transform.localPosition    = new Vector3(0, 25, -60f);
         }
     }
 }

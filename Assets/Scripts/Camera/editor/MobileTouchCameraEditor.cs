@@ -135,15 +135,10 @@ namespace TouchInput
       MobileTouchCamera mobileTouchCamera = (MobileTouchCamera)target;
 
       DrawPropertyField("m_Script");
-
-      string camAxesError = mobileTouchCamera.CheckCameraAxesErrors();
-      bool isAxesValid = string.IsNullOrEmpty(camAxesError);
-      DrawPropertyField("cameraAxes", isAxesValid);
-      DrawErrorLine(camAxesError, Color.red);
-      GUI.enabled = mobileTouchCamera.GetComponent<Camera>().orthographic == false;
+      GUI.enabled       = mobileTouchCamera.GetComponent<Camera>().orthographic == false;
       DrawPropertyField("perspectiveZoomMode");
-      GUI.enabled = true;
-      bool isZoomValid = mobileTouchCamera.CamZoomMax >= mobileTouchCamera.CamZoomMin;
+      GUI.enabled       = true;
+      bool isZoomValid  = mobileTouchCamera.CamZoomMax >= mobileTouchCamera.CamZoomMin;
       DrawPropertyField("camZoomMin", isZoomValid);
       DrawPropertyField("camZoomMax", isZoomValid);
       if (isZoomValid == false) {
@@ -200,20 +195,6 @@ namespace TouchInput
 #endregion
 
       DrawPropertyField("camFollowFactor");
-
-#region auto scroll damp
-      AutoScrollDampMode selectedDampMode = (AutoScrollDampMode)serializedObject.FindProperty("autoScrollDampMode").enumValueIndex;
-      if (selectedDampMode == AutoScrollDampMode.DEFAULT && mobileTouchCamera.AutoScrollDamp != 300) {
-        serializedObject.FindProperty("autoScrollDampMode").enumValueIndex = (int)AutoScrollDampMode.CUSTOM; //Set selected mode to custom in case it was set to default but the damp wasn't the default value. This may happen for users that have changed the damp and upgraded from an older version of the asset.
-        selectedDampMode = AutoScrollDampMode.CUSTOM;
-      }
-      DrawPropertyField("autoScrollDampMode");
-      if (selectedDampMode == AutoScrollDampMode.CUSTOM) {
-        DrawPropertyField("autoScrollDamp", true, true, subSettingsInset);
-        DrawPropertyField("autoScrollDampCurve", true, true, subSettingsInset);
-      }
-#endregion
-
       DrawPropertyField("groundLevelOffset");
       DrawPropertyField("enableRotation");
       DrawPropertyField("enableTilt");
@@ -240,57 +221,9 @@ namespace TouchInput
         DrawPropertyField("zoomTiltAngleMin", mobileTouchCamera.ZoomTiltAngleMin >= minTiltErrorAngle, mobileTouchCamera.ZoomTiltAngleMin >= minTiltWarningAngle, subSettingsInset);
         DrawPropertyField("zoomTiltAngleMax", mobileTouchCamera.ZoomTiltAngleMax <= maxTiltErrorAngle, true, subSettingsInset);
       }
-      DrawPropertyField("keyboardAndMousePlatforms");
-      DrawPropertyField("controlTweakablesEnabled");
-      SerializedProperty serializedPropertyControlTweakables = serializedObject.FindProperty("controlTweakablesEnabled");
-      if (serializedPropertyControlTweakables.boolValue == true) {
-        DrawPropertyField("keyboardControlsModifiers");
-        DrawPropertyField("mouseRotationFactor");
-        DrawPropertyField("mouseTiltFactor");
-        DrawPropertyField("mouseZoomFactor");
-        DrawPropertyField("keyboardRotationFactor");
-        DrawPropertyField("keyboardTiltFactor");
-        DrawPropertyField("keyboardZoomFactor");
-        DrawPropertyField("keyboardRepeatFactor");
-        DrawPropertyField("keyboardRepeatDelay");
-      }
-
-      DrawPropertyField("expertModeEnabled");
-      SerializedProperty serializedPropertyExpertMode = serializedObject.FindProperty("expertModeEnabled");
-      if(serializedPropertyExpertMode.boolValue == true) {
-        DrawPropertyField("zoomBackSpringFactor");
-        DrawPropertyField("dragBackSpringFactor");
-        DrawPropertyField("autoScrollVelocityMax");
-        DrawPropertyField("dampFactorTimeMultiplier");
-        DrawPropertyField("isPinchModeExclusive");
-        DrawPropertyField("customZoomSensitivity");
-        DrawPropertyField("terrainCollider");
-        DrawPropertyField("cameraTransform");
-
-        DrawPropertyField("rotationDetectionDeltaThreshold");
-        DrawPropertyField("rotationMinPinchDistance");
-        DrawPropertyField("rotationLockThreshold");
-
-        DrawPropertyField("pinchModeDetectionMoveTreshold");
-        DrawPropertyField("pinchTiltModeThreshold");
-        DrawPropertyField("pinchTiltSpeed");
-
-        DrawPropertyField("is2dOverdragMarginEnabled");
-        SerializedProperty serializedProperty2dOverdragMargin = serializedObject.FindProperty("is2dOverdragMarginEnabled");
-        if (serializedProperty2dOverdragMargin.boolValue == true) {
-          DrawPropertyField("camOverdragMargin2d");
-        }
-      }
-
+     
       if (GUI.changed) {
-
         serializedObject.ApplyModifiedProperties();
-
-        //Detect modified properties.
-        AutoScrollDampMode dampModeAfterApply = (AutoScrollDampMode)serializedObject.FindProperty("autoScrollDampMode").enumValueIndex;
-        if (selectedDampMode != dampModeAfterApply) {
-          OnScrollDampModeChanged(dampModeAfterApply);
-        }
       }
     }
 

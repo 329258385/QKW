@@ -31,6 +31,7 @@ public enum Formation
 /// </summary>
 public class BattleTeam
 {
+    readonly int                MAX_MEMBERS = 8;
     private static int          GenIDPool = 1;
     public int                  ID;
 
@@ -188,7 +189,7 @@ public class BattleTeam
             if (config != null && config.ArmsType > 0 )
             {
                 HeroConfig memberCfg        = HeroConfigProvider.Get().GetData(config.ArmsType);
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < MAX_MEMBERS; i++)
                 {
                     BattleMember member = sceneManager.AddMember(master, (int)team.team, memberCfg);
                     member.battleTeam   = this;
@@ -220,7 +221,7 @@ public class BattleTeam
         Transform tf = Leader.entity.go.transform;
         for (int i = 0; i < members.Count; i++)
         {
-            Vector3 newPos = tf.TransformPoint(MyBattleOrder.MarchFormation[i] * MyBattleOrder.MAX_FORMATION_SPACE );
+            Vector3 newPos = tf.TransformPoint(MyBattleOrder.MarchFormation[i] * MyBattleOrder.MAX_FORMATION_SPACE);
             members[i].SetTargetPosition(newPos);
         }
     }
@@ -293,11 +294,11 @@ public class BattleTeam
             btState         = BattleTeamState.Battle;
             btFormation     = Formation.FormationNull;
 
-            Leader.entity.StartAttackAction();
-            for (int i = 0; i < members.Count; i++)
-            {
-                members[i].entity.StartAttackAction();
-            }
+            //Leader.entity.StartAttackAction();
+            //for (int i = 0; i < members.Count; i++)
+            //{
+            //    members[i].entity.StartAttackAction();
+            //}
         }
     }
 
@@ -336,11 +337,11 @@ public class BattleTeam
             btState         = BattleTeamState.Battle;
             btFormation     = Formation.FormationNull;
 
-            Leader.entity.StartAttackAction();
-            for (int i = 0; i < members.Count; i++)
-            {
-                members[i].entity.StartAttackAction();
-            }
+            //Leader.entity.StartAttackAction();
+            //for (int i = 0; i < members.Count; i++)
+            //{
+            //    members[i].entity.StartAttackAction();
+            //}
         }
     }
 
@@ -353,7 +354,6 @@ public class BattleTeam
         }
 
         FadeInMembers();
-
         Leader.MoveTo(to, bWarp);
         for (int i = 0; i < members.Count; i++)
         {
@@ -378,10 +378,10 @@ public class BattleTeam
 
     private void UpdateEnterCity( int frame, float interval )
     {
-        bool bEnterCity = Leader.entity.UpdateMove(frame, interval);
+        bool bEnterCity = Leader.UpdateMove(frame, interval);
         for (int i = 0; i < members.Count; i++)
         {
-            bEnterCity      = members[i].entity.IsNeedMove();
+            bEnterCity      = members[i].IsNeedMove();
             if (bEnterCity)
                 return;
         }
@@ -402,10 +402,10 @@ public class BattleTeam
 
     private bool IsReadyTarget()
     {
-        bool bEnterCity = Leader.entity.IsNeedMove();
+        bool bEnterCity             = Leader.IsNeedMove();
         for (int i = 0; i < members.Count; i++)
         {
-            bEnterCity = members[i].entity.IsNeedMove();
+            bEnterCity = members[i].IsNeedMove();
         }
         return bEnterCity;
     }
@@ -416,10 +416,10 @@ public class BattleTeam
     /// </summary>
     public void ChangeShipsStats(MemberState state )
     {
-        this.Leader.entity.shipState = state;
+        this.Leader.shipState = state;
         for( int i = 0; i < members.Count; i++ )
         {
-            members[i].entity.shipState = state;
+            members[i].shipState = state;
         }
     }
 
@@ -429,10 +429,10 @@ public class BattleTeam
     /// </summary>
     public void EntersEncircleCity()
     {
-        Leader.entity.ClearTarget();
+        Leader.ClearTarget();
         Leader.PriorityEncircleCity();
         for (int i = 0; i < members.Count; i++)
-            members[i].entity.ClearTarget();
+            members[i].ClearTarget();
 
         btState      = BattleTeamState.Encirclecity;
         btFormation  = Formation.FormationSurround;
@@ -535,11 +535,11 @@ public class BattleTeam
     public void EnterCity( Node city )
     {
         btState             = BattleTeamState.EnterCity;
-        Leader.entity.StopAttack();
+        //Leader.entity.StopAttack();
         Leader.SetTargetPosition(city.GetPosition());
         for (int i = 0; i < members.Count; i++)
         {
-            members[i].entity.StopAttack();
+           // members[i].entity.StopAttack();
             members[i].SetTargetPosition(city.GetPosition());
         }
     }
@@ -567,9 +567,9 @@ public class BattleTeam
     /// -----------------------------------------------------------------------------------------
     public void ClearTarget()
     {
-        Leader.entity.ClearTarget();
+        Leader.ClearTarget();
         for (int i = 0; i < members.Count; i++)
-            members[i].entity.ClearTarget();
+            members[i].ClearTarget();
     }
 
 
@@ -583,7 +583,7 @@ public class BattleTeam
         Leader.LeaveNode();
         Leader.entity.SetPosition(postion);
         Leader.EnterNode(targetNode);
-        Leader.entity.shipState = MemberState.ORBIT;
+        Leader.shipState = MemberState.ORBIT;
 
         for (int i = 0; i < members.Count; i++)
         {

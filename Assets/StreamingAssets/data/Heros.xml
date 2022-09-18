@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Heros>
-	<Hero id="3001" Arms="0" ArmsType="4001" speed="5" attackspeed="45" attackrange="15" WarningRange="4" MaxHP="1000" damage="100" Armor="100" name="英雄" icon="" desc="xxxxxxxxxx" perfab="Hero001" />
-	<Hero id="3002" Arms="0" ArmsType="4002" speed="5" attackspeed="45" attackrange="5" WarningRange="4" MaxHP="1000" damage="100" Armor="100" name="英雄" icon="" desc="xxxxxxxxxx" perfab="Hero002" />
-	<Hero id="3003" Arms="0" ArmsType="4003" speed="5" attackspeed="45" attackrange="15" WarningRange="4" MaxHP="1000" damage="100" Armor="100" name="英雄" icon="" desc="xxxxxxxxxx" perfab="Hero003" />
+	<Hero id="3001" Arms="0" ArmsType="4001" speed="2" attackspeed="45" attackrange="15" WarningRange="4" MaxHP="1000" damage="100" Armor="100" name="英雄" icon="" desc="xxxxxxxxxx" perfab="Hero001" />
+	<Hero id="3002" Arms="0" ArmsType="4002" speed="2" attackspeed="45" attackrange="5" WarningRange="4" MaxHP="1000" damage="100" Armor="100" name="英雄" icon="" desc="xxxxxxxxxx" perfab="Hero002" />
+	<Hero id="3003" Arms="0" ArmsType="4003" speed="2" attackspeed="45" attackrange="15" WarningRange="4" MaxHP="1000" damage="100" Armor="100" name="英雄" icon="" desc="xxxxxxxxxx" perfab="Hero003" />
 	
-	<Hero id="4001" Arms="0" ArmsType="-1" speed="5" attackspeed="45" attackrange="15" WarningRange="5" MaxHP="100" damage="2" Armor="5" name="弓箭兵" icon="" desc="xxxxxxxxxx" perfab="Archer" />
-	<Hero id="4002" Arms="0" ArmsType="-1" speed="5" attackspeed="45" attackrange="5" WarningRange="1" MaxHP="100" damage="2" Armor="5" name="盾牌兵" icon="" desc="xxxxxxxxxx" perfab="ShieldWarrior" />
-	<Hero id="4003" Arms="0" ArmsType="-1" speed="5" attackspeed="45" attackrange="15" WarningRange="5" MaxHP="100" damage="2" Armor="5" name="投掷兵" icon="" desc="xxxxxxxxxx" perfab="ThrowerDummy" />
+	<Hero id="4001" Arms="0" ArmsType="-1" speed="2" attackspeed="45" attackrange="15" WarningRange="5" MaxHP="100" damage="2" Armor="5" name="弓箭兵" icon="" desc="xxxxxxxxxx" perfab="Archer" />
+	<Hero id="4002" Arms="0" ArmsType="-1" speed="2" attackspeed="45" attackrange="5" WarningRange="1" MaxHP="100" damage="2" Armor="5" name="盾牌兵" icon="" desc="xxxxxxxxxx" perfab="ShieldWarrior" />
+	<Hero id="4003" Arms="0" ArmsType="-1" speed="2" attackspeed="45" attackrange="15" WarningRange="5" MaxHP="100" damage="2" Armor="5" name="投掷兵" icon="" desc="xxxxxxxxxx" perfab="ThrowerDummy" />
 </Heros>

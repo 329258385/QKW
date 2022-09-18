@@ -124,7 +124,7 @@ namespace Nebukam.ORCA
             job.projLines                   = projLines;
 
             job.m_results                   = m_results;
-            job.m_timestep                  = delta;// / 0.25f;
+            job.m_timestep                  = delta;
         }
 
         protected override void Apply(ref ORCALinesJob job)

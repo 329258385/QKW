@@ -58,26 +58,23 @@ namespace Nebukam.ORCA
             job.m_inputAgents = m_orcaResultProvider.agentProvider.outputAgents;
             job.m_inputAgentResults = m_orcaResultProvider.results;
             job.m_timestep = delta;// / 0.25f;
-
-         
-
         }
 
         protected override void Apply(ref ORCAApplyJob job)
         {
 
-            IAgentProvider agentProvider = m_orcaResultProvider.agentProvider;
+            IAgentProvider agentProvider         = m_orcaResultProvider.agentProvider;
             NativeArray<AgentData> agentDataList = agentProvider.outputAgents;
-            List<Agent> agentList = agentProvider.lockedAgents;
+            List<Agent> agentList                = agentProvider.lockedAgents;
             Agent agent;
             AgentData agentData;
 
             for (int i = 0, count = agentDataList.Length; i < count; i++)
             {
-                agentData = agentDataList[i];
-                agent = agentList[agentData.index];
-                agent.pos = agentData.worldPosition;
-                agent.velocity = agentData.worldVelocity;
+                agentData               = agentDataList[i];
+                agent                   = agentList[agentData.index];
+                agent.pos               = agentData.worldPosition;
+                agent.velocity          = agentData.worldVelocity;
             }
 
         }
@@ -87,6 +84,5 @@ namespace Nebukam.ORCA
             base.Dispose(disposing);
             if (!disposing) { return; }
         }
-
     }
 }
