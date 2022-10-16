@@ -185,7 +185,7 @@ public partial class Node
 	/// <summary>
 	/// 检测战斗状态变化
 	/// </summary>
-	private void EnterEncircleCityByTeam( NodeState newState )
+	private void EnterEncircleCityByTeam( NodeState newState, TEAM atkTeam = TEAM.Neutral)
     {
 		if (state == newState)
 			return;
@@ -195,7 +195,7 @@ public partial class Node
         {
 			foreach (var battle in battArray)
 			{
-				battle.EntersEncircleCity();
+				battle.EnterBattleStats( this, atkTeam );
 			}
 		}
     }

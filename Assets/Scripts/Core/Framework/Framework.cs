@@ -21,7 +21,6 @@ namespace Solarmax
         {
             while(true)
             {
-                if (!InputGate.Instance.Init()) break;
                 if (!ConfigSystem.Instance.Init ()) break;
                 if (!LoggerSystem.Instance.Init ()) break;
                 if (!TimeSystem.Instance.Init ()) break;
@@ -46,8 +45,6 @@ namespace Solarmax
          * */
         public void Tick(float interval)
         {
-            InputGate.Instance.Tick(interval);
-			ConfigSystem.Instance.Tick (interval);
             DataProviderSystem.Instance.Tick (interval);
 			DataHandlerSystem.Instance.Tick (interval);
 			TimeSystem.Instance.Tick (interval);
@@ -68,8 +65,6 @@ namespace Solarmax
          * */
         public void Destroy()
         {
-            InputGate.Instance.Destroy();
-            ConfigSystem.Instance.Destroy ();
             EventSystem.Instance.Destroy ();
             DataProviderSystem.Instance.Destroy ();
 			DataHandlerSystem.Instance.Destroy ();

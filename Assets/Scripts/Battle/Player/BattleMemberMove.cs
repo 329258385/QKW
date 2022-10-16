@@ -118,9 +118,9 @@ public partial class BattleMember
     /// 暂时先定义小兵的战斗逻辑
     /// </summary>
     /// ---------------------------------------------------------------------------------------------------------
-    public void UpdateBattle(bool atkCity = false)
+    public void UpdateBattle( int frame, float dt )
     {
-
+        AotuBattle(frame, dt);
     }
 
     /// ---------------------------------------------------------------------------------------------------------
@@ -224,30 +224,5 @@ public partial class BattleMember
     {
         targetNode           = node;
         pool.AddFlyShip(this);
-    }
-
-    // --------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// 优先攻击最近的英雄
-    /// </summary>
-    /// --------------------------------------------------------------------------------------------------------
-    public void PriorityEncircleCity()
-    {
-        if (targetNode == null) return;
-
-        float orbitDist         = targetNode.GetWidth() * 30f;
-        Vector3 targetNodePos   = targetNode.GetPosition();
-        Vector3 moveDir         = GetPosition() - targetNodePos;
-        moveDir.Normalize();
-        targetNodePos           += (moveDir * orbitDist);
-
-        targetPos.x             = (float)Math.Round(targetNodePos.x, 2);
-        targetPos.y             = (float)Math.Round(targetNodePos.y, 2);
-        targetPos.z             = (float)Math.Round(targetNodePos.z, 2);
-    }
-
-    public void ClearTarget()
-    {
-        target = null;
     }
 }

@@ -134,9 +134,13 @@ public class EntityMember : DisplayEntity
 		if( ship != null )
         {
 			Vector3 newPos		= ship.GetPosition();
+			newPos.y			= 0f;
 			tfcache.position	= newPos;
-			Vector3 targetdir	= Vector3.Normalize( ship.targetPos - GetPosition());
-			tfcache.rotation	= Quaternion.LookRotation(targetdir);
+
+			if (ship.unitType == BattleMember.BattleUnitType.bmt_Hero)
+			{
+				tfcache.LookAt(ship.targetPos);
+			}
 		}
 	}
 

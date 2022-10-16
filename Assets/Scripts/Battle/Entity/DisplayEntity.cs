@@ -147,7 +147,7 @@ public class DisplayEntity : Lifecycle2
 	/// 设置转动角度
 	/// </summary>
 	/// <param name="r3">R3.</param>
-    public void SetEulerAngles(Vector3 r3)
+    public void SetEulerAngles( Vector3 r3)
 	{
 		this.eulerAngles = r3;
 		#if !SERVER

@@ -12,11 +12,6 @@ using UnityEngine.Events;
 
 namespace TouchInput
 {
-    public class UnityEventWithRaycastHit : UnityEvent<RaycastHit>
-    {
-    
-    }
-
     [RequireComponent(typeof(TouchInputController))]
     [RequireComponent(typeof(Camera))]
     public class MobileTouchCamera : MonoBehaviourWrapped
@@ -1136,23 +1131,6 @@ namespace TouchInput
             {
                 refPlaneXZ = new Plane(new Vector3(0, 1, 0), -hitInfo.point.y);
             }
-        }
-
-        private bool GetKeyWithRepeat(KeyCode keyCode, out float factor)
-        {
-            bool isDown = false;
-            factor = 1;
-            if (Input.GetKeyDown(keyCode))
-            {
-                timeKeyDown = Time.realtimeSinceStartup;
-                isDown = true;
-            }
-            else if (Input.GetKey(keyCode) && Time.realtimeSinceStartup > timeKeyDown + keyboardRepeatDelay)
-            {
-                isDown = true;
-                factor = Time.unscaledDeltaTime * keyboardRepeatFactor;
-            }
-            return isDown;
         }
     }
 }

@@ -129,6 +129,11 @@ public abstract partial class Node : Lifecycle3
                 EventSystem.Instance.FireEvent(EventId.OnPopulationUp, population);
             }
         }
+
+		if( initNode )
+        {
+			occupiedTeam = value.team;
+		}
 	}
 
 	/// <summary>

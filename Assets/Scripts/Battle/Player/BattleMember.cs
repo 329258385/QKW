@@ -125,13 +125,10 @@ public partial class BattleMember : Lifecycle2
 
     private List<BufferEntiy>       bufs = new List<BufferEntiy>();
 
-
-    public BattleMemberAIPublicy    aiPublicy;
-
     /// <summary>
     /// 集群寻路代理对象
     /// </summary>
-    private Agent                   mAgent;
+    //private Agent                   mAgent;
 
 
     /// <summary>
@@ -189,6 +186,27 @@ public partial class BattleMember : Lifecycle2
         targetPos           = new float3(pos.x, pos.y, pos.z );
     }
 
+    /// <summary>
+	/// 设置转动角度
+	/// </summary>
+	/// <param name="r3">R3.</param>
+    public void SetEulerAngles(Vector3 r3)
+    {
+        if(entity != null )
+        {
+            entity.SetEulerAngles(r3);
+        }
+    }
+
+    public Vector3 GetEulerAngles()
+    {
+        if (entity != null)
+        {
+            return entity.GetEulerAngles();
+        }
+
+        return Vector3.zero;
+    }
 
     public bool Init ()
 	{
@@ -208,7 +226,6 @@ public partial class BattleMember : Lifecycle2
         isALive         = false;
         currentNode     = null;
 
-        aiPublicy       = new BattleMemberAIPublicy(this);
         attribute[(int)ShipAttr.AttackRange]    = config.attackrange;
         attribute[(int)ShipAttr.AttackSpeed]    = config.attackspeed;
         attribute[(int)ShipAttr.WarningRange]   = config.WarningRange;

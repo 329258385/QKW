@@ -19,27 +19,8 @@ public enum BattleMemberStatus
     status_Repel,                   // 击退
 }
 
-
-/// <summary>
-/// 战斗单元类型
-/// </summary>
-public enum BattleMemberType
+public partial class BattleMember
 {
-    BMT_0,          // 轻步兵
-    BMT_1,          // 重步兵
-    BMT_2,          // 盾排兵
-    BMT_3,          // 轻骑兵
-    BMT_4,          // 重骑兵
-    BMT_5,          // 弓箭兵
-    BMT_6,          // 飞行兵
-    BMT_7,          // 炮兵兵
-}
-
-
-public class BattleMemberAIPublicy
-{
-    private BattleMember            mOwer = null;
-
     /// <summary>
     /// 当前状态
     /// </summary>
@@ -48,11 +29,12 @@ public class BattleMemberAIPublicy
     /// <summary>
     /// 攻击间隔
     /// </summary>
-    private float                   attacktimer = 0.0f;
+    private int                     attacktimer = 0;
 
-    public BattleMemberAIPublicy( BattleMember bm )
+
+    public void ResetAttackTimer()
     {
-        mOwer               = bm;
+        attacktimer                 = BattleSystem.Instance.battleData.rand.Range(50, 100);
     }
 
     /// --------------------------------------------------------------------------------------------------------
@@ -62,62 +44,17 @@ public class BattleMemberAIPublicy
     /// --------------------------------------------------------------------------------------------------------
     public void AotuBattle( int frame, float dt )
     {
-        /// 索敌策略
-        searchEntiyPublicy(frame, dt);
+        searchEntiyPublicy( frame, dt );
+
         if ( _eStatus == BattleMemberStatus.status_Move )
         {
-            if (!mOwer.UpdateMove(frame, dt))
-            {
-                _eStatus = BattleMemberStatus.status_Attack;
-                return;
-            }
+            UpdateMove(frame, dt);
         }
 
         if (_eStatus == BattleMemberStatus.status_Attack)
         {
-
             attackPublicy(frame, dt);
         }
-
-        if (_eStatus == BattleMemberStatus.status_AtkCity )
-        {
-            // 攻城
-            atkCityPublicy();
-        }
-
-        if (_eStatus == BattleMemberStatus.status_Escape )
-        {
-            /// 逃跑逻辑
-            OnEscape();
-        }
-
-        if( _eStatus == BattleMemberStatus.status_Repel )
-        {
-            /// 击退逻辑
-            OnRepel( frame, dt );
-        }
-    }
-
-
-
-    /// --------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// 是否在警戒范围
-    /// </summary>
-    /// --------------------------------------------------------------------------------------------------------
-    private bool IsAlertRange()
-    {
-        if (mOwer.target != null && mOwer.target.isALive)
-        {
-            float fRange    = mOwer.GetAtt(ShipAttr.WarningRange);
-            fRange          *= fRange;
-            float distance  = (mOwer.GetPosition() - mOwer.target.GetPosition()).sqrMagnitude;
-            if (distance <= fRange)
-            {
-                return true;
-            }
-        }
-        return false;
     }
 
 
@@ -128,11 +65,11 @@ public class BattleMemberAIPublicy
     /// --------------------------------------------------------------------------------------------------------
     private bool IsAtkRange( )
     {
-        if( mOwer.target != null && mOwer.target.isALive )
+        if( target != null && target.isALive )
         {
-            float fRange        = mOwer.GetAtt( ShipAttr.AttackRange );
+            float fRange        = GetAtt( ShipAttr.AttackRange );
             fRange              *= fRange;
-            float distance      = (mOwer.GetPosition() - mOwer.target.GetPosition()).sqrMagnitude;
+            float distance      = (GetPosition() - target.GetPosition()).sqrMagnitude;
             if (distance <= fRange )
             {
                 return true;
@@ -149,11 +86,11 @@ public class BattleMemberAIPublicy
     /// --------------------------------------------------------------------------------------------------------
     private bool IsAtkCity( )
     {
-        if( mOwer.targetNode != null )
+        if( targetNode != null )
         {
-            float fRange        = mOwer.GetAtt( ShipAttr.AttackRange );
+            float fRange        = GetAtt( ShipAttr.AttackRange );
             fRange              *= fRange;
-            float distance      = (mOwer.GetPosition() - mOwer.targetNode.GetPosition()).sqrMagnitude;
+            float distance      = (GetPosition() - targetNode.GetPosition()).sqrMagnitude;
             if (distance <= fRange )
             {
                 return true;
@@ -170,16 +107,15 @@ public class BattleMemberAIPublicy
     ///  --------------------------------------------------------------------------------------------------------
     private void attackPublicy( int frame, float dt )
     {
-        attacktimer         += dt;
-        if (attacktimer < mOwer.GetAtt(ShipAttr.AttackSpeed))
+        attacktimer--;
+        if (attacktimer < GetAtt(ShipAttr.AttackSpeed))
             return;
 
-        attacktimer          = 0.0f;
-        if ( mOwer.target == null ) return;
-        if( IsAtkRange() )
-        {
-            mOwer.UpdateBattle();
-        }
+        if ( target == null && targetNode == null ) 
+            return;
+
+        EventGroup.fireEvent((int)BattleEvent.Attack, this, null);
+        ResetAttackTimer();
     }
 
 
@@ -190,11 +126,11 @@ public class BattleMemberAIPublicy
     /// --------------------------------------------------------------------------------------------------------
     private void searchEntiyPublicy( int frame, float dt )
     {
-        mOwer.target     = FindNearestEnemy();
-        if( mOwer.target != null )
+        target     = FindNearestEnemy();
+        if( target != null )
         {
-            float fAtkRange     = mOwer.GetAtt(ShipAttr.AttackRange);
-            Vector3 moveDir     = mOwer.GetPosition() - mOwer.target.GetPosition();
+            float fAtkRange     = GetAtt(ShipAttr.AttackRange);
+            Vector3 moveDir     = GetPosition() - target.GetPosition();
             float distance      = moveDir.magnitude;
 
             if( distance < fAtkRange )
@@ -204,26 +140,48 @@ public class BattleMemberAIPublicy
             else if( distance > fAtkRange )
             {
                 _eStatus        = BattleMemberStatus.status_Move;
-                Vector3 tarPos  = mOwer.target.GetPosition();
-                mOwer.SetTargetPos(tarPos);
+                Vector3 tarPos  = target.GetPosition();
+                RandomAttackPoint(tarPos);
             }
         }
-        else
+        
+        if( targetNode != null )
         {
-            if( IsNeedAtkCity() )
+            if (IsAtkCity())
             {
-                if ( IsAtkCity())
-                    _eStatus        = BattleMemberStatus.status_AtkCity;
-                else
-                {
-                    Vector3 tarPos  = mOwer.targetNode.GetPosition();
-                    _eStatus        = BattleMemberStatus.status_Move;
-                    mOwer.SetTargetPos(tarPos);
-                }
+                _eStatus        = BattleMemberStatus.status_Attack;
+            }
+            else
+            {
+                _eStatus        = BattleMemberStatus.status_Move;
+                Vector3 tarPos  = targetNode.GetPosition();
+                RandomAttackPoint(tarPos);
             }
         }
     }
 
+    public bool CanAttack( BattleMember member )
+    {
+        return false;
+    }
+
+
+    private void RandomAttackPoint( Vector3 targetPos )
+    {
+        float randX          = BattleSystem.Instance.battleData.rand.Range(-2.5f, 2.5f);
+        float randZ          = BattleSystem.Instance.battleData.rand.Range(-2.5f, 2.5f);
+
+        Vector3 rayStart     = new Vector3(targetPos.x + randX, 2.0f, targetPos.z + randZ);
+       
+        RaycastHit hit;
+        if (Physics.Raycast(rayStart, -Vector3.up, out hit, 2f))
+        {
+            rayStart         = hit.point;
+        }
+
+        SetTargetPos(rayStart);
+        EventGroup.fireEvent((int)BattleEvent.MoveToTarget, this, null);
+    }
 
     /// --------------------------------------------------------------------------------------------------------
     /// <summary>
@@ -240,91 +198,6 @@ public class BattleMemberAIPublicy
         return null;
     }
 
-
-
-    /// --------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// 攻城
-    /// </summary>
-    /// --------------------------------------------------------------------------------------------------------
-    private void atkCityPublicy( )
-    {
-        if ( mOwer.targetNode != null )
-        {
-            mOwer.UpdateBattle(true);
-        }
-    }
-
-
-    private bool IsNeedAtkCity()
-    {
-        int nTeam = 0;
-        for (int i = 0; i < (int)TEAM.TeamMax; i++)
-        {
-            if (mOwer.currentNode.GetShipCount(i) == 0)
-                continue;
-
-            nTeam++;
-        }
-
-        return nTeam == 1 ? true : false;
-    }
-
-
-    /// <summary>
-    /// 逃跑逻辑
-    /// </summary>
-    private void OnEscape()
-    {
-
-    }
-
-    /// <summary>
-    /// 击退
-    /// </summary>
-    private void OnRepel( int frame, float dt )
-    {
-        bool IsNeedMove   = mOwer.UpdateMove(frame, dt);
-        if (!IsNeedMove)
-        {
-            this._eStatus =  BattleMemberStatus.status_Attack;
-            return;
-        }
-
-        //repelTimer += dt;
-        //if( repelTimer > 1.5f )
-        //{
-
-        //}
-    }
-
-    public void MovetoTargetPos()
-    {
-        _eStatus = BattleMemberStatus.status_Move;
-    }
-
-    public void Attack()
-    {
-        _eStatus = BattleMemberStatus.status_Attack;
-    }
-
-
-    public void Dead()
-    {
-        _eStatus = BattleMemberStatus.status_Dead;
-    }
-
-
-    public void EnterEscape()
-    {
-        _eStatus = BattleMemberStatus.status_Escape;
-    }
-
-    public void ExitEscape()
-    {
-        _eStatus = BattleMemberStatus.status_Dead;
-    }
-
     /// --------------------------------------------------------------------------------------------------------
     /// <summary>
     /// 找最近的敌人
@@ -332,19 +205,18 @@ public class BattleMemberAIPublicy
     /// --------------------------------------------------------------------------------------------------------
     private BattleMember FindNearestEnemy()
     {
-        Node currentNode            = mOwer.currentNode;
         float fMax                  = float.MaxValue;
         BattleMember nearestEnemy   = null;
         List<BattleTeam> arrays     = currentNode.battArray;
         foreach (BattleTeam bt in arrays)
         {
-            if (bt.team.team == mOwer.team )
+            if (bt.team.team == team )
                 continue;
 
             List<BattleMember> members = bt.members;
             foreach (var member in members)
             {
-                float distance      = (mOwer.GetPosition() - member.GetPosition()).sqrMagnitude;
+                float distance      = (GetPosition() - member.GetPosition()).sqrMagnitude;
                 if (distance <= fMax && member.isALive && member.unitType == BattleMember.BattleUnitType.bmt_Soldier )
                 {
                     nearestEnemy    = member;
